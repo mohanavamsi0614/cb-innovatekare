@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
 
 function Form(){
@@ -8,10 +8,22 @@ function Form(){
         registrationNumber: '',
         teamname: '',
         type: '',
-        teamMembers: Array(4).fill({ name: '', registrationNumber: '', type: '' })
+        room: '',
+        teamMembers: Array(4).fill({ name: '', registrationNumber: '', type: '', room: '' })
     });
     const [errors, setErrors] = useState({});
     const nav = useNavigate();
+
+    useEffect(() => {
+        const savedData = localStorage.getItem('formData');
+        if (savedData) {
+            setFormData(JSON.parse(savedData));
+        }
+    }, []);
+
+    useEffect(() => {
+        localStorage.setItem('formData', JSON.stringify(formData));
+    }, [formData]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -33,10 +45,12 @@ function Form(){
         if (!formData.registrationNumber) newErrors.registrationNumber = 'Registration Number is required';
         if (!formData.teamname) newErrors.teamname = 'Team Name is required';
         if (!formData.type) newErrors.type = 'Type is required';
+        if (!formData.room) newErrors.room = 'Room Number is required';
         formData.teamMembers.forEach((member, index) => {
             if (!member.name) newErrors[`teamMember${index}Name`] = `Team Member ${index + 1} Name is required`;
             if (!member.registrationNumber) newErrors[`teamMember${index}RegistrationNumber`] = `Team Member ${index + 1} Registration Number is required`;
             if (!member.type) newErrors[`teamMember${index}Type`] = `Team Member ${index + 1} Type is required`;
+            if (!member.room) newErrors[`teamMember${index}Room`] = `Team Member ${index + 1} Room Number is required`;
         });
         return newErrors;
     };
@@ -89,6 +103,10 @@ function Form(){
                 </select>
                 {errors.type && <p className="text-red-500 text-sm">{errors.type}</p>}
 
+                <label className="block mb-2 text-xl font-medium"><p>Room Number:</p></label>
+                <input name="room" value={formData.room} onChange={handleChange} placeholder="Room Number" className="w-full h-12 rounded-lg p-3 border mb-4 text-lg"/>
+                {errors.room && <p className="text-red-500 text-sm">{errors.room}</p>}
+
                 {formData.teamMembers.map((member, index) => (
                     <div key={index} className="mb-4">
                         <label className="block mb-2 text-xl font-medium"><p>Team Member {index + 1} Name</p></label>
@@ -115,6 +133,10 @@ function Form(){
                             <option value="Lh-3">Lh-3</option>
                         </select>
                         {errors[`teamMember${index}Type`] && <p className="text-red-500 text-sm">{errors[`teamMember${index}Type`]}</p>}
+
+                        <label className="block mb-2 text-xl font-medium"><p>Team Member {index + 1} Room Number</p></label>
+                        <input name="room" value={member.room} onChange={(e) => handleTeamMemberChange(index, e)} placeholder={`Team member ${index + 1} room number`} className="w-full h-12 rounded-lg p-3 border mb-4 text-lg"/>
+                        {errors[`teamMember${index}Room`] && <p className="text-red-500 text-sm">{errors[`teamMember${index}Room`]}</p>}
                     </div>
                 ))}
                 <button type="submit" className="w-full h-12 rounded-lg bg-white border text-lg font-medium">Next</button>

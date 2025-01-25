@@ -2,35 +2,39 @@ import { useLocation } from "react-router";
 import { useEffect, useRef, useState } from "react";
 
 function Payment() {
-    const data = useLocation().state;
-    const [upiId, setupi] = useState('');
-    const [transactionId, settxn] = useState('');
-    const [errors, setErrors] = useState({ upiId: '', transactionId: '',link:"" });
-    const [link,setlink]=useState("")
+    const data = useLocation().state || JSON.parse(localStorage.getItem('paymentData')) || {};
+    const [upiId, setupi] = useState(data.upiId || '');
+    const [transactionId, settxn] = useState(data.transactionId || '');
+    const [errors, setErrors] = useState({ upiId: '', transactionId: '', link: '' });
+    const [link, setlink] = useState(data.link || '');
     const wid = useRef();
 
-  useEffect(() => {
-    let myWidget = cloudinary.createUploadWidget(
-      {
-        cloudName: "dus9hgplo",
-        uploadPreset: "vh0llv8b",
-      },
-      (error, result) => {
-        if (!error && result && result.event === "success") {
-          console.log("Done! Here is the image info: ", result.info);
-          setlink(result.info.secure_url);
-        } else if (error) {
-          console.error("Error during Cloudinary upload:", error);
-          setErrors({...errors,img:"Image upload failed! Please try again."});
-        }
-      }
-    );
-    wid.current = myWidget;
-  }, []);
+    useEffect(() => {
+        let myWidget = cloudinary.createUploadWidget(
+            {
+                cloudName: "dus9hgplo",
+                uploadPreset: "vh0llv8b",
+            },
+            (error, result) => {
+                if (!error && result && result.event === "success") {
+                    console.log("Done! Here is the image info: ", result.info);
+                    setlink(result.info.secure_url);
+                } else if (error) {
+                    console.error("Error during Cloudinary upload:", error);
+                    setErrors({ ...errors, img: "Image upload failed! Please try again." });
+                }
+            }
+        );
+        wid.current = myWidget;
+    }, []);
+
+    useEffect(() => {
+        localStorage.setItem('paymentData', JSON.stringify({ ...data, upiId, transactionId, link }));
+    }, [upiId, transactionId, link]);
 
     const validate = () => {
         let valid = true;
-        let errors = { upiId: '', transactionId: '' ,link:''};
+        let errors = { upiId: '', transactionId: '', link: '' };
 
         if (!upiId) {
             errors.upiId = 'UPI ID is required';
@@ -40,9 +44,9 @@ function Payment() {
             errors.transactionId = 'Transaction Number is required';
             valid = false;
         }
-        if(link){
-            errors.link="Upload your ScreenShot"
-            valid=false
+        if (!link) {
+            errors.link = 'Upload your Screenshot';
+            valid = false;
         }
 
         setErrors(errors);
@@ -52,7 +56,7 @@ function Payment() {
     const handleSubmit = (e) => {
         e.preventDefault();
         if (validate()) {
-            console.log("hie", {...data,upiId,transactionId,link});
+            console.log("hie", { ...data, upiId, transactionId, link });
         }
     };
 
