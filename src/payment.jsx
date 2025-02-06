@@ -4,6 +4,7 @@ import axios from "axios";
 import api from "./api";
 import Modal from "./Model";
 import done from "/public/completed.gif"
+import Squid from "./squid";
 
 function Payment() {
     const data = useLocation().state || JSON.parse(localStorage.getItem('paymentData')) || {};
@@ -15,7 +16,7 @@ function Payment() {
     const [isDone, setIsDone] = useState(false);
     const [error, setError] = useState("");
     const wid = useRef();
-
+   
     useEffect(() => {
         let myWidget = cloudinary.createUploadWidget(
             {
@@ -92,20 +93,20 @@ function Payment() {
                         <p className="font-bold text-center text-xl">{data.teamName}</p>
                         <hr className="my-4 border-gray-300" />
                         <p className="m-2 text-xl">
-                            <b>Team Lead:</b> {data.name} x 200
+                            <b>Team Lead:</b> {data.name} x 350
                         </p>
                         {data.teamMembers.map((i, j) => (
                             <p className="m-2  text-xl" key={i.name}>
                                 <b>Member {j + 1}: </b>
-                                {i.name} x 200
+                                {i.name} x 350
                             </p>
                         ))}
                         <b className="m-2 text-xl">
-                            Total: <i className="text-[#E16254] text-xl">₹1000 </i>
+                            Total: <i className="text-[#E16254] text-xl">₹1750 </i>
                         </b>
                     </div>
                     <p className="text-black text-xl">
-                        Pay a total of <b className="text-[#E16254] text-2xl">₹1000 </b> using any UPI app. Provide your UPI ID and
+                        Pay a total of <b className="text-[#E16254] text-2xl">₹1750 </b> using any UPI app. Provide your UPI ID and
                         Transaction Number for our reference.
                     </p>
                     <div className="w-full flex flex-col justify-center p-6 bg-gray-100 rounded-lg shadow-md">
@@ -170,7 +171,7 @@ function Payment() {
                     {isDone && (
                         <div className="modal-content">
                             <img src={done} alt="Success" />
-                            <p className="text-xl font-bold">Registration successful!</p>
+                            <p className="text-xl font-bold">Registration successfully!</p>
                             <p className="font-mono w-full">
                                 Please check your inbox for the confirmation mail. Thank you!
                             </p>
@@ -182,7 +183,7 @@ function Payment() {
                     {error && (
                         <div className="modal-content">
                             <p className="text-xl font-bold text-red-500">Error</p>
-                            <p className=" w-full font-serif text-xl">Please Contact 6281605767</p>
+                            <p className=" w-full font-serif">Please Contact 6281605767</p>
                             <button
                                 onClick={() => setError("")}
                                 className="bg-[#E16254] w-24 p-4 text-white rounded mt-5"
