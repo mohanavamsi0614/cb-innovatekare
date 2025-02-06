@@ -15,7 +15,7 @@ function Home() {
             transition={{ duration: 1 }}
         >
             <motion.div 
-                className="p-6 rounded-2xl bg-white border shadow-2xl max-w-lg w-full text-center text-gray-900"
+                className="p-4 rounded-2xl bg-white border shadow-2xl max-w-lg w-full text-center text-gray-900"
                 initial={{ scale: 0.8 }}
                 animate={{ scale: 1 }}
                 transition={{ duration: 0.5 }}
@@ -25,7 +25,7 @@ function Home() {
                     <img src={cb} className="size-20 ml-4 rounded-full" alt="Coding Blocks Logo" />
                     <img src={score} className="size-20 ml-4 rounded"/>
                 </div>
-                <h1 className="text-4xl md:text-5xl font-extrabold text-gray-800 ">Coding Blocks Kare</h1>
+                <h1 className="text-4xl md:text-5xl font-extrabold text-gray-800   ">Coding Blocks Kare</h1>
               <h1 className=' text-3xl md:text-5xl font-extrabold text-gray-700'>and</h1>
                 <h1 className="text-4xl md:text-5xl font-extrabold text-gray-800"> Scorecraft kare</h1>
                 <h2 className="text-3xl mt-2 text-gray-700">Presents</h2>
