@@ -4,7 +4,6 @@ import axios from "axios";
 import api from "./api";
 import Modal from "./Model";
 import done from "/public/completed.gif"
-import Squid from "./squid";
 
 function Payment() {
     const data = useLocation().state || JSON.parse(localStorage.getItem('paymentData')) || {};
@@ -16,7 +15,7 @@ function Payment() {
     const [isDone, setIsDone] = useState(false);
     const [error, setError] = useState("");
     const wid = useRef();
-   
+
     useEffect(() => {
         let myWidget = cloudinary.createUploadWidget(
             {
