@@ -47,14 +47,13 @@ function Home() {
                 transition={{ delay: 0.5, duration: 1 }}
             >
                 <h1 className="text-3xl font-extrabold mb-4">About the Event</h1>
-                <ul>
-
-<li> Participants receive a random domain  </li>
-<li> Identify a real-world problem in the assigned domain related to KARE  </li>
-<li> Develop innovative solutions to address the challenge  </li>
-<li> Fosters critical thinking, problem-solving, and creativity  </li>
-<li> Empowers contributions toward meaningful advancements in KARE  </li>
-<li> Intense, collaborative, and exciting innovation experience</li>
+                <ul className="list-disc list-inside space-y-2 text-left">
+                    <li>Participants receive a random domain</li>
+                    <li>Identify a real-world problem in the assigned domain related to KARE</li>
+                    <li>Develop innovative solutions to address the challenge</li>
+                    <li>Fosters critical thinking, problem-solving, and creativity</li>
+                    <li>Empowers contributions toward meaningful advancements in KARE</li>
+                    <li>Intense, collaborative, and exciting innovation experience</li>
                 </ul>
             </motion.div>
 

@@ -170,7 +170,7 @@ function Payment() {
                     {isDone && (
                         <div className="modal-content">
                             <img src={done} alt="Success" />
-                            <p className="text-xl font-bold">Registration successfully!</p>
+                            <p className="text-xl font-bold">Registration successful!</p>
                             <p className="font-mono w-full">
                                 Please check your inbox for the confirmation mail. Thank you!
                             </p>
