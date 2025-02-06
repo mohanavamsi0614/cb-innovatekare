@@ -48,7 +48,6 @@ function Home() {
             >
                 <h1 className="text-3xl font-extrabold mb-4">About the Event</h1>
                 <ul>
-                About Event
 
 <li> Participants receive a random domain  </li>
 <li> Identify a real-world problem in the assigned domain related to KARE  </li>
