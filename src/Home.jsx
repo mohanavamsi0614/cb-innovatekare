@@ -47,14 +47,32 @@ function Home() {
                 transition={{ delay: 0.5, duration: 1 }}
             >
                 <h1 className="text-3xl font-extrabold mb-4">About the Event</h1>
-                <ul className="list-disc list-inside space-y-2 text-left">
-                    <li>Participants receive a random domain</li>
-                    <li>Identify a real-world problem in the assigned domain related to KARE</li>
-                    <li>Develop innovative solutions to address the challenge</li>
-                    <li>Fosters critical thinking, problem-solving, and creativity</li>
-                    <li>Empowers contributions toward meaningful advancements in KARE</li>
-                    <li>Intense, collaborative, and exciting innovation experience</li>
-                </ul>
+                <div className="text-lg text-gray-700 space-y-4 text-left">
+                    <div className="flex items-start">
+                        <span className="mr-2 font-bold">1.</span>
+                        <p>Participants receive a random domain</p>
+                    </div>
+                    <div className="flex items-start">
+                        <span className="mr-2 font-bold">2.</span>
+                        <p>Identify a real-world problem in the assigned domain related to KARE</p>
+                    </div>
+                    <div className="flex items-start">
+                        <span className="mr-2 font-bold">3.</span>
+                        <p>Develop innovative solutions to address the challenge</p>
+                    </div>
+                    <div className="flex items-start">
+                        <span className="mr-2 font-bold">4.</span>
+                        <p>Fosters critical thinking, problem-solving, and creativity</p>
+                    </div>
+                    <div className="flex items-start">
+                        <span className="mr-2 font-bold">5.</span>
+                        <p>Empowers contributions toward meaningful advancements in KARE</p>
+                    </div>
+                    <div className="flex items-start">
+                        <span className="mr-2 font-bold">6.</span>
+                        <p>Intense, collaborative, and exciting innovation experience</p>
+                    </div>
+                </div>
             </motion.div>
 
             <motion.div 
