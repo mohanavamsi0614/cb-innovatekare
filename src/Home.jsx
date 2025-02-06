@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import kalasalingam from "/public/kalasalingam.png";
 import cb from "/public/KARE(latest).png";
+import score from "/public/scorecraft.jpg"
 
 function Home() {
     const nav = useNavigate();
@@ -22,8 +23,10 @@ function Home() {
                 <div className="w-full flex justify-center items-center mb-6">
                     <img src={kalasalingam} className="size-20" alt="Kalasalingam Logo" />
                     <img src={cb} className="size-20 ml-4 rounded-full" alt="Coding Blocks Logo" />
+                    <img src={score} className="size-20 ml-4 rounded"/>
                 </div>
-                <h1 className="text-4xl md:text-5xl font-extrabold text-gray-800">Coding Blocks Kare</h1>
+                <h1 className="text-4xl md:text-5xl font-extrabold text-gray-800">Coding Blocks Kare
+                and Scorecraft kare</h1>
                 <h2 className="text-3xl mt-2 text-gray-700">Presents</h2>
                 <h1 className="text-6xl font-extrabold mb-6 ">Innovate Kare</h1>
                 <h3 className="text-xl font-semibold"><span className="font-bold">Date & Time:</span> 11th to 12th Feb 2025</h3>

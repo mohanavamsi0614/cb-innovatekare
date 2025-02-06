@@ -1,7 +1,9 @@
-import { useLocation } from "react-router";
+import { Link, useLocation } from "react-router";
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import api from "./api";
+import Modal from "./Model";
+import done from "/public/completed.gif"
 
 function Payment() {
     const data = useLocation().state || JSON.parse(localStorage.getItem('paymentData')) || {};
@@ -9,6 +11,9 @@ function Payment() {
     const [transactionId, settxn] = useState(data.transactionId || '');
     const [errors, setErrors] = useState({ upiId: '', transactionId: '', link: '' });
     const [link, setlink] = useState(data.link || '');
+    const [loading, setLoading] = useState(false);
+    const [isDone, setIsDone] = useState(false);
+    const [error, setError] = useState("");
     const wid = useRef();
 
     useEffect(() => {
@@ -58,13 +63,25 @@ function Payment() {
     const handleSubmit = (e) => {
         e.preventDefault();
         if (validate()) {
-            axios.post(`${api}/event/register`,{...data,upiId, transactionId, link}).then((res)=>{console.log(res.data)})
+            setLoading(true);
+            axios.post(`${api}/event/register`, { ...data, upiId, transactionId, link })
+                .then((res) => {
+                    console.log(res.data);
+                    setLoading(false);
+                    setIsDone(true);
+                })
+                .catch((error) => {
+                    console.error("Error during registration:", error);
+                    setLoading(false);
+                    setError("Registration failed! Please try again.");
+                });
             console.log("hie", { ...data, upiId, transactionId, link });
         }
     };
 
     return (
         <div className="home flex flex-col justify-center text-black items-center h-full p-4 bg-gradient-to-r from-gray-100 to-gray-200">
+            {loading && <div className="loading-spinner">Loading...</div>}
             <form className="border rounded-2xl bg-white p-8 shadow-xl w-full max-w-lg" onSubmit={handleSubmit}>
                 <div className="w-full max-w-md space-y-6 p-6 border rounded-lg bg-gray-50 shadow-lg">
                     <h3 className="text-3xl font-bold text-gray-800 text-center">🔒 Payment</h3>
@@ -143,10 +160,39 @@ function Payment() {
                 <button
                     type="submit"
                     className="w-full font-semibold bg-white border rounded-full h-14 mt-6  transition duration-300"
+                    disabled={loading}
                 >
-                    Submit
+                    {loading ? "Submitting..." : "Submit"}
                 </button>
             </form>
+            {(loading || isDone || error) && (
+                <Modal isLoading={loading}>
+                    {isDone && (
+                        <div className="modal-content">
+                            <img src={done} alt="Success" />
+                            <p className="text-xl font-bold">Registration successfully!</p>
+                            <p className="font-mono w-full">
+                                Please check your inbox for the confirmation mail. Thank you!
+                            </p>
+                            <Link to="/">
+                                <button className="bg-[#E16254] w-24 p-4 text-white rounded mt-5">Home</button>
+                            </Link>
+                        </div>
+                    )}
+                    {error && (
+                        <div className="modal-content">
+                            <p className="text-xl font-bold text-red-500">Error</p>
+                            <p className=" w-full font-serif text-xl">Please Contact 6281605767</p>
+                            <button
+                                onClick={() => setError("")}
+                                className="bg-[#E16254] w-24 p-4 text-white rounded mt-5"
+                            >
+                                Close
+                            </button>
+                        </div>
+                    )}
+                </Modal>
+            )}
         </div>
     );
 }
