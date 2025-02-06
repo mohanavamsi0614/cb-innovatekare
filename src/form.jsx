@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
+import axios from 'axios';
 
-function Form(){
+function Form() {
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -55,14 +56,18 @@ function Form(){
         return newErrors;
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         const validationErrors = validate();
         if (Object.keys(validationErrors).length > 0) {
             setErrors(validationErrors);
         } else {
-            nav("/payment", { state: formData });
-            console.log(formData);
+            try {
+                nav("/payment", { state: formData });
+                console.log(formData);
+            } catch (error) {
+                console.error('Error saving form data:', error);
+            }
         }
     };
 

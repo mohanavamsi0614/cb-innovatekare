@@ -1,5 +1,7 @@
 import { useLocation } from "react-router";
 import { useEffect, useRef, useState } from "react";
+import axios from "axios";
+import api from "./api";
 
 function Payment() {
     const data = useLocation().state || JSON.parse(localStorage.getItem('paymentData')) || {};
@@ -56,6 +58,7 @@ function Payment() {
     const handleSubmit = (e) => {
         e.preventDefault();
         if (validate()) {
+            axios.post(`${api}/event/register`,{...data,upiId, transactionId, link}).then((res)=>{console.log(res.data)})
             console.log("hie", { ...data, upiId, transactionId, link });
         }
     };
