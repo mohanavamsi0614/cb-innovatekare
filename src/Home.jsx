@@ -47,8 +47,16 @@ function Home() {
                 transition={{ delay: 0.5, duration: 1 }}
             >
                 <h1 className="text-3xl font-extrabold mb-4">About the Event</h1>
-                <p className="text-lg leading-relaxed text-gray-700">
-                Innovate KARE is a premier hackathon where creativity meets technology. Participants will be assigned a domain at random and must identify a real-world problem within that domain related to KARE. They will then develop innovative solutions to tackle the challenges they define. This unique approach fosters critical thinking, problem-solving, and creativity, empowering participants to contribute meaningful advancements to KARE. Get ready for an intense, collaborative, and exciting innovation experience!                </p>
+                <ul>
+                About Event
+
+<li> Participants receive a random domain  </li>
+<li> Identify a real-world problem in the assigned domain related to KARE  </li>
+<li> Develop innovative solutions to address the challenge  </li>
+<li> Fosters critical thinking, problem-solving, and creativity  </li>
+<li> Empowers contributions toward meaningful advancements in KARE  </li>
+<li> Intense, collaborative, and exciting innovation experience</li>
+                </ul>
             </motion.div>
 
             <motion.div 
