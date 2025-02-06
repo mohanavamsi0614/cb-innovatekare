@@ -43,7 +43,8 @@ function Home() {
                 transition={{ delay: 0.5, duration: 1 }}
             >
                 <h1 className="text-3xl font-extrabold mb-4">About the Event</h1>
-                <p className="text-lg leading-relaxed text-gray-700">Innovate Kare is a premier hackathon where creativity meets technology. Participants will get an opportunity to develop groundbreaking solutions to real-world problems in an intense, collaborative, and fun environment.</p>
+                <p className="text-lg leading-relaxed text-gray-700">
+                Innovate KARE is a premier hackathon where creativity meets technology. Participants will be assigned a domain at random and must identify a real-world problem within that domain related to KARE. They will then develop innovative solutions to tackle the challenges they define. This unique approach fosters critical thinking, problem-solving, and creativity, empowering participants to contribute meaningful advancements to KARE. Get ready for an intense, collaborative, and exciting innovation experience!                </p>
             </motion.div>
 
             <motion.div 
