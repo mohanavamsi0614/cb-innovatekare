@@ -83,7 +83,7 @@ function Form() {
                 <input name="name" value={formData.name} onChange={handleChange} placeholder="Name" className="w-full h-12 rounded-lg p-3 border mb-4 text-lg"/>
                 {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
                 
-                <label className="block mb-2 text-xl font-medium"><p>Email:</p></label>
+                <label className="block mb-2 text-xl font-medium"><p>Collage mail:</p></label>
                 <input name="email" value={formData.email} onChange={handleChange} placeholder="Email" className="w-full h-12 rounded-lg p-3 border mb-4 text-lg"/>
                 {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
                 
