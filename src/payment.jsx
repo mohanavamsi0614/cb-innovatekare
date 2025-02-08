@@ -95,7 +95,7 @@ function Payment() {
                             <b>Team Lead:</b> {data.name} x 350
                         </p>
                         {data.teamMembers.map((i, j) => (
-                            <p className="m-2  text-xl" key={i.name}>
+                            <p className="m-2  text-lg" key={i.name}>
                                 <b>Member {j + 1}: </b>
                                 {i.name} x 350
                             </p>
