@@ -81,6 +81,9 @@ function Payment() {
 
     return (
         <div className="home flex flex-col justify-center text-black items-center h-full p-4 bg-gradient-to-r from-gray-100 to-gray-200">
+            <Link to="/registration" className="self-start mb-4">
+                <button className="bg-white border px-4 py-2 rounded">Back to Registration</button>
+            </Link>
             {loading && <div className="loading-spinner">Loading...</div>}
             <form className="border rounded-2xl bg-white p-8 shadow-xl w-full max-w-lg" onSubmit={handleSubmit}>
                 <div className="w-full max-w-md space-y-6 p-6 border rounded-lg bg-gray-50 shadow-lg">
@@ -88,7 +91,7 @@ function Payment() {
                     <p className="text-black text-lg text-center">
                         <b>Info:</b> Please scan the QR code below to make a payment for:
                     </p>
-                    <div className="text-gray-800 border p-6 rounded-lg bg-white shadow-sm">
+                    <div className="text-gray-800 border p-2 rounded-lg bg-white shadow-sm">
                         <p className="font-bold text-center text-xl">{data.teamName}</p>
                         <hr className="my-4 border-gray-300" />
                         <p className="m-2 text-xl">
@@ -97,7 +100,7 @@ function Payment() {
                         {data.teamMembers.map((i, j) => (
                             <p className="m-2  text-lg" key={i.name}>
                                 <b>Member {j + 1}: </b>
-                                {i.name} x 350
+                                {i.registrationNumber} x 350
                             </p>
                         ))}
                         <b className="m-2 text-xl">
