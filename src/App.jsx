@@ -12,7 +12,6 @@ function App() {
         <Route path='/' element={<Home/>}/>
         <Route path='/registration' element={<Form/>}/>
         <Route path='/payment' element={<Payment/>}/>
-        <Analytics/>
         {/* <Route path='/admin' element={<Admin/>}/>
         <Route path='/teampanel' element={<TeamPanel/>}/>
         <Route path='/at' element={<AllTeamsAttendance/>}/>
