@@ -3,6 +3,7 @@ import './App.css'
 import Home from './Home'
 import Payment from './payment';
 import Form from './form';
+import { Analytics } from '@vercel/analytics/react';
 
 function App() {
     return (
@@ -11,6 +12,7 @@ function App() {
         <Route path='/' element={<Home/>}/>
         <Route path='/registration' element={<Form/>}/>
         <Route path='/payment' element={<Payment/>}/>
+        <Analytics/>
         {/* <Route path='/admin' element={<Admin/>}/>
         <Route path='/teampanel' element={<TeamPanel/>}/>
         <Route path='/at' element={<AllTeamsAttendance/>}/>
