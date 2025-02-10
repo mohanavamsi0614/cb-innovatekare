@@ -3,7 +3,8 @@ import './App.css'
 import Home from './Home'
 import Payment from './payment';
 import Form from './form';
-import { Analytics } from '@vercel/analytics/react';
+import Admin from './admin';
+import Attd from './Attd';
 
 function App() {
     return (
@@ -12,6 +13,8 @@ function App() {
         <Route path='/' element={<Home/>}/>
         <Route path='/registration' element={<Form/>}/>
         <Route path='/payment' element={<Payment/>}/>
+        <Route path='/adminu' element={<Admin/>}/>
+        <Route path='/attd' element={<Attd/>}/>
         {/* <Route path='/admin' element={<Admin/>}/>
         <Route path='/teampanel' element={<TeamPanel/>}/>
         <Route path='/at' element={<AllTeamsAttendance/>}/>

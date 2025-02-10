@@ -24,11 +24,11 @@ const StyledWrapper = styled.div`
   }
 
   .spinner > div {
-   background-color: #E16254;
+   background-color: white;
    height: 100%;
    position: absolute;
    width: 100%;
-   border: 2px solid #ffff;
+   border: 1px solid #000;
   }d
 
   .spinner div:nth-of-type(1) {

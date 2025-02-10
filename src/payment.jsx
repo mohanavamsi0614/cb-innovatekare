@@ -3,14 +3,14 @@ import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import api from "./api";
 import Modal from "./Model";
-import done from "/public/completed.gif"
-
+import done from "/public/1cbd3594bb5e8d90924a105d4aae924c.gif"
+import "./App.css"
 function Payment() {
     const data = useLocation().state || JSON.parse(localStorage.getItem('paymentData')) || {};
     const [upiId, setupi] = useState(data.upiId || '');
-    const [transactionId, settxn] = useState(data.transactionId || '');
-    const [errors, setErrors] = useState({ upiId: '', transactionId: '', link: '' });
-    const [link, setlink] = useState(data.link || '');
+    const [transtationId, settxn] = useState(data.transtationId || '');
+    const [errors, setErrors] = useState({ upiId: '', transtationId: '', imgUrl: '' });
+    const [imgUrl, setimgUrl] = useState(data.imgUrl || '');
     const [loading, setLoading] = useState(false);
     const [isDone, setIsDone] = useState(false);
     const [error, setError] = useState("");
@@ -25,7 +25,7 @@ function Payment() {
             (error, result) => {
                 if (!error && result && result.event === "success") {
                     console.log("Done! Here is the image info: ", result.info);
-                    setlink(result.info.secure_url);
+                    setimgUrl(result.info.secure_url);
                 } else if (error) {
                     console.error("Error during Cloudinary upload:", error);
                     setErrors({ ...errors, img: "Image upload failed! Please try again." });
@@ -36,23 +36,23 @@ function Payment() {
     }, []);
 
     useEffect(() => {
-        localStorage.setItem('paymentData', JSON.stringify({ ...data, upiId, transactionId, link }));
-    }, [upiId, transactionId, link]);
+        localStorage.setItem('paymentData', JSON.stringify({ ...data, upiId, transtationId, imgUrl }));
+    }, [upiId, transtationId, imgUrl]);
 
     const validate = () => {
         let valid = true;
-        let errors = { upiId: '', transactionId: '', link: '' };
+        let errors = { upiId: '', transtationId: '', imgUrl: '' };
 
         if (!upiId) {
             errors.upiId = 'UPI ID is required';
             valid = false;
         }
-        if (!transactionId) {
-            errors.transactionId = 'Transaction Number is required';
+        if (!transtationId) {
+            errors.transtationId = 'Transaction Number is required';
             valid = false;
         }
-        if (!link) {
-            errors.link = 'Upload your Screenshot';
+        if (!imgUrl) {
+            errors.imgUrl = 'Upload your Screenshot';
             valid = false;
         }
 
@@ -64,7 +64,7 @@ function Payment() {
         e.preventDefault();
         if (validate()) {
             setLoading(true);
-            axios.post(`${api}/event/register`, { ...data, upiId, transactionId, link })
+            axios.post(`${api}/event/register`, { ...data, upiId, transtationId, imgUrl })
                 .then((res) => {
                     console.log(res.data);
                     setLoading(false);
@@ -75,7 +75,7 @@ function Payment() {
                     setLoading(false);
                     setError("Registration failed! Please try again.");
                 });
-            console.log("hie", { ...data, upiId, transactionId, link });
+            console.log("hie", { ...data, upiId, transtationId, imgUrl });
         }
     };
 
@@ -140,23 +140,31 @@ function Payment() {
                         <input
                             type="text"
                             id="txn"
-                            value={transactionId}
+                            value={transtationId}
                             onChange={(e) => settxn(e.target.value)}
                             placeholder="Enter transaction number"
                             className="w-full p-4 text-gray-800 bg-gray-50 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500"
                         />
-                        {errors.transactionId && <p className="text-red-500 text-sm">{errors.transactionId}</p>}
+                        {errors.transtationId && <p className="text-red-500 text-sm">{errors.transtationId}</p>}
 
                         <label htmlFor="transactionScreenshot" className="text-black  text-lg">
                             <p>Transaction Screenshot: <span className="text-red-700">*</span></p>
                         </label>
                         <div className="flex justify-center mt-4">
-                            <button
+                        {!imgUrl ? (
+                            <div
                                 onClick={() => wid.current.open()}
-                                className="w-72 h-12 rounded-lg bg--white border  font-semibold  transition duration-300"
+                                className="  cursor-pointer button p-4 pl-5 pr-5 rounded-lg bg--white border  font-semibold  transition duration-300"
                             >
                                 Upload Your Screenshot
-                            </button>
+                            </div>) :
+                            (     
+                                <div>                            
+                                <img src={imgUrl}/>
+                                <p className=" text-center p-2 border rounded-xl mt-1 button cursor-pointer">Re-Upload</p>
+                                </div>
+                            ) }
+                            
                         </div>
                     </div>
                 </div>
