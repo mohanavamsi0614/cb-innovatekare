@@ -79,19 +79,19 @@ function Form() {
                 <input name="teamname" value={formData.teamname} onChange={handleChange} placeholder="Team Name" className="w-full h-12 rounded-lg p-3 border mb-4 text-lg"/>
                 {errors.teamname && <p className="text-red-500 text-sm">{errors.teamname}</p>}
                 
-                <label className="block mb-2 text-xl font-medium"><p>Name:</p></label>
+                <label className="block mb-2 text-xl font-medium"><p>Lead Name:</p></label>
                 <input name="name" value={formData.name} onChange={handleChange} placeholder="Name" className="w-full h-12 rounded-lg p-3 border mb-4 text-lg"/>
                 {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
                 
-                <label className="block mb-2 text-xl font-medium"><p>Collage mail:</p></label>
+                <label className="block mb-2 text-xl font-medium"><p>Lead Collage mail:</p></label>
                 <input name="email" value={formData.email} onChange={handleChange} placeholder="Email" className="w-full h-12 rounded-lg p-3 border mb-4 text-lg"/>
                 {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
                 
-                <label className="block mb-2 text-xl font-medium"><p>Registration Number:</p></label>
+                <label className="block mb-2 text-xl font-medium"><p>Lead Registration Number:</p></label>
                 <input name="registrationNumber" value={formData.registrationNumber} onChange={handleChange} placeholder="Registration Number" className="w-full h-12 rounded-lg p-3 border mb-4 text-lg"/>
                 {errors.registrationNumber && <p className="text-red-500 text-sm">{errors.registrationNumber}</p>}
                 
-                <label className="block mb-2 text-xl font-medium"><p>Type:</p></label>
+                <label className="block mb-2 text-xl font-medium"><p>Lead Type:</p></label>
                 <select name="type" value={formData.type} onChange={handleChange} className="w-full h-12 rounded-lg p-3 border mb-4 text-lg">
                     <option value="">Select Type</option>
                     <option value="Day's Scholar">Day's Scholar</option>

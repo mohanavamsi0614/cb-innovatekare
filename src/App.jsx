@@ -5,6 +5,7 @@ import Payment from './payment';
 import Form from './form';
 import Admin from './admin';
 import Attd from './Attd';
+import TeamPanel from './TeamPanel';
 
 function App() {
     return (
@@ -15,6 +16,7 @@ function App() {
         <Route path='/payment' element={<Payment/>}/>
         <Route path='/adminu' element={<Admin/>}/>
         <Route path='/attd' element={<Attd/>}/>
+        <Route path='/teampanel' element={<TeamPanel/>}/>
         {/* <Route path='/admin' element={<Admin/>}/>
         <Route path='/teampanel' element={<TeamPanel/>}/>
         <Route path='/at' element={<AllTeamsAttendance/>}/>
