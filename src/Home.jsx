@@ -3,9 +3,16 @@ import { useNavigate } from 'react-router-dom';
 import kalasalingam from "/public/kalasalingam.png";
 import cb from "/public/KARE(latest).png";
 import score from "/public/scorecraft.jpg"
+import { useEffect } from 'react';
 
 function Home() {
     const nav = useNavigate();
+    useEffect(()=>{
+        Notification.requestPermission().then((res)=>{
+            console.log(res)
+         
+        })
+    })
     
     return (
         <motion.div 
@@ -32,11 +39,12 @@ function Home() {
                 <h1 className="text-6xl font-extrabold mb-6 ">Innovate Kare</h1>
                 <h3 className="text-xl font-semibold"><span className="font-bold">Date:</span> 8th to 9th Mar 2025</h3>
                 <motion.button 
-                    className="mt-6 bg-white text-black border border-black py-3 px-6 rounded-lg shadow-md text-lg font-semibold  transition-transform transform hover:scale-105"
+                    className="mt-6 bg-white text-black border border-black py-3 px-6 rounded-lg shadow-md text-md font-semibold  transition-transform transform hover:scale-105"
                     whileHover={{ scale: 1 }}
                     onClick={() => nav("/registration")}
+                    disabled={true}
                 >
-                    Register Now
+                    Registrations Will Open at 6PM🚀
                 </motion.button>
             </motion.div>
             
@@ -130,11 +138,12 @@ function Home() {
                 </div>
             </motion.div>
             <motion.button 
-                    className="mt-6 bg-white text-black border border-black py-3 px-6 rounded-lg shadow-md text-lg font-semibold  transition-transform transform hover:scale-105"
+                    className="mt-6 bg-white text-black border border-black py-3 px-6 rounded-lg shadow-md text-md font-semibold  transition-transform transform hover:scale-105"
                     whileHover={{ scale: 1 }}
                     onClick={() => nav("/registration")}
+                    disabled={true}
                 >
-                    Register Now
+                    Registrations Will Open at 6PM🚀
                 </motion.button>
 
         </motion.div>

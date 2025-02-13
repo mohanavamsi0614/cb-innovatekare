@@ -1,54 +1,111 @@
-import { Link, useLocation } from "react-router";
+import { Link, useLocation } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import api from "./api";
 import Modal from "./Model";
-import done from "/public/1cbd3594bb5e8d90924a105d4aae924c.gif"
-import "./App.css"
+import done from "/public/1cbd3594bb5e8d90924a105d4aae924c.gif";
+import "./App.css";
+import { io } from "socket.io-client";
+import cb from "/public/cb.png"
+
 function Payment() {
     const data = useLocation().state || JSON.parse(localStorage.getItem('paymentData')) || {};
-    const [upiId, setupi] = useState(data.upiId || '');
-    const [transtationId, settxn] = useState(data.transtationId || '');
-    const [errors, setErrors] = useState({ upiId: '', transtationId: '', imgUrl: '' });
-    const [imgUrl, setimgUrl] = useState(data.imgUrl || '');
+    const [upiId, setUpi] = useState(data.upiId || '');
+    const [transactionId, setTxn] = useState(data.transactionId || '');
+    const [errors, setErrors] = useState({ upiId: '', transactionId: '', imgUrl: '' });
+    const [imgUrl, setImgUrl] = useState(data.imgUrl || '');
     const [loading, setLoading] = useState(false);
     const [isDone, setIsDone] = useState(false);
     const [error, setError] = useState("");
+    const [close, setClose] = useState(false);
     const wid = useRef();
+    const socketRef = useRef();
 
     useEffect(() => {
-        let myWidget = cloudinary.createUploadWidget(
-            {
-                cloudName: "dus9hgplo",
-                uploadPreset: "vh0llv8b",
-            },
-            (error, result) => {
-                if (!error && result && result.event === "success") {
-                    console.log("Done! Here is the image info: ", result.info);
-                    setimgUrl(result.info.secure_url);
-                } else if (error) {
-                    console.error("Error during Cloudinary upload:", error);
-                    setErrors({ ...errors, img: "Image upload failed! Please try again." });
-                }
+        // Request notification permissions
+        const requestNotificationPermission = async () => {
+            if (!("Notification" in window)) {
+                console.log("This browser does not support notifications");
+                return;
             }
+            
+            try {
+                const permission = await Notification.requestPermission();
+                console.log("Notification permission:", permission);
+            } catch (err) {
+                console.error("Error requesting notification permission:", err);
+            }
+        };
+
+        requestNotificationPermission();
+
+        let myWidget = cloudinary.createUploadWidget(
+          {
+            cloudName: "dus9hgplo",
+            uploadPreset: "vh0llv8b",
+          },
+          (error, result) => {
+            if (!error && result && result.event === "success") {
+              console.log("Done! Here is the image info: ", result.info);
+              setImgUrl(result.info.secure_url);
+            } else if (error) {
+              console.error("Error during Cloudinary upload:", error);
+              setError("Image upload failed! Please try again.");
+            }
+          }
         );
+
+        // Socket connection
+        socketRef.current = io(api);
+        
+        socketRef.current.on("check", (res) => {
+            if(res === "stop") {
+                if (Notification.permission === "granted") {
+                    new Notification("Registration Status", {
+                        body: "Registrations are now closed!",
+                        icon: {cb} // Add your favicon path here
+                    });
+                }
+                setClose(true);
+            }
+        });
+
+        socketRef.current.emit("check");
+
+        socketRef.current.on("see", (res) => {
+            if(res === "stop") {
+                if (Notification.permission === "granted") {
+                    new Notification("Registration Status", {
+                        body: "Registrations are now closed!",
+                        icon: {cb} // Add your favicon path here
+                    });
+                }
+                setClose(true);
+            }
+        });
+
+        // Cleanup socket connection
         wid.current = myWidget;
-    }, []);
+        return () => {
+            socketRef.current.disconnect();
+        };
+
+      }, []);
 
     useEffect(() => {
-        localStorage.setItem('paymentData', JSON.stringify({ ...data, upiId, transtationId, imgUrl }));
-    }, [upiId, transtationId, imgUrl]);
+        localStorage.setItem('paymentData', JSON.stringify({ ...data, upiId, transactionId, imgUrl }));
+    }, [upiId, transactionId, imgUrl]);
 
     const validate = () => {
         let valid = true;
-        let errors = { upiId: '', transtationId: '', imgUrl: '' };
+        let errors = { upiId: '', transactionId: '', imgUrl: '' };
 
         if (!upiId) {
             errors.upiId = 'UPI ID is required';
             valid = false;
         }
-        if (!transtationId) {
-            errors.transtationId = 'Transaction Number is required';
+        if (!transactionId) {
+            errors.transactionId = 'Transaction Number is required';
             valid = false;
         }
         if (!imgUrl) {
@@ -64,21 +121,31 @@ function Payment() {
         e.preventDefault();
         if (validate()) {
             setLoading(true);
-            axios.post(`${api}/event/register`, { ...data, upiId, transtationId, imgUrl })
+            axios.post(`${api}/event/register`, { ...data, upiId, transactionId, imgUrl })
                 .then((res) => {
                     console.log(res.data);
                     setLoading(false);
                     setIsDone(true);
+                    new Notification("Registration Was Done",{body:"Thank You For Your Intrest!"})
                 })
                 .catch((error) => {
                     console.error("Error during registration:", error);
                     setLoading(false);
                     setError("Registration failed! Please try again.");
                 });
-            console.log("hie", { ...data, upiId, transtationId, imgUrl });
+            console.log("hie", { ...data, upiId, transactionId, imgUrl });
         }
     };
+    if(close){
+        return(
+            <div className=" bg-black w-full h-screen text-white text-xl flex flex-col justify-center items-center">
+                <h1>Registrations  Got Closed If your payment was done then Please fill this form for refund </h1>
+                <br/>
+                <a href="https://forms.gle/4WoCQPbTNo91zYMR9" className="  text-[#E16254] " target="_blank">Fill</a>
+            </div>
+        )
 
+    }     
     return (
         <div className="home flex flex-col justify-center text-black items-center h-full p-4 bg-gradient-to-r from-gray-100 to-gray-200">
             <Link to="/registration" className="self-start mb-4">
@@ -128,7 +195,7 @@ function Payment() {
                             type="text"
                             id="upi"
                             value={upiId}
-                            onChange={(e) => setupi(e.target.value)}
+                            onChange={(e) => setUpi(e.target.value)}
                             placeholder="Enter your UPI ID"
                             className="w-full p-4 text-gray-800 bg-gray-50 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500"
                         />
@@ -140,12 +207,12 @@ function Payment() {
                         <input
                             type="text"
                             id="txn"
-                            value={transtationId}
-                            onChange={(e) => settxn(e.target.value)}
+                            value={transactionId}
+                            onChange={(e) => setTxn(e.target.value)}
                             placeholder="Enter transaction number"
                             className="w-full p-4 text-gray-800 bg-gray-50 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500"
                         />
-                        {errors.transtationId && <p className="text-red-500 text-sm">{errors.transtationId}</p>}
+                        {errors.transactionId && <p className="text-red-500 text-sm">{errors.transactionId}</p>}
 
                         <label htmlFor="transactionScreenshot" className="text-black  text-lg">
                             <p>Transaction Screenshot: <span className="text-red-700">*</span></p>
