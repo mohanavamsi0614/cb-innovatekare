@@ -51,7 +51,7 @@ function Payment() {
             } else if (error) {
               console.error("Error during Cloudinary upload:", error);
               setError("Image upload failed! Please try again.");
-              alert("here")
+              alert("here at image "+ error)
             }
           }
         );
