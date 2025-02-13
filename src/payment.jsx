@@ -7,7 +7,7 @@ import done from "/public/1cbd3594bb5e8d90924a105d4aae924c.gif";
 import "./App.css";
 import { io } from "socket.io-client";
 import cb from "/public/cb.png"
-
+import qr from "/public/og.jpg"
 function Payment() {
     const data = useLocation().state || JSON.parse(localStorage.getItem('paymentData')) || {};
     const [upiId, setUpi] = useState(data.upiId || '');
@@ -126,7 +126,7 @@ function Payment() {
                     console.log(res.data);
                     setLoading(false);
                     setIsDone(true);
-                    new Notification("Registration Was Done",{body:"Thank You For Your Intrest!"})
+                    new Notification("Registration Was Done",{body:"Thank You For Your Intrest!",icon: {cb}})
                 })
                 .catch((error) => {
                     console.error("Error during registration:", error);
@@ -181,10 +181,11 @@ function Payment() {
                     <div className="w-full flex flex-col justify-center p-6 bg-gray-100 rounded-lg shadow-md">
                         <p className="text-black text-lg">Scan Here To Pay:</p>
                         <div className="w-full flex flex-col justify-center items-center mt-4">
-                            {/* <img src={qr} alt="QR Code for Payment" className="w-72 object-contain" /> */}
-                            <p className="text-[#E16254] font-bold border p-4 rounded-lg shadow-sm">
+                            <img src={qr} alt="QR Code for Payment" className="w-72 object-contain" />
+                            <p className="text-[#E16254] font-bold mt-2 border p-4 rounded-lg shadow-sm">
                                 Use Only Gpay
                             </p>
+                            <a href={qr} download="qr"><div className=" button border mt-2 p-4">Download QR</div></a>
                         </div>
                     </div>
                     <div className="space-y-6">
