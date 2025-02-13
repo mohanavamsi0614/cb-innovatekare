@@ -133,7 +133,7 @@ function Payment() {
                     console.error("Error during registration:", error);
                     setLoading(false);
                     setError("Registration failed! Please try again.");
-                    alert("here")
+                    alert("here at registrions ")
                 });
             console.log("hie", { ...data, upiId, transactionId, imgUrl });
         }
