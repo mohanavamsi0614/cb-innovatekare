@@ -11,8 +11,8 @@ import qr from "/public/og.jpg"
 function Payment() {
     const data = useLocation().state || JSON.parse(localStorage.getItem('paymentData')) || {};
     const [upiId, setUpi] = useState(data.upiId || '');
-    const [transactionId, setTxn] = useState(data.transactionId || '');
-    const [errors, setErrors] = useState({ upiId: '', transactionId: '', imgUrl: '' });
+    const [transtationId, setTxn] = useState(data.transtationId || '');
+    const [errors, setErrors] = useState({ upiId: '', transtationId: '', imgUrl: '' });
     const [imgUrl, setImgUrl] = useState(data.imgUrl || '');
     const [loading, setLoading] = useState(false);
     const [isDone, setIsDone] = useState(false);
@@ -94,19 +94,19 @@ function Payment() {
       }, []);
 
     useEffect(() => {
-        localStorage.setItem('paymentData', JSON.stringify({ ...data, upiId, transactionId, imgUrl }));
-    }, [upiId, transactionId, imgUrl]);
+        localStorage.setItem('paymentData', JSON.stringify({ ...data, upiId, transtationId, imgUrl }));
+    }, [upiId, transtationId, imgUrl]);
 
     const validate = () => {
         let valid = true;
-        let errors = { upiId: '', transactionId: '', imgUrl: '' };
+        let errors = { upiId: '', transtationId: '', imgUrl: '' };
 
         if (!upiId) {
             errors.upiId = 'UPI ID is required';
             valid = false;
         }
-        if (!transactionId) {
-            errors.transactionId = 'Transaction Number is required';
+        if (!transtationId) {
+            errors.transtationId = 'Transaction Number is required';
             valid = false;
         }
         if (!imgUrl) {
@@ -122,7 +122,7 @@ function Payment() {
         e.preventDefault();
         if (validate()) {
             setLoading(true);
-            axios.post(`${api}/event/register`, { ...data, upiId, transactionId, imgUrl })
+            axios.post(`${api}/event/register`, { ...data, upiId, transtationId, imgUrl })
                 .then((res) => {
                     console.log(res.data);
                     setLoading(false);
@@ -135,7 +135,7 @@ function Payment() {
                     setError("Registration failed! Please try again.");
                     alert("here at registrions"+error)
                 });
-            console.log("hie", { ...data, upiId, transactionId, imgUrl });
+            console.log("hie", { ...data, upiId, transtationId, imgUrl });
         }
     };
     if(close){
@@ -210,12 +210,12 @@ function Payment() {
                         <input
                             type="text"
                             id="txn"
-                            value={transactionId}
+                            value={transtationId}
                             onChange={(e) => setTxn(e.target.value)}
                             placeholder="Enter transaction number"
                             className="w-full p-4 text-gray-800 bg-gray-50 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500"
                         />
-                        {errors.transactionId && <p className="text-red-500 text-sm">{errors.transactionId}</p>}
+                        {errors.transtationId && <p className="text-red-500 text-sm">{errors.transtationId}</p>}
 
                         <label htmlFor="transactionScreenshot" className="text-black  text-lg">
                             <p>Transaction Screenshot: <span className="text-red-700">*</span></p>
