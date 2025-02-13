@@ -8,6 +8,7 @@ import "./App.css";
 import { io } from "socket.io-client";
 import cb from "/public/cb.png"
 import qr from "/public/og.jpg"
+
 function Payment() {
     const data = useLocation().state || JSON.parse(localStorage.getItem('paymentData')) || {};
     const [upiId, setUpi] = useState(data.upiId || '');
@@ -21,19 +22,52 @@ function Payment() {
     const wid = useRef();
     const socketRef = useRef();
 
-    useEffect(() => {
-        // Request notification permissions
-        const requestNotificationPermission = async () => {
+    const showNotification = async (title, body) => {
+        try {
+            // Check if the browser supports notifications
             if (!("Notification" in window)) {
                 console.log("This browser does not support notifications");
                 return;
             }
-            
+
+            // Check if we already have permission
+            if (Notification.permission === "granted") {
+                // Create and show notification
+                try {
+                    // Try using ServiceWorkerRegistration if available
+                    const registration = await navigator.serviceWorker?.ready;
+                    if (registration?.showNotification) {
+                        await registration.showNotification(title, {
+                            body: body,
+                            icon: cb // your icon
+                        });
+                    } else {
+                        // Fallback to regular Notification
+                        new Notification(title, {
+                            body: body,
+                            icon: cb
+                        });
+                    }
+                } catch (err) {
+                    console.log("Notification failed:", err);
+                }
+            }
+        } catch (error) {
+            console.log("Notification error:", error);
+            // Continue without notifications
+        }
+    };
+
+    useEffect(() => {
+        // Request notification permissions
+        const requestNotificationPermission = async () => {
             try {
-                const permission = await Notification.requestPermission();
-                console.log("Notification permission:", permission);
+                if ("Notification" in window) {
+                    const permission = await Notification.requestPermission();
+                    console.log("Notification permission:", permission);
+                }
             } catch (err) {
-                console.error("Error requesting notification permission:", err);
+                console.log("Error requesting notification permission:", err);
             }
         };
 
@@ -61,12 +95,7 @@ function Payment() {
         
         socketRef.current.on("check", (res) => {
             if(res === "stop") {
-                if (Notification.permission === "granted") {
-                    new Notification("Registration Status", {
-                        body: "Registrations are now closed!",
-                        icon: {cb} // Add your favicon path here
-                    });
-                }
+                showNotification("Registration Status", "Registrations are now closed!");
                 setClose(true);
             }
         });
@@ -75,13 +104,7 @@ function Payment() {
 
         socketRef.current.on("see", (res) => {
             if(res === "stop") {
-                if (Notification.permission === "granted") {
-                    ServiceWorkerRegistration.showNotification("Registration Status",{body:"Registrations are now closed"})
-                    // Notification("Registration Status", {
-                    //     body: "Registrations are now closed!",
-                    //     icon: {cb} // Add your favicon path here
-                    // });
-                }
+                showNotification("Registration Status", "Registrations are now closed!");
                 setClose(true);
             }
         });
@@ -128,14 +151,13 @@ function Payment() {
                     console.log(res.data);
                     setLoading(false);
                     setIsDone(true);
-                    ServiceWorkerRegistration.showNotification("Registration Was Done",{body:"Thank You For Your Intrest!"})
-                    // new Notification("Registration Was Done",{body:"Thank You For Your Intrest!",icon: {cb}})
+                    showNotification("Registration Was Done", "Thank You For Your Interest!");
                 })
                 .catch((error) => {
                     console.error("Error during registration:", error);
                     setLoading(false);
                     setError("Registration failed! Please try again.");
-                    alert("here at registrions"+error)
+                    alert("Registration error: " + error.message);
                 });
             console.log("hie", { ...data, upiId, transtationId, imgUrl });
         }
