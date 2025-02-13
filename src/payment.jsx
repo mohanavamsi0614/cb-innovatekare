@@ -24,17 +24,13 @@ function Payment() {
 
     const showNotification = async (title, body) => {
         try {
-            // Check if the browser supports notifications
             if (!("Notification" in window)) {
                 console.log("This browser does not support notifications");
                 return;
             }
 
-            // Check if we already have permission
             if (Notification.permission === "granted") {
-                // Create and show notification
                 try {
-                    // Try using ServiceWorkerRegistration if available
                     const registration = await navigator.serviceWorker?.ready;
                     if (registration?.showNotification) {
                         await registration.showNotification(title, {
@@ -42,7 +38,6 @@ function Payment() {
                             icon: cb // your icon
                         });
                     } else {
-                        // Fallback to regular Notification
                         new Notification(title, {
                             body: body,
                             icon: cb
@@ -50,11 +45,12 @@ function Payment() {
                     }
                 } catch (err) {
                     console.log("Notification failed:", err);
+                    alert(error)
                 }
             }
         } catch (error) {
             console.log("Notification error:", error);
-            // Continue without notifications
+            alert(error)
         }
     };
 
