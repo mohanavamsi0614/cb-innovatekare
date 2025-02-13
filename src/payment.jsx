@@ -76,10 +76,11 @@ function Payment() {
         socketRef.current.on("see", (res) => {
             if(res === "stop") {
                 if (Notification.permission === "granted") {
-                    new Notification("Registration Status", {
-                        body: "Registrations are now closed!",
-                        icon: {cb} // Add your favicon path here
-                    });
+                    ServiceWorkerRegistration.showNotification("Registration Status",{body:"Registrations are now closed"})
+                    // Notification("Registration Status", {
+                    //     body: "Registrations are now closed!",
+                    //     icon: {cb} // Add your favicon path here
+                    // });
                 }
                 setClose(true);
             }
@@ -127,7 +128,8 @@ function Payment() {
                     console.log(res.data);
                     setLoading(false);
                     setIsDone(true);
-                    new Notification("Registration Was Done",{body:"Thank You For Your Intrest!",icon: {cb}})
+                    ServiceWorkerRegistration.showNotification("Registration Was Done",{body:"Thank You For Your Intrest!"})
+                    // new Notification("Registration Was Done",{body:"Thank You For Your Intrest!",icon: {cb}})
                 })
                 .catch((error) => {
                     console.error("Error during registration:", error);
