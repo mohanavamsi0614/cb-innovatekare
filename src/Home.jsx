@@ -95,11 +95,12 @@ function Home() {
                         <span className="mr-2  font-bold">1.</span>
                         <p>Register for the event 
                         <motion.button 
-                    className="mt-6 bg-white text-black border border-black p-1  rounded-lg shadow-md text-lg font-semibold  transition-transform transform hover:scale-105"
+                    className="mt-6 bg-white text-black border border-black py-3 px-6 rounded-lg shadow-md text-md font-semibold  transition-transform transform hover:scale-105"
                     whileHover={{ scale: 1 }}
                     onClick={() => nav("/registration")}
+                    disabled={true}
                 >
-                    Register Now
+                    Registrations Will Open at 6PM🚀
                 </motion.button>
                 </p>
                     </div>
