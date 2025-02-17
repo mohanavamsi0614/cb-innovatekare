@@ -112,7 +112,7 @@ function Payment() {
     if(close){
         return(
             <div className=" bg-black w-full h-screen text-white text-xl flex flex-col justify-center items-center">
-                <h1>Registrations  Got Closed If your payment was done then Please fill this form for refund </h1>
+                <h1>Registrations  Got Freezed If you did the  payment Please fill this form. </h1>
                 <br/>
                 <a href="https://forms.gle/4WoCQPbTNo91zYMR9" className="  text-[#E16254] " target="_blank">Fill</a>
             </div>
