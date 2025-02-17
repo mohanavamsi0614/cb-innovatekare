@@ -54,8 +54,9 @@ function PaymentCard({ team }) {
             onClick={() => handleVerify(team._id)}
             disabled={team.verified}
             className={`px-4 py-2 rounded font-semibold text-white flex items-center space-x-2 ${
-              "bg-[#E16254] hover:bg-[#E16256] transition duration-300"
-            }`}
+            !team.verified ?
+              "bg-[#E16254] hover:bg-[#E16256] transition duration-300" : " bg-gray-600"
+            } ${verified && " bg-gray-600"}`    }
           >
             {loading ? (
               <>

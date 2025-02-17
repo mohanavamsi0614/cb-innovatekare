@@ -22,53 +22,7 @@ function Payment() {
     const wid = useRef();
     const socketRef = useRef();
 
-    const showNotification = async (title, body) => {
-        try {
-            if (!("Notification" in window)) {
-                console.log("This browser does not support notifications");
-                return;
-            }
-
-            if (Notification.permission === "granted") {
-                try {
-                    const registration = await navigator.serviceWorker?.ready;
-                    if (registration?.showNotification) {
-                        await registration.showNotification(title, {
-                            body: body,
-                            icon: cb // your icon
-                        });
-                    } else {
-                        new Notification(title, {
-                            body: body,
-                            icon: cb
-                        });
-                    }
-                } catch (err) {
-                    console.log("Notification failed:", err);
-                    alert(error)
-                }
-            }
-        } catch (error) {
-            console.log("Notification error:", error);
-            alert(error)
-        }
-    };
-
     useEffect(() => {
-        // Request notification permissions
-        const requestNotificationPermission = async () => {
-            try {
-                if ("Notification" in window) {
-                    const permission = await Notification.requestPermission();
-                    console.log("Notification permission:", permission);
-                }
-            } catch (err) {
-                console.log("Error requesting notification permission:", err);
-            }
-        };
-
-        requestNotificationPermission();
-
         let myWidget = cloudinary.createUploadWidget(
           {
             cloudName: "dus9hgplo",
@@ -91,7 +45,6 @@ function Payment() {
         
         socketRef.current.on("check", (res) => {
             if(res === "stop") {
-                showNotification("Registration Status", "Registrations are now closed!");
                 setClose(true);
             }
         });
@@ -100,7 +53,6 @@ function Payment() {
 
         socketRef.current.on("see", (res) => {
             if(res === "stop") {
-                showNotification("Registration Status", "Registrations are now closed!");
                 setClose(true);
             }
         });
@@ -147,7 +99,6 @@ function Payment() {
                     console.log(res.data);
                     setLoading(false);
                     setIsDone(true);
-                    showNotification("Registration Was Done", "Thank You For Your Interest!");
                 })
                 .catch((error) => {
                     console.error("Error during registration:", error);
@@ -283,7 +234,7 @@ function Payment() {
                     {error && (
                         <div className="modal-content">
                             <p className="text-xl font-bold text-red-500">Error</p>
-                            <p className=" w-full font-serif">Please Contact 6281605767</p>
+                            <p className=" w-full font-serif">Please Contact 6281605767.</p>
                             <button
                                 onClick={() => setError("")}
                                 className="bg-[#E16254] w-24 p-4 text-white rounded mt-5"

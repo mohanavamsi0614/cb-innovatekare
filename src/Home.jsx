@@ -3,16 +3,34 @@ import { useNavigate } from 'react-router-dom';
 import kalasalingam from "/public/kalasalingam.png";
 import cb from "/public/KARE(latest).png";
 import score from "/public/scorecraft.jpg"
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 function Home() {
     const nav = useNavigate();
-    useEffect(()=>{
-        Notification.requestPermission().then((res)=>{
-            console.log(res)
-         
-        })
-    })
+    const [timeRemaining, setTimeRemaining] = useState('');
+    const [registrationOpen, setRegistrationOpen] = useState(false);
+
+    useEffect(() => {
+        const timer = setInterval(() => {
+            const now = new Date();
+            const targetTime = new Date();
+            targetTime.setHours(18, 0, 0); 
+
+            if (now >= targetTime) {
+                setRegistrationOpen(true);
+                clearInterval(timer);
+                setTimeRemaining('Registrations are now open!');
+            } else {
+                const diff = targetTime - now;
+                const hours = Math.floor(diff / (1000 * 60 * 60));
+                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+                setTimeRemaining(`${hours}h ${minutes}m ${seconds}s`);
+            }
+        }, 1000);
+
+        return () => clearInterval(timer);
+    }, []);
     
     return (
         <motion.div 
@@ -42,9 +60,9 @@ function Home() {
                     className="mt-6 bg-white text-black border border-black py-3 px-6 rounded-lg shadow-md text-md font-semibold  transition-transform transform hover:scale-105"
                     whileHover={{ scale: 1 }}
                     onClick={() => nav("/registration")}
-                    disabled={true}
+                    disabled={!registrationOpen}
                 >
-                    Registrations Will Open at 6PM🚀
+                    {registrationOpen ? 'Register Now! 🚀' : `Registrations will open in ${timeRemaining}`}
                 </motion.button>
             </motion.div>
             
@@ -98,15 +116,15 @@ function Home() {
                     className="mt-6 bg-white text-black border border-black py-3 px-6 rounded-lg shadow-md text-md font-semibold  transition-transform transform hover:scale-105"
                     whileHover={{ scale: 1 }}
                     onClick={() => nav("/registration")}
-                    disabled={true}
+                    disabled={!registrationOpen}
                 >
-                    Registrations Will Open at 6PM🚀
+                    {registrationOpen ? 'Register Now! 🚀' : `Registrations will open in ${timeRemaining}`}
                 </motion.button>
                 </p>
                     </div>
                     <div className="flex items-start">
                         <span className="mr-2  font-bold">2.</span>
-                        <p> participants will receive a random domain to work on.</p>
+                        <p> participants will take a domain to work on.</p>
                     </div>
                     <div className="flex items-start">
                         <span className="mr-2  font-bold">3.</span>
@@ -142,9 +160,9 @@ function Home() {
                     className="mt-6 bg-white text-black border border-black py-3 px-6 rounded-lg shadow-md text-md font-semibold  transition-transform transform hover:scale-105"
                     whileHover={{ scale: 1 }}
                     onClick={() => nav("/registration")}
-                    disabled={true}
+                    disabled={!registrationOpen}
                 >
-                    Registrations Will Open at 6PM🚀
+                    {registrationOpen ? 'Register Now! 🚀' : `Registrations will open in ${timeRemaining}`}
                 </motion.button>
 
         </motion.div>
