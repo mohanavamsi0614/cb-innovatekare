@@ -11,12 +11,6 @@ function Admin() {
     const [notVerifiedCount, setNotVerifiedCount] = useState(0);
     const [loading, setLoading] = useState(true);
     useEffect(() => {
-        socket.on("check",(res)=>{
-            console.log(res)
-            if(res=="ok"){
-                data()
-            }
-        })
         async function data() {
             try {
                 let res = await axios.get(`${api}/event/students`);
