@@ -1,18 +1,42 @@
 import axios from "axios";
 import api from "../api";
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 function PaymentCard({ team }) {
   const [photo, setPhoto] = useState(false);
   const [full, setFull] = useState(false);
   const [loading, setLoading] = useState(false);
   const [verified, setVerified] = useState(team.verified);
-  console.log(team)
+  console.log(team);
+
+  // Add new function to handle escape key
+  const handleEscapeKey = useCallback((event) => {
+    if (event.key === 'Escape') {
+      setPhoto(false);
+    }
+  }, []);
+
+  // Add new function to handle overlay click
+  const handleOverlayClick = (e) => {
+    if (e.target === e.currentTarget) {
+      setPhoto(false);
+    }
+  };
+
+  // Add effect for escape key listener
+  useEffect(() => {
+    if (photo) {
+      document.addEventListener('keydown', handleEscapeKey);
+    }
+    return () => {
+      document.removeEventListener('keydown', handleEscapeKey);
+    };
+  }, [photo, handleEscapeKey]);
 
   async function handleVerify(id) {
     try {
       setLoading(true);
-      const response = await axios.get(`${api}/event/team/${id}`,);
+      const response = await axios.get(`${api}/event/team/${id}`);
       console.log(response.data);
       setVerified(true);
     } catch (err) {
@@ -30,10 +54,10 @@ function PaymentCard({ team }) {
           {team.teamname || "Team Name"}
         </h3>
         <h3>
-            <h3>transtationId: {team.transtationId}</h3>
-            <h3>upiId: {team.upiId}</h3>
+          <h3>transtationId: {team.transtationId}</h3>
+          <h3>upiId: {team.upiId}</h3>
         </h3>
-        
+
         {full && (
           <div className="mb-4">
             <h3 className=" font-bold text-black">Team Lead:</h3>
@@ -54,9 +78,10 @@ function PaymentCard({ team }) {
             onClick={() => handleVerify(team._id)}
             disabled={team.verified}
             className={`px-4 py-2 rounded font-semibold text-white flex items-center space-x-2 ${
-            !team.verified ?
-              "bg-[#E16254] hover:bg-[#E16256] transition duration-300" : " bg-gray-600"
-            } ${verified && " bg-gray-600"}`    }
+              !team.verified
+                ? "bg-[#E16254] hover:bg-[#E16256] transition duration-300"
+                : " bg-gray-600"
+            } ${verified && " bg-gray-600"}`}
           >
             {loading ? (
               <>
@@ -112,25 +137,24 @@ function PaymentCard({ team }) {
       </div>
 
       {photo && (
-        <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-75 z-50">
-          <div className="bg-white rounded-lg p-4 relative shadow-lg max-w-lg w-full">
-            <div className="flex justify-between items-center mb-4">
-              <p className="text-xl font-semibold text-gray-800 text-center w-full">
-                {team.teamName}
-              </p>
-              <button
-                className="absolute top-2 right-4 text-gray-800 text-xl hover:text-red-500"
-                onClick={() => setPhoto(false)}
-              >
-                X
-              </button>
-            </div>
+        <div
+          className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-75 z-50"
+          onClick={handleOverlayClick}
+        >
+          <div className="bg-white rounded-lg p-4 relative shadow-2xl max-w-3xl w-full mx-4">
+            <button
+              className="absolute -top-3 -right-3 bg-red-500 text-white w-8 h-8 rounded-full flex items-center justify-center hover:bg-red-600 transition-colors duration-200 shadow-lg"
+              onClick={() => setPhoto(false)}
+            >
+              ×
+            </button>
 
-            <div className="flex justify-center items-center">
+            <div className="mt-4">
               <img
                 src={team.imgUrl}
-                alt="Team"
-                className="max-w-full h-auto rounded-lg"
+                alt="Payment Screenshot"
+                className="max-w-full h-auto rounded-lg mx-auto"
+                style={{ maxHeight: "80vh" }}
               />
             </div>
           </div>

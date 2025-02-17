@@ -115,12 +115,12 @@ function Clock() {
             <div className="container mx-auto flex justify-between items-center">
                 <div className="flex items-center">
                     <img src={logo} className="size-16 rounded-full relative top-1" />
-                    <h1 className="text-pink-500 text-2xl font-bold">Cb innovative KARE</h1>
+                    <h1 className="text-[#f44786] text-2xl font-bold">Cb innovative KARE</h1>
                 </div>
                 <div>
-                    <a href="#schedule" className="text-pink-500 mx-4 hover:text-gray-400">Event Schedule</a>
-                    <a href="#leaderboard" className="text-pink-500 mx-4 hover:text-gray-400">Leaderboard</a>
-                    <a href="#resources" className="text-pink-500 mx-4 hover:text-gray-400">Resources</a>
+                    <a href="#schedule" className="text-[#f44786] mx-4 hover:text-gray-400">Event Schedule</a>
+                    <a href="#leaderboard" className="text-[#f44786] mx-4 hover:text-gray-400">Leaderboard</a>
+                    <a href="#resources" className="text-[#f44786] mx-4 hover:text-gray-400">Resources</a>
                 </div>
             </div>
         </nav>
@@ -133,11 +133,11 @@ function Clock() {
                     <img src={kalasalingam} className="size-20" alt="Kalasalingam Logo" />
                     <img src={cb} className="size-24 relative ml-5 rounded-full" alt="Coding Blocks Logo" />
                 </div>
-                <p className="text-3xl font-bold text-center text-pink-500">
+                <p className="text-3xl font-bold text-center text-[#f44786]">
                     <span className="text-[#E16254]">Squid Game Kare</span> Presents
                 </p>
-                <h1 className="text-5xl mt-2 text-pink-500">Build a Bot</h1>
-                <p className="text-xl m-2 text-pink-500">A 24-Hours Hackathon</p>
+                <h1 className="text-5xl mt-2 text-[#f44786]">Build a Bot</h1>
+                <p className="text-xl m-2 text-[#f44786]">A 24-Hours Hackathon</p>
                 <div className="bg-white rounded-lg shadow-lg p-8 w-96 flex flex-col">
                     <h1 className="text-4xl font-semibold text-center mb-6">Team Access Panel</h1>
                     {error && <p className="text-red-500 text-center mb-4">{error}</p>}
@@ -153,7 +153,7 @@ function Clock() {
                         <p>The Password is on your table</p>
                     </div>
                     <button
-                        className="bg-pink-500 py-3 rounded-md text-white font-semibold hover:bg-pink-600 transition duration-200"
+                        className="bg-[#f44786] py-3 rounded-md text-white font-semibold hover:bg-pink-600 transition duration-200"
                         onClick={verify}
                         disabled={loading}
                     >
@@ -175,7 +175,7 @@ function Clock() {
             ) : (
                 team ? (
                     <div className="w-full max-w-5xl p-6 mx-auto">
-                        <h1 className="text-4xl text-center mb-6 text-pink-500 font-bold">Welcome, {team.teamname}!</h1>
+                        <h1 className="text-4xl text-center mb-6 text-[#f44786] font-bold">Welcome, {team.teamname}!</h1>
                         <hr className="mb-6 border-gray-600" />
                         <div className="flex flex-col md:flex-row justify-between items-center mb-8">
                             <div className="border border-gray-700 rounded-lg p-6 w-full md:w-[70%]">
@@ -191,7 +191,7 @@ function Clock() {
                                 <div>
                                     <table className="table-auto rounded-lg border-collapse border mt-4 border-gray-300 w-full text-left">
                                         <thead>
-                                            <tr className="bg-pink-500 text-white font-bold">
+                                            <tr className="bg-[#f44786] text-white font-bold">
                                                 <th className="border border-gray-300 px-4 py-2">Name</th>
                                                 <th className="border border-gray-300 px-4 py-2">1st Attd</th>
                                                 <th className="border border-gray-300 px-4 py-2">2nd Attd</th>
@@ -225,7 +225,7 @@ function Clock() {
                             </div>
                         </div>
                         <div className="mb-6 p-6 bg-gray-800 rounded-lg shadow-lg">
-                            <h2 className="text-4xl text-center font-bold text-pink-500 mb-4">Your Domain</h2>
+                            <h2 className="text-4xl text-center font-bold text-[#f44786] mb-4">Your Domain</h2>
                             <div>Click Me!</div>
                         </div>
                     </div>

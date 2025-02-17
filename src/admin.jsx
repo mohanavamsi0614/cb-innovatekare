@@ -3,14 +3,20 @@ import "./admin.css";
 import PaymentCard from "./components/PaymentVeriy";
 import axios from "axios";
 import api from "./api";
-
+import { io } from "socket.io-client";
+const socket=io(api)
 function Admin() {
     const [teams, setTeams] = useState([]);
     const [verifiedCount, setVerifiedCount] = useState(0);
     const [notVerifiedCount, setNotVerifiedCount] = useState(0);
     const [loading, setLoading] = useState(true);
-
     useEffect(() => {
+        socket.on("check",(res)=>{
+            console.log(res)
+            if(res=="ok"){
+                data()
+            }
+        })
         async function data() {
             try {
                 let res = await axios.get(`${api}/event/students`);
