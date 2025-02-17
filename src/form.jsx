@@ -136,6 +136,7 @@ function Form() {
                             <option value="Lh-1">Lh-1</option>
                             <option value="Lh-2">Lh-2</option>
                             <option value="Lh-3">Lh-3</option>
+                            <option value="Lh-4">Lh-4</option>
                         </select>
                         {errors[`teamMember${index}Type`] && <p className="text-red-500 text-sm">{errors[`teamMember${index}Type`]}</p>}
 
