@@ -150,9 +150,9 @@ function Home() {
                 <h1 className="text-3xl font-extrabold mb-4">Prizes & Rewards</h1>
                 <p className="text-lg text-gray-700">We value innovation and hard work. The top winners will receive cash prizes along with additional credits, and all participants will get certificates of participation.</p>
                 <div className="mt-4 flex flex-col space-y-4">
-                    <div className="p-4 bg-gray-200 rounded-lg font-semibold text-gray-800">🏆 1st Prize: Cash reward + 2 credits</div>
-                    <div className="p-4 bg-gray-200 rounded-lg font-semibold text-gray-800">🥈 2nd Prize: Cash reward + 2 credits</div>
-                    <div className="p-4 bg-gray-200 rounded-lg font-semibold text-gray-800">🥉 3rd Prize: Cash reward + 2 credits</div>
+                    <div className="p-4 bg-gray-200 rounded-lg font-semibold text-gray-800">🏆 1st Prize: 7000 + 2 credits</div>
+                    <div className="p-4 bg-gray-200 rounded-lg font-semibold text-gray-800">🥈 2nd Prize: 5000 + 2 credits</div>
+                    <div className="p-4 bg-gray-200 rounded-lg font-semibold text-gray-800">🥉 3rd Prize: 3000 + 2 credits</div>
                     <div className="p-4 bg-gray-200 rounded-lg font-semibold text-gray-800">📜 Certificate for all participants + 2 credits</div>
                 </div>
             </motion.div>
