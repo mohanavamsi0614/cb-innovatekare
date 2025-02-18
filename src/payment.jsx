@@ -7,7 +7,7 @@ import done from "/public/1cbd3594bb5e8d90924a105d4aae924c.gif";
 import "./App.css";
 import { io } from "socket.io-client";
 import cb from "/public/cb.png"
-import qr from "/public/on.jpg"
+import qr from "/public/og.jpg"
 
 function Payment() {
     const data = useLocation().state || JSON.parse(localStorage.getItem('paymentData')) || {};

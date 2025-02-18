@@ -32,14 +32,23 @@ function Home() {
                 <h2 className="text-3xl mt-2 text-gray-700">Presents</h2>
                 <h1 className="text-6xl font-extrabold mb-6 ">Innovate Kare</h1>
                 <h3 className="text-xl font-semibold"><span className="font-bold">Date:</span> 8th to 9th Mar 2025</h3>
-                <motion.button 
+                {/* <motion.button 
                     className="mt-6 bg-white text-black border border-black py-3 px-6 rounded-lg shadow-md text-md font-semibold  transition-transform transform hover:scale-105"
                     whileHover={{ scale: 1 }}
                     onClick={() => nav("/registration")}
                     disabled={true}
                 >
                 Registration Are Freezed 🥶
+                </motion.button> */}
+                <motion.button 
+                    className="mt-6 bg-white text-black border border-black py-3 px-6 rounded-lg shadow-md text-md font-semibold  transition-transform transform hover:scale-105"
+                    whileHover={{ scale: 1 }}
+                    onClick={() => nav("/registration")}
+                    // disabled={true}
+                >
+                Register Now 🚀
                 </motion.button>
+                <div className=' p-4 border rounded-3xl mt-3 font-bold'>Registration are open for only for IT Students.</div>
             </motion.div>
             
             <motion.div 
@@ -88,13 +97,21 @@ function Home() {
                 <div className="flex items-center ">
                         <span className="mr-2  font-bold">1.</span>
                         <p>Register for the event 
-                        <motion.button 
+                        {/* <motion.button 
                     className="mt-6 bg-white text-black border border-black py-3 px-6 rounded-lg shadow-md text-md font-semibold  transition-transform transform hover:scale-105"
                     whileHover={{ scale: 1 }}
                     onClick={() => nav("/registration")}
                     disabled={true}
                 >
                 Registration Are Freezed 🥶
+                </motion.button> */}
+                <motion.button 
+                    className="mt-6 bg-white text-black border border-black py-3 px-6 rounded-lg shadow-md text-md font-semibold  transition-transform transform hover:scale-105"
+                    whileHover={{ scale: 1 }}
+                    onClick={() => nav("/registration")}
+                    // disabled={true}
+                >
+                Register Now 🚀
                 </motion.button>
                 </p>
                     </div>
@@ -136,9 +153,9 @@ function Home() {
                     className="mt-6 bg-white text-black border border-black py-3 px-6 rounded-lg shadow-md text-md font-semibold  transition-transform transform hover:scale-105"
                     whileHover={{ scale: 1 }}
                     onClick={() => nav("/registration")}
-                    disabled={true}
+                    // disabled={true}
                 >
-                Registration Are Freezed 🥶
+                Register Now 🚀
                 </motion.button>
 
         </motion.div>
