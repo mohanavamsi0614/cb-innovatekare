@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import logo from "/public/cb.png";
+import logo from "/public/squid-game-2-smile.jpg";
 import axios from "axios";
 import api from "./api";
 import { io } from "socket.io-client";
@@ -111,16 +111,16 @@ function Clock() {
         attendance === "P" ? "text-green-500" : "text-red-500";
 
     const Navbar = () => (
-        <nav className="bg-black p-4">
-            <div className="container mx-auto flex justify-between items-center">
+        <nav className="bg-black p-4 fixed w-full top-0 z-50">
+            <div className="container mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
                 <div className="flex items-center">
-                    <img src={logo} className="size-16 rounded-full relative top-1" />
-                    <h1 className="text-[#f44786] text-2xl font-bold">Cb innovative KARE</h1>
+                    <img src={logo} className="w-12 h-12 sm:w-16 sm:h-16 rounded-full relative" alt="Logo" />
+                    <h1 className="text-[#f44786] text-xl sm:text-2xl font-bold ml-3">Cb innovative KARE</h1>
                 </div>
-                <div>
-                    <a href="#schedule" className="text-[#f44786] mx-4 hover:text-gray-400">Event Schedule</a>
-                    <a href="#leaderboard" className="text-[#f44786] mx-4 hover:text-gray-400">Leaderboard</a>
-                    <a href="#resources" className="text-[#f44786] mx-4 hover:text-gray-400">Resources</a>
+                <div className="flex flex-wrap justify-center gap-4">
+                    <a href="#schedule" className="text-[#f44786] hover:text-gray-400 transition-colors">Event Schedule</a>
+                    <a href="#leaderboard" className="text-[#f44786] hover:text-gray-400 transition-colors">Leaderboard</a>
+                    <a href="#resources" className="text-[#f44786] hover:text-gray-400 transition-colors">Resources</a>
                 </div>
             </div>
         </nav>
@@ -165,31 +165,59 @@ function Clock() {
     }
 
     return (
-        <div className="bg-black w-full h-full text-white flex flex-col">
+        <div className="bg-black min-h-screen text-white flex flex-col">
             <Navbar />
-            {loading ? (
-                <div className="w-full h-screen flex flex-col justify-center items-center">
-                    <div><img src={lod} className="size-48 rounded-full" /></div>
-                    <p className="text-center text-2xl mt-10 font-bold">Loading...</p>
-                </div>
-            ) : (
-                team ? (
-                    <div className="w-full max-w-5xl p-6 mx-auto">
-                        <h1 className="text-4xl text-center mb-6 text-[#f44786] font-bold">Welcome, {team.teamname}!</h1>
-                        <hr className="mb-6 border-gray-600" />
-                        <div className="flex flex-col md:flex-row justify-between items-center mb-8">
-                            <div className="border border-gray-700 rounded-lg p-6 w-full md:w-[70%]">
-                                <h2 className="text-2xl font-bold mb-4">Team Leader</h2>
-                                <p className="text-lg mb-6">👑 {team.name} ({team.registrationNumber})</p>
-                                <h2 className="text-xl font-bold mb-4">Team Members</h2>
-                                <div className="border border-gray-700 rounded-lg h-40 overflow-y-auto p-4">
-                                    {team.teamMembers.map((member, index) => (
-                                        <p key={index} className="mb-2">{index + 1}. {member.name} ({member.registrationNumber})</p>
-                                    ))}
+            <div className="pt-24 sm:pt-28 px-4"> {/* Changed mt-20 to pt-24 for better spacing */}
+                {loading ? (
+                    <div className="w-full h-[80vh] flex flex-col justify-center items-center">
+                        <div className="animate-pulse"><img src={lod} className="w-32 h-32 sm:w-48 sm:h-48 rounded-full" /></div>
+                        <p className="text-center text-xl sm:text-2xl mt-6 font-bold">Loading...</p>
+                    </div>
+                ) : (
+                    team ? (
+                        <div className="w-full max-w-7xl p-4 sm:p-6 mx-auto">
+                            <h1 className="text-3xl sm:text-4xl text-center mb-8 text-[#f44786] font-bold mt-4">
+                                Welcome, {team.teamname}!
+                            </h1>
+                            
+                            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+                                {/* Team Info Section */}
+                                <div className="lg:col-span-2 border border-gray-700 rounded-lg p-4 sm:p-6 bg-gray-900">
+                                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4">
+                                        <h2 className="text-2xl font-bold">Team Information</h2>
+                                        <Clock />
+                                    </div>
+                                    
+                                    {/* Team Details */}
+                                    <div className="space-y-4">
+                                        <div>
+                                            <h3 className="text-xl font-bold mb-2">Team Leader</h3>
+                                            <p className="text-lg">👑 {team.name} ({team.registrationNumber})</p>
+                                        </div>
+                                        
+                                        <div>
+                                            <h3 className="text-xl font-bold mb-2">Team Members</h3>
+                                            <div className="border border-gray-700 rounded-lg max-h-40 overflow-y-auto p-4 bg-gray-800">
+                                                {team.teamMembers.map((member, index) => (
+                                                    <p key={index} className="mb-2 text-gray-300">
+                                                        {index + 1}. {member.name} ({member.registrationNumber})
+                                                    </p>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <Clock />
-                                <div>
-                                    <table className="table-auto rounded-lg border-collapse border mt-4 border-gray-300 w-full text-left">
+
+                                {/* Team Logo Section */}
+                                <div className="rounded-lg flex justify-center items-center p-4 bg-gray-900">
+                                    <img src={logo} alt="Team Logo" className="max-w-full max-h-64 rounded-lg object-cover" />
+                                </div>
+                            </div>
+
+                            <div className="overflow-x-auto mb-6 bg-gray-900 rounded-lg p-4">
+                                <h2 className="text-2xl font-bold mb-4">Attendance Tracker</h2>
+                                <div className="inline-block min-w-full align-middle">
+                                    <table className="min-w-full divide-y divide-gray-700">
                                         <thead>
                                             <tr className="bg-[#f44786] text-white font-bold">
                                                 <th className="border border-gray-300 px-4 py-2">Name</th>
@@ -220,21 +248,55 @@ function Clock() {
                                     </table>
                                 </div>
                             </div>
-                            <div className="bg-gray-700 rounded-lg flex justify-center items-center w-full md:w-1/3 h-72 mt-8 md:mt-0 md:ml-11">
-                                <img src={logo} alt="Team Logo" className="max-w-full max-h-full rounded-lg" />
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                                <div className="bg-gray-900 rounded-lg p-6 shadow-lg">
+                                    <h2 className="text-2xl sm:text-3xl text-center font-bold text-[#f44786] mb-4">Your Domain</h2>
+                                    <div className="text-center p-4 bg-gray-800 rounded-lg cursor-pointer hover:bg-gray-700 transition-colors">
+                                        Click to View Domain
+                                    </div>
+                                </div>
+
+                                <div className="bg-gray-900 rounded-lg p-6 shadow-lg">
+                                    <h2 className="text-2xl sm:text-3xl text-center font-bold text-[#f44786] mb-4">Problem Statement</h2>
+                                    <textarea 
+                                        className="w-full h-32 bg-gray-800 text-white rounded-lg p-4 border border-gray-700 focus:border-[#f44786] focus:ring-1 focus:ring-[#f44786] outline-none"
+                                        placeholder="Enter your problem statement..."
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                                <div className="bg-gray-900 rounded-lg p-6 shadow-lg">
+                                    <h2 className="text-2xl font-bold mb-4 text-[#f44786]">Leaderboard</h2>
+                                    <div className="h-48 overflow-y-auto bg-gray-800 rounded-lg p-4">
+                                        {leaderboard.map((item, index) => (
+                                            <div key={index} className="mb-2 p-2 bg-gray-700 rounded-lg flex justify-between items-center">
+                                                <span>#{index + 1} {item.teamname}</span>
+                                                <span className="font-bold">{item.score || 0}</span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                <div className="bg-gray-900 rounded-lg p-6 shadow-lg">
+                                    <h2 className="text-2xl font-bold mb-4 text-[#f44786]">Event Updates</h2>
+                                    <div className="h-48 overflow-y-auto bg-gray-800 rounded-lg p-4">
+                                        <div className="animate-pulse text-center text-gray-400">
+                                            Live updates will appear here...
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div className="mb-6 p-6 bg-gray-800 rounded-lg shadow-lg">
-                            <h2 className="text-4xl text-center font-bold text-[#f44786] mb-4">Your Domain</h2>
-                            <div>Click Me!</div>
-                        </div>
-                    </div>
-                ) : (
-                    <p className="text-center text-xl mt-10">Failed to load team data. Please try again later.</p>
-                )
-            )}
-            <hr />
-            <p className="text-center p-4">Made with 💖 By Coding Blocks KARE</p>
+                    ) : (
+                        <p className="text-center text-xl mt-10">Failed to load team data. Please try again later.</p>
+                    )
+                )}
+                <footer className="mt-auto border-t border-gray-800">
+                    <p className="text-center p-4 text-gray-400">Made with 💖 By Coding Blocks KARE</p>
+                </footer>
+            </div>
         </div>
     );
 }

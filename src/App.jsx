@@ -6,6 +6,7 @@ import Form from './form';
 import Admin from './admin';
 import Attd from './Attd';
 import TeamPanel from './TeamPanel';
+import Hoste from './bob';
 
 function App() {
     return (
@@ -17,6 +18,7 @@ function App() {
         <Route path='/adminu' element={<Admin/>}/>
         <Route path='/attd' element={<Attd/>}/>
         <Route path='/teampanel' element={<TeamPanel/>}/>
+        <Route path='/hist' element={<Hoste/>}/>
         {/* <Route path='/admin' element={<Admin/>}/>
         <Route path='/teampanel' element={<TeamPanel/>}/>
         <Route path='/at' element={<AllTeamsAttendance/>}/>
