@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import "./admin.css";
-import PaymentCard from "./components/PaymentVeriy";
 import axios from "axios";
 import api from "./api";
 import AttenCard from "./components/Atted";
@@ -31,21 +30,8 @@ function Attd() {
 
     return (
         <div className="bg-gray-900 flex flex-col min-h-screen p-4">
-            <h1 className="text-3xl text-white text-center mt-4 mb-6">Admin Dashboard</h1>
-            <div className="flex flex-col md:flex-row justify-around mb-8 space-y-4 md:space-y-0">
-                <div className="bg-green-600 text-white p-6 rounded-lg shadow-lg flex-1 mx-2">
-                    <h2 className="text-2xl font-semibold">Present</h2>
-                    <p className="text-4xl mt-2">{present}</p>
-                </div>
-                <div className="bg-red-600 text-white p-6 rounded-lg shadow-lg flex-1 mx-2">
-                    <h2 className="text-2xl font-semibold">Absent</h2>
-                    <p className="text-4xl mt-2">{absent}</p>
-                </div>
-                <div className=" bg-orange-300 text-white p-6 rounded-lg shadow-lg flex-1 mx-2">
-                    <h2 className="text-2xl font-semibold">Total Members</h2>
-                    <p className="text-4xl mt-2">{pop}</p>
-                </div>
-            </div>
+            <h1 className="text-3xl text-white text-center mt-4 mb-6">Attendance Dashboard</h1>
+            
 
             {loading ? (
                 <div className="flex justify-center items-center">
@@ -54,10 +40,12 @@ function Attd() {
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {teams.map((team, i) => (
-                        <div key={team._id} className="col-span-1">
-                            <p className="text-white">{i + 1}</p>
+                        <details key={team._id} className="col-span-1 bg-gray-600 rounded-2xl font-bold">
+                            <summary className="text-white cursor-pointer p-2 hover:bg-gray-800 rounded">
+                                {i + 1}. {team.teamname}
+                            </summary>
                             <AttenCard team={team} />
-                        </div>
+                        </details>
                     ))}
                 </div>
             )}

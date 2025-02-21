@@ -9,21 +9,18 @@
   width: 100%;
   background-image: url("./assets/download.svg");
 }
-h1,h2,p{
+/* h1,h2,p{
     font-family: "Patrick Hand SC", serif;
     font-weight: 400;
     font-style: normal;
-}
+} */
 form{
   box-shadow: 4px 4px  rgba(0,0,0,1);  
 }
 input{
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 }
-button{
-  box-shadow: 4px 4px  rgba(0,0,0,1);  
-  font-weight:700;
-}
+
 .button{
   box-shadow: 4px 4px  rgba(0,0,0,1);  
   font-weight:700;
@@ -32,10 +29,7 @@ label{
   font-weight: 600;
   font-size: 25px;
 }
-button:hover{
-  box-shadow: none;
-  margin-left: 10px;
-}
+
 .button:hover{
   box-shadow: none;
   margin-left: 10px;
