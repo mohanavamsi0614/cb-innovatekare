@@ -44,9 +44,9 @@ function Home() {
                     className="mt-6 bg-white text-black border border-black py-3 px-6 rounded-lg shadow-md text-md font-semibold  transition-transform transform hover:scale-105"
                     whileHover={{ scale: 1 }}
                     onClick={() => nav("/registration")}
-                    // disabled={true}
+                    disabled={true}
                 >
-                Register Now 🚀
+                Registration Are Closed 😔
                 </motion.button>
                 <div className=' p-4 border rounded-3xl mt-3 font-bold'>Registration are open for only for IT Students.</div>
             </motion.div>
@@ -109,9 +109,9 @@ function Home() {
                     className="mt-6 bg-white text-black border border-black py-3 px-6 rounded-lg shadow-md text-md font-semibold  transition-transform transform hover:scale-105"
                     whileHover={{ scale: 1 }}
                     onClick={() => nav("/registration")}
-                    // disabled={true}
+                    disabled={true}
                 >
-                Register Now 🚀
+                Registration Are Closed 😔
                 </motion.button>
                 </p>
                     </div>
@@ -153,9 +153,9 @@ function Home() {
                     className="mt-6 bg-white text-black border border-black py-3 px-6 rounded-lg shadow-md text-md font-semibold  transition-transform transform hover:scale-105"
                     whileHover={{ scale: 1 }}
                     onClick={() => nav("/registration")}
-                    // disabled={true}
+                    disabled={true}
                 >
-                Register Now 🚀
+                Registration Are Closed 😔
                 </motion.button>
 
         </motion.div>
