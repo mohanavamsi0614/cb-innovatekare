@@ -59,13 +59,6 @@ function Form() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const validationErrors = validate();
-        const leadRegNumberok=formData.registrationNumber[6]=="8"
-        const membersok=formData.teamMembers.every((member)=>{
-        return member.registrationNumber[6]=="8"
-    })
-    
-    console.log(leadRegNumberok,membersok)
-    if(membersok && leadRegNumberok){
         if (Object.keys(validationErrors).length > 0) {
             setErrors(validationErrors);
         } else {
@@ -76,10 +69,8 @@ function Form() {
                 console.error('Error saving form data:', error);
             }
         }
-    }
-    else{
-        alert("Only IT Students are allowed to register we will notify when we are having open registrations")
-    }
+    
+    
     };
 
     return (
