@@ -31,20 +31,27 @@ function Attd() {
     return (
         <div className="bg-gray-900 flex flex-col min-h-screen p-4">
             <h1 className="text-3xl text-white text-center mt-4 mb-6">Attendance Dashboard</h1>
-            
 
             {loading ? (
-                <div className="flex justify-center items-center">
-                    <div className="loading-spinner">Loading...</div>
+                <div className="flex justify-center items-center h-64">
+                    <div className="loading-spinner text-white text-xl">Loading...</div>
                 </div>
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {teams.map((team, i) => (
-                        <details key={team._id} className="col-span-1 bg-gray-600 rounded-2xl font-bold">
-                            <summary className="text-white cursor-pointer p-2 hover:bg-gray-800 rounded">
-                                {i + 1}. {team.teamname}
+                        <details key={team._id} 
+                            className="col-span-1 bg-gray-800 rounded-xl overflow-hidden">
+                            <summary className="text-white cursor-pointer p-4 hover:bg-gray-700 transition-colors">
+                                <div className="flex items-center justify-between">
+                                    <span>{i + 1}. {team.teamname}</span>
+                                    <span className={`text-sm ${team.lead?.FirstAttd ? 'text-green-500' : 'text-gray-400'}`}>
+                                        {team.lead?.FirstAttd ? 'Submitted' : 'Pending'}
+                                    </span>
+                                </div>
                             </summary>
-                            <AttenCard team={team} />
+                            <div className="p-2">
+                                <AttenCard team={team} />
+                            </div>
                         </details>
                     ))}
                 </div>

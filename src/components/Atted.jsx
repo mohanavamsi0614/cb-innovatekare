@@ -33,6 +33,15 @@ function AttenCard({ team }) {
     const handleSubmit = () => {
         if (done || !socket) return;
         
+        // Validate all attendance entries are set
+        const isComplete = leadAttendance && 
+            Object.values(memberAttendance).every(status => status !== null);
+            
+        if (!isComplete) {
+            alert("Please mark attendance for all team members");
+            return;
+        }
+
         const attendanceData = {
             name: team.teamname,
             lead: { ...team.lead, FirstAttd: leadAttendance },
