@@ -1,4 +1,10 @@
 @import "tailwindcss";
+@font-face {
+  font-family: Game Of Squids;
+  src: url('/public/font.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
 
 .home {
   background-size: cover;
@@ -16,8 +22,6 @@
 } */
 .text{
   font-family: Game Of Squids;
-  src: url('/public/Game\ Of\ Squids.ttf') format('truetype');
-
 }
 form{
   box-shadow: 4px 4px  rgba(0,0,0,1);  
