@@ -560,7 +560,7 @@ function Clock() {
                     👑
                 </div>
                 <div>
-                    <p className="font-bold text-[#FFD700] text-lg">{team.name}</p>
+                    <p className="font-bold text-[#FFD700] text-lg">{team.name}({team.registrationNumber})</p>
                     <p className="text-white/70 text-sm">Team Leader</p>
                 </div>
             </div>
