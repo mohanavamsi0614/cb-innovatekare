@@ -41,6 +41,7 @@
     -webkit-animation: pathTriangle var(--duration) cubic-bezier(0.785, 0.135, 0.15, 0.86) infinite;
             animation: pathTriangle var(--duration) cubic-bezier(0.785, 0.135, 0.15, 0.86) infinite;
   }
+ 
   .loader svg rect {
     stroke-dasharray: 192 64 192 64;
     stroke-dashoffset: 0;

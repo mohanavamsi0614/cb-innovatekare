@@ -18,6 +18,11 @@ import YourDomain from "/public/Your Domain.png"
 import ProblemStatement from "/public/Problem Statement.png"
 import Eventup from "/public/EventUp.png"
 import PLAYERSPROFILE from "/public/prof.png"
+import expra from "/public/expra.png"
+import scorecraft from "/public/scorecraft.jpg"
+import card from "/public/card.png"
+import card1 from "/public/card1.png"
+import Modal from 'react-modal';
 const socket = io(api);
 
 function TeamPanel() {
@@ -32,6 +37,7 @@ function TeamPanel() {
     const sym=[square,circle,umbr,triangle]
     const [selectedDomain, setSelectedDomain] = useState();
     const [DomainData,setDomainData]=useState([]);
+    const [isModalOpen, setIsModalOpen] = useState(false);
     
     const handleDomainSelect = (domainId) => {
         setSelectedDomain(domainId)
@@ -196,8 +202,10 @@ function Clock() {
                         <img src={cb} className="w-12 h-12 sm:w-14 sm:h-14 rounded-full relative hover:scale-105 transition-transform" alt="Logo" />
                         <div className="h-8 w-px bg-white/20 hidden sm:block" />
                     </div>
-                    <img src={title} className="h-8 sm:h-10 hover:opacity-80 transition-opacity"/>
-                </div>
+                    <div>
+                <img src={title} className=" w-50"/>
+                <img src={expra} className=" relative w-27  bottom-4.5"/>
+                </div>                </div>
                 <div className="flex flex-wrap justify-center gap-6">
                     {['Event Schedule', 'Leaderboard', 'Resources'].map((item, index) => (
                         <a 
@@ -219,31 +227,36 @@ function Clock() {
     if (!localStorage.getItem("token")) {
         return (
             <div className="bg-black w-full h-screen flex justify-center flex-col items-center font-mono">
-                <div className="w-full flex justify-center items-center">
+                <div className="w-full flex justify-center items-center mb-10">
                     <img src={kalasalingam} className="size-20" alt="Kalasalingam Logo" />
-                    <img src={cb} className="size-24 relative ml-5 rounded-full" alt="Coding Blocks Logo" />
+                    <img src={cb} className="size-20 relative border border-white ml-5 rounded-full" alt="Coding Blocks Logo" />
+                    <img src={scorecraft} className="size-20 relative ml-5 rounded-full" alt="Coding Blocks Logo"/>
                 </div>
-                <p className="text-3xl font-bold text-center text-[#f44786]">
-                    <span className="text-[#E16254]">Squid Game Kare</span> Presents
-                </p>
-                <h1 className="text-5xl mt-2 text-[#f44786]">Build a Bot</h1>
-                <p className="text-xl m-2 text-[#f44786]">A 24-Hours Hackathon</p>
-                <div className="bg-white rounded-lg shadow-lg p-8 w-96 flex flex-col">
-                    <h1 className="text-4xl font-semibold text-center mb-6">Team Access Panel</h1>
+                <p className="text-3xl font-bold text-center text-white">
+                CODING BLOCKS KARE & SCORECRAFT KARE                </p>
+                <h1 className=" text-2xl  text-[#D2003F]  m-4">Presents</h1>
+                <div>
+                <img src={title} className=" w-60"/>
+                <img src={expra} className=" relative w-32  bottom-4.5"/>
+                </div>
+                <h1 className=" text-[#2BAD98] text-xl mb-10">[24hrs Hackathon]</h1>
+                <div className=" relative bg-[#73737370] text-white rounded-lg shadow-lg p-8 w-96 flex flex-col">
+                    <img src={card} className="  w-15 absolute z-10 right-[-30px] top-[-50px]"/>
+                    <img src={card1} className=" w-15  absolute  right-[1px] top-[-20px]"/>
                     {error && <p className="text-red-500 text-center mb-4">{error}</p>}
                     <div className="flex flex-col mb-6">
                         <label htmlFor="pass" className="text-lg mb-2">Enter Password:</label>
                         <input
                             id="pass"
                             placeholder="Enter passcode"
-                            className="border border-gray-400 h-12 px-3 rounded-md"
+                            className="border border-white h-12 px-3 rounded-md"
                             value={pass}
                             onChange={(e) => setPass(e.target.value)}
                         />
                         <p>The Password is on your table</p>
                     </div>
                     <button
-                        className="bg-[#f44786] py-3 rounded-md text-white font-semibold hover:bg-pink-600 transition duration-200"
+                        className="bg-[#2BAD98] py-3 rounded-3xl border text-white font-semibold hover:bg-pink-600 transition duration-200"
                         onClick={verify}
                         disabled={loading}
                     >
@@ -253,6 +266,84 @@ function Clock() {
             </div>
         );
     }
+
+    const customModalStyles = {
+        content: {
+            top: '50%',
+            left: '50%',
+            right: 'auto',
+            bottom: 'auto',
+            transform: 'translate(-50%, -50%)',
+            backgroundColor: '#1a1a1a',
+            border: '1px solid #34D4BA',
+            borderRadius: '15px',
+            padding: '2rem',
+            maxWidth: '800px',
+            width: '90%',
+            maxHeight: '90vh',
+            overflow: 'auto'
+        },
+        overlay: {
+            backgroundColor: 'rgba(0, 0, 0, 0.75)',
+            zIndex: 1000
+        }
+    };
+
+    const DomainSelectionModal = () => (
+        <Modal
+            isOpen={isModalOpen}
+            onRequestClose={() => setIsModalOpen(false)}
+            style={customModalStyles}
+            contentLabel="Domain Selection"
+        >
+            <div className="text-white">
+                <div className="flex justify-between items-center mb-6">
+                    <h2 className="text-2xl font-bold text-[#34D4BA]">Choose Your Domain</h2>
+                    <button 
+                        onClick={() => setIsModalOpen(false)}
+                        className="text-white/60 hover:text-white transition-colors"
+                    >
+                        ✕
+                    </button>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {DomainData.map((domain) => (
+                        <div 
+                            key={domain.id}
+                            onClick={() => handleDomainSelect(domain.id)}
+                            className={`
+                                cursor-pointer p-4 rounded-xl transition-all duration-300
+                                ${domain.id === selectedDomain 
+                                    ? 'bg-[#34D4BA] text-black border-2 border-[#34D4BA]' 
+                                    : 'bg-white/5 hover:bg-white/10 border-2 border-white/10'}
+                            `}
+                        >
+                            <h3 className="text-xl font-bold mb-2">{domain.name}</h3>
+                            <p className="text-sm opacity-80 line-clamp-3">{domain.description}</p>
+                        </div>
+                    ))}
+                </div>
+                <div className="mt-6 flex justify-end gap-4">
+                    <button 
+                        onClick={() => setIsModalOpen(false)}
+                        className="px-6 py-2 rounded-full border border-white/20 hover:bg-white/10 transition-colors"
+                    >
+                        Cancel
+                    </button>
+                    <button 
+                        onClick={() => {
+                            handleDomain();
+                            setIsModalOpen(false);
+                        }}
+                        className="px-6 py-2 rounded-full bg-[#34D4BA] text-black hover:bg-[#2ba898] transition-colors"
+                        disabled={!selectedDomain || DomainLoading}
+                    >
+                        {DomainLoading ? "Submitting..." : "Confirm Selection"}
+                    </button>
+                </div>
+            </div>
+        </Modal>
+    );
 
     return (
         <div className="bg-black min-h-screen text-white flex flex-col">
@@ -275,7 +366,7 @@ function Clock() {
                                             👋
                                         </div>
                                         <div className="flex flex-col">
-                                            <h1 className="text-2xl sm:text-[36px] font-bold text-black">
+                                            <h1 className="text-xl text sm:text-[30px]  text-black">
                                                 Welcome, <span className="text-white">{team.teamname}!</span>
                                             </h1>
                                             <p className="text-black/70 text-sm sm:text-base">Let's build something amazing together</p>
@@ -301,8 +392,8 @@ function Clock() {
                             }} 
                             className="flex flex-col md:flex-row justify-center items-center p-4">
                                 <div className="flex flex-col w-full md:w-1/2">
-                                    <div className="w-full md:w-[400px] flex items-center h-[62px] text-center text-[#f73e91] text-[28px] md:text-[34px] font-normal font-['Game Of Squids'] leading-[19px] tracking-widest">
-                                        <img src={PLAYERSPROFILE}/>
+                                    <div className="w-full  text md:w-[400px] flex items-center h-[62px] text-center text-[#f73e91] text-[28px] md:text-[34px] font-normal font-['Game Of Squids'] leading-[19px] tracking-widest">
+                                    PLAYERS PROFILE
                                     </div>
                                     <div className=" flex items-center m-2"> <div className="w-[45px] h-[45px] flex justify-center items-center bg-[#ffcc00] rounded-full shadow-[inset_17px_15px_9.100000381469727px_-7px_rgba(189,152,6,0.51)] shadow-[inset_-4px_-5px_4px_0px_rgba(225,180,2,1.00)] border border-black mr-5" >👑</div>{team.name}</div>
                                 {team.teamMembers.map((i,j)=>(
@@ -357,7 +448,7 @@ function Clock() {
 </div>
                             </div>
                             <div className="overflow-x-auto mb-6 bg-black border border-white mt-10 rounded-lg p-2 md:p-4">
-                                <h2 className="text-xl md:text-2xl font-bold mb-4"><img src={attendance} className=" w-96"/></h2>
+                                <h2 className="text-xl md:text-2xl  mb-4 text">ATTENDANCE TRACKER</h2>
                                 <div className="inline-block min-w-full align-middle">
                                     <table className="min-w-full divide-y divide-gray-700 text-sm md:text-base">
                                         <thead>
@@ -411,7 +502,7 @@ function Clock() {
                                     <div className="relative z-10">
                                         <div className="flex items-center justify-center gap-2 mb-6">
                                             <span className="text-3xl">🏆</span>
-                                            <h1 className="text-3xl font-bold "><img src={Scoreboard} className=" w-96"/></h1>
+                                            <h1 className="text-3xl  text">SCOREBOARD</h1>
                                         </div>
                                         <div className="space-y-3">
                                             {leaderboard.map((item, index) => (
@@ -456,30 +547,25 @@ function Clock() {
                                         <img src={squido} className="h-full w-full object-cover rounded-2xl"/>
                                     </div>
                                     <div className="rounded-2xl p-6 bg-gradient-to-r from-[#3BEACE] to-[#20D4B7] h-96 flex flex-col justify-center items-center">
-                                        <h2 className="text-2xl font-bold text-black mb-4"><img src={YourDomain}/></h2>
+                                        <h2 className="text-2xl  text-black mb-4 text">YOUR DOMAIN</h2>
                                         {!team.Domain ? (
-                                            <div className="grid grid-cols-2 gap-3">
-                                                {DomainData.map((domain) => (
-                                                    <button
-                                                        key={domain.id}
-                                                        onClick={() => handleDomainSelect(domain.id)}
-                                                        className={`flex items-center gap-2 p-3 ${domain.id==selectedDomain ? " bg-pink-400 " :"bg-white/20 "} 
-                                                                  rounded-xl transition-all duration-300
-                                                                 border-2 border-white/50`}
-                                                    >
-                                                        <span className="text-sm font-medium text-black">
-                                                            {domain.name}
-                                                        </span>
-                                                    </button>
-                                                ))}
-                                                <button className=" bg-[#3BEACE] p-4 border rounded-2xl " onClick={handleDomain}>Submit</button>
+                                            <div className="text-center">
+                                                <button
+                                                    onClick={() => setIsModalOpen(true)}
+                                                    className="px-8 py-4 bg-white/20 hover:bg-white/30 transition-colors rounded-xl text-black font-bold"
+                                                >
+                                                    Select Your Domain
+                                                </button>
+                                                <DomainSelectionModal />
                                             </div>
                                         ) : (
-                                            <div className="bg-white/20 p-4 rounded-xl">
-                                                <p className="text-black font-bold">
-                                                {team.Domain}
-                                                </p>
-                                         
+                                            <div className="bg-white/20 p-6 rounded-xl w-full max-w-md">
+                                                <h3 className="text-xl font-bold text-black mb-2">{team.Domain}</h3>
+                                                {DomainData.find(d => d.name === team.Domain)?.description && (
+                                                    <p className="text-black/80">
+                                                        {DomainData.find(d => d.name === team.Domain).description}
+                                                    </p>
+                                                )}
                                             </div>
                                         )}
                                     </div>
@@ -490,7 +576,7 @@ function Clock() {
                                 {team.Domain && (
                                     <div className="w-full md:w-1/2">
                                         <div className="bg-[#D2003F] h-full rounded-2xl p-4 md:p-6">
-                                            <h2 className="text-xl md:text-2xl font-bold mb-4 text-white"><img src={ProblemStatement}/></h2>
+                                            <h2 className="text-xl md:text-2xl  mb-4 text-white text">PROBLEM STATEMENT</h2>
                                             <textarea 
                                                 placeholder="Your problem statement here..."
                                                 className="w-full h-[180px] md:h-[207px] p-4 bg-white/20 border border-white/30 
@@ -505,7 +591,7 @@ function Clock() {
                                     <div className="h-full rounded-lg p-4 md:p-6 shadow-lg bg-white/20 backdrop-blur-2xl"
                                         style={{background: 'linear-gradient(109.53deg, rgba(255, 255, 255, 0.23) 3.27%, rgba(145, 145, 145, 0.47) 96.91%)'}}
                                     >
-                                        <h2 className="text-xl md:text-2xl font-bold mb-4 text-white"><img src={Eventup}/></h2>
+                                        <h2 className="text-xl md:text-2xl  mb-4 text-white text">EVENT UPDATES</h2>
                                         <div className="h-[180px] md:h-[207px] overflow-y-auto rounded-lg p-4">
                                             <div className="animate-pulse text-center text-gray-400">
                                                 Live updates will appear here...
@@ -523,7 +609,7 @@ function Clock() {
                     )
                 )}
                 <footer className="mt-auto border-t border-gray-800">
-                    <p className="text-center p-4 text-gray-400">Made with 💖 By Coding Blocks KARE</p>
+                    <p className="text-center p-4 text-white text" >Made with 💖 By Coding Blocks KARE</p>
                 </footer>
             </div>
         </div>
