@@ -16,6 +16,8 @@
 } */
 .text{
   font-family: Game Of Squids;
+  src: url('/public/Game\ Of\ Squids.ttf') format('truetype');
+
 }
 form{
   box-shadow: 4px 4px  rgba(0,0,0,1);  
