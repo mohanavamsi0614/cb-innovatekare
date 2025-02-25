@@ -439,7 +439,7 @@ function Clock() {
                 </div>
             ) : (
                 <>
-                    <img src={logo} className="h-40 md:h-56 rounded-xl"/>
+                    <img src={logo} className="h-40 md:h-56 w-96 rounded-xl"/>
                     <button 
                         onClick={startCamera}
                         className="bg-[#34D4BA] mt-5 border-white border-2 hover:bg-[#f73e90] 
@@ -512,7 +512,7 @@ function Clock() {
                         
                         <div className="w-full max-w-7xl p-2 sm:p-6 mx-auto">
                         
-                            <div className="bg-gradient-to-r from-[#34D4BA] to-[#20D4B7] rounded-md p-1 mb-10 mt-10">
+                            <div className="bg-gradient-to-r from-[#34D4BA] to-[#20D4B7] rounded-md p-1 mb-10 mt-5">
                                 <div className="bg-gradient-to-r from-[#34D4BA]/10 to-[#20D4B7]/10 backdrop-blur-sm rounded p-4 flex flex-col sm:flex-row justify-between items-center gap-4">
                                     <div className="flex items-center gap-4">
                                         <div className="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center text-2xl animate-bounce">
@@ -556,8 +556,8 @@ function Clock() {
             <div className="flex items-center gap-4">
                 <div className="w-[50px] h-[50px] flex justify-center items-center 
                               bg-[#ffcc00] rounded-full shadow-[0_0_15px_rgba(255,204,0,0.5)] 
-                              border-2 border-[#FFD700]">
-                    👑
+                              border-2 border-[#FFD700] text">
+                    <p className="font-['Game Of Squids']">👑</p>
                 </div>
                 <div>
                     <p className="font-bold text-[#FFD700] text-lg">{team.name}({team.registrationNumber})</p>
