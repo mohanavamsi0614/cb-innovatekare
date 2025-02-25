@@ -268,8 +268,8 @@ function Clock() {
                         
                         <div className="w-full max-w-7xl p-2 sm:p-6 mx-auto">
                         
-                            <div className="bg-gradient-to-r from-[#34D4BA] to-[#20D4B7] rounded-xl p-1 mb-10 mt-10">
-                                <div className="bg-gradient-to-r from-[#34D4BA]/10 to-[#20D4B7]/10 backdrop-blur-sm rounded-lg p-4 flex flex-col sm:flex-row justify-between items-center gap-4">
+                            <div className="bg-gradient-to-r from-[#34D4BA] to-[#20D4B7] rounded-md p-1 mb-10 mt-10">
+                                <div className="bg-gradient-to-r from-[#34D4BA]/10 to-[#20D4B7]/10 backdrop-blur-sm rounded p-4 flex flex-col sm:flex-row justify-between items-center gap-4">
                                     <div className="flex items-center gap-4">
                                         <div className="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center text-2xl animate-bounce">
                                             👋
@@ -362,11 +362,11 @@ function Clock() {
                                     <table className="min-w-full divide-y divide-gray-700 text-sm md:text-base">
                                         <thead>
                                             <tr className="bg-[#34D4BA] text-black font-bold">
-                                                <th className="border border-gray-300 px-4 py-2">Name</th>
-                                                <th className="border border-gray-300 px-4 py-2">1st Attd</th>
-                                                <th className="border border-gray-300 px-4 py-2">2nd Attd</th>
-                                                <th className="border border-gray-300 px-4 py-2">3rd Attd</th>
-                                                <th className="border border-gray-300 px-4 py-2">4th Attd</th>
+                                                <th className="border border-gray-300 px-4 py-4 text-2xl">Name</th>
+                                                <th className="border border-gray-300 px-4 py-4 text-2xl">1st Attd</th>
+                                                <th className="border border-gray-300 px-4 py-4 text-2xl">2nd Attd</th>
+                                                <th className="border border-gray-300 px-4 py-4 text-2xl">3rd Attd</th>
+                                                <th className="border border-gray-300 px-4 py-4 text-2xl">4th Attd</th>
                                             </tr>
                                         </thead>
                                         <tbody>
