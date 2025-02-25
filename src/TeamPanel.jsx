@@ -185,12 +185,23 @@ function Clock() {
 
     const attendanceClass = (attendance) => {
         switch(attendance) {
-            case 'Present':
-                return 'bg-green-500 rounded-full w-4 h-4 mx-auto';
+            case 'P':
+                return 'bg-green-500/ border-3 border-white rounded-full w-8 h-8 mx-auto flex items-center text-white justify-center shadow-[inset_0_0_8px_rgba(34,197,94,0.4)] text-green-500 text-lg font-bold';
             case 'Absent':
-                return 'bg-red-500 rounded-full w-4 h-4 mx-auto';
+                return 'bg-red-500 border-3 border-white rounded-full w-8 h-8 mx-auto flex items-center justify-center shadow-[inset_0_0_8px_rgba(239,68,68,0.4)] text-red-500 text-lg font-bold text-white';
             default:
-                return 'bg-gray-300 rounded-full w-4 h-4 mx-auto';
+                return 'bg-gray-500/20 border-2 border-gray-400 rounded-full w-8 h-8 mx-auto flex items-center justify-center shadow-[inset_0_0_8px_rgba(156,163,175,0.4)]';
+        }
+    };
+
+    const attendanceIcon = (attendance) => {
+        switch(attendance) {
+            case 'Present':
+                return '✓';
+            case 'Absent':
+                return '✕';
+            default:
+                return '';
         }
     };
 
@@ -392,17 +403,49 @@ function Clock() {
                             }} 
                             className="flex flex-col md:flex-row justify-center items-center p-4">
                                 <div className="flex flex-col w-full md:w-1/2">
-                                    <div className="w-full  text  md:w-[400px] flex items-center h-[62px] text-center text-[#f73e91] text-[28px] md:text-[34px] font-normal font-['Game Of Squids'] leading-[19px] tracking-widest">
-                                    PLAYERS PROFILE
-                                    </div>
-                                    <div className=" flex items-center m-2"> <div className="w-[45px] h-[45px] flex justify-center items-center bg-[#ffcc00] rounded-full shadow-[inset_17px_15px_9.100000381469727px_-7px_rgba(189,152,6,0.51)] shadow-[inset_-4px_-5px_4px_0px_rgba(225,180,2,1.00)] border border-black mr-5" >👑</div>{team.name}</div>
-                                {team.teamMembers.map((i,j)=>(
-                                    <div className=" flex  items-center m-1.5" key={j}>
-                                    <div className="w-[45px] mr-4 flex justify-center items-center text-xl h-[45px] bg-[#ffcc00] rounded-full shadow-[inset_17px_15px_9.100000381469727px_-7px_rgba(189,152,6,0.51)] shadow-[inset_-4px_-5px_4px_0px_rgba(225,180,2,1.00)] border border-black" ><img src={sym[j]} className=" w-1/2"/></div>
-                                    {i.name}({i.registrationNumber})
+    <div className="w-full text-center md:w-[400px] mb-6">
+        <h2 className="text-[#f73e91] text-[32px] font-['Game Of Squids'] tracking-widest">
+            PLAYERS PROFILE
+        </h2>
+    </div>
+    <div className="space-y-4">
+        {/* Team Leader Card */}
+        <div className="bg-gradient-to-r from-[#FFD700]/20 to-[#FFA500]/20 backdrop-blur-sm 
+                        rounded-xl p-4 border border-[#FFD700]">
+            <div className="flex items-center gap-4">
+                <div className="w-[50px] h-[50px] flex justify-center items-center 
+                              bg-[#ffcc00] rounded-full shadow-[0_0_15px_rgba(255,204,0,0.5)] 
+                              border-2 border-[#FFD700]">
+                    👑
+                </div>
+                <div>
+                    <p className="font-bold text-[#FFD700] text-lg">{team.name}</p>
+                    <p className="text-white/70 text-sm">Team Leader</p>
+                </div>
+            </div>
+        </div>
+
+        {/* Team Members Cards */}
+        {team.teamMembers.map((member, index) => (
+            <div key={index} 
+                 className="bg-gradient-to-r from-white/10 to-white/5 backdrop-blur-sm 
+                           rounded-xl p-4 border border-white/20 hover:border-[#34D4BA]/50 
+                           transition-all duration-300">
+                <div className="flex items-center gap-4">
+                    <div className="w-[50px] h-[50px] flex justify-center items-center 
+                                  bg-[#34D4BA]/20 rounded-full border border-[#34D4BA]/50">
+                        <img src={sym[index]} className="w-1/2 opacity-70"/>
+                    </div>
+                    <div>
+                        <p className="font-semibold text-white">{member.name}</p>
+                        <p className="text-[#34D4BA] text-sm">{member.registrationNumber}</p>
+                    </div>
+                </div>
+            </div>
+        ))}
+    </div>
 </div>
-                    ))}
-                                </div>
+
                                 <div className="flex flex-col justify-center items-center w-full md:w-1/2 mt-4 md:mt-0">
     {showCamera ? (
         <div className=" flex flex-col">
@@ -464,32 +507,48 @@ function Clock() {
                                             <tr>
                                                 <td className="border border-gray-300 px-4 py-2">{team.name}</td>
                                                 <td className="border border-gray-300 px-4 py-2">
-                                                    <div className={attendanceClass(team?.FirstAttd)}></div>
+                                                    <div className={attendanceClass(team?.FirstAttd)}>
+                                                        {attendanceIcon(team?.FirstAttd)}
+                                                    </div>
                                                 </td>
                                                 <td className="border border-gray-300 px-4 py-2">
-                                                    <div className={attendanceClass(team?.SecondAttd)}></div>
+                                                    <div className={attendanceClass(team?.SecondAttd)}>
+                                                        {attendanceIcon(team?.SecondAttd)}
+                                                    </div>
                                                 </td>
                                                 <td className="border border-gray-300 px-4 py-2">
-                                                    <div className={attendanceClass(team?.ThirdAttd)}></div>
+                                                    <div className={attendanceClass(team?.ThirdAttd)}>
+                                                        {attendanceIcon(team?.ThirdAttd)}
+                                                    </div>
                                                 </td>
                                                 <td className="border border-gray-300 px-4 py-2">
-                                                    <div className={attendanceClass(team?.FourthAttd)}></div>
+                                                    <div className={attendanceClass(team?.FourthAttd)}>
+                                                        {attendanceIcon(team?.FourthAttd)}
+                                                    </div>
                                                 </td>
                                             </tr>
                                             {team.teamMembers.map((member) => (
                                                 <tr key={member.id}>
                                                     <td className="border border-gray-300 px-4 py-2">{member.name}</td>
                                                     <td className="border border-gray-300 px-4 py-2">
-                                                        <div className={attendanceClass(member?.FirstAttd)}></div>
+                                                        <div className={attendanceClass(member?.FirstAttd)}>
+                                                            {attendanceIcon(member?.FirstAttd)}
+                                                        </div>
                                                     </td>
                                                     <td className="border border-gray-300 px-4 py-2">
-                                                        <div className={attendanceClass(member?.SecondAttd)}></div>
+                                                        <div className={attendanceClass(member?.SecondAttd)}>
+                                                            {attendanceIcon(member?.SecondAttd)}
+                                                        </div>
                                                     </td>
                                                     <td className="border border-gray-300 px-4 py-2">
-                                                        <div className={attendanceClass(member?.ThirdAttd)}></div>
+                                                        <div className={attendanceClass(member?.ThirdAttd)}>
+                                                            {attendanceIcon(member?.ThirdAttd)}
+                                                        </div>
                                                     </td>
                                                     <td className="border border-gray-300 px-4 py-2">
-                                                        <div className={attendanceClass(member?.FourthAttd)}></div>
+                                                        <div className={attendanceClass(member?.FourthAttd)}>
+                                                            {attendanceIcon(member?.FourthAttd)}
+                                                        </div>
                                                     </td>
                                                 </tr>
                                             ))}
