@@ -12,12 +12,6 @@ import circle from "/public/circle-svgrepo-com.svg"
 import triangle from "/public/triangle-svgrepo-com.svg"
 import squido from "/public/squido.png"
 import umbr from "/public/umbrella-svgrepo-com.svg"
-import attendance from "/public/Attdance.png"
-import Scoreboard from  "/public/Score.png"
-import YourDomain from "/public/Your Domain.png"
-import ProblemStatement from "/public/Problem Statement.png"
-import Eventup from "/public/EventUp.png"
-import PLAYERSPROFILE from "/public/prof.png"
 import expra from "/public/expra.png"
 import scorecraft from "/public/scorecraft.jpg"
 import card from "/public/card.png"
@@ -38,6 +32,12 @@ function TeamPanel() {
     const [selectedDomain, setSelectedDomain] = useState();
     const [DomainData,setDomainData]=useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [ProblemStatement,setProblemStatement]=useState("")
+    const [FinalProblemStatement,setFinalProblemStatement]=useState(team?.ProblemStatement || "")
+    const [photoLoading, setPhotoLoading] = useState(false);
+    const [problemSubmitting, setProblemSubmitting] = useState(false);
+    const [photoError, setPhotoError] = useState("");
+    const [problemError, setProblemError] = useState("");
     
     const handleDomainSelect = (domainId) => {
         setSelectedDomain(domainId)
@@ -76,19 +76,38 @@ const stopCamera = () => {
     setShowCamera(false);
 };
 
-const capturePhoto = () => {
-    const video = videoRef.current;
-    const photo = photoRef.current;
-    const ctx = photo.getContext('2d');
-    
-    photo.width = video.videoWidth;
-    photo.height = video.videoHeight;
-    
-    ctx.drawImage(video, 0, 0, photo.width, photo.height);
-    
-    const imageData = photo.toDataURL('image/jpeg');
-    setCapturedImage(imageData);
-    stopCamera();
+const capturePhoto = async () => {
+    setPhotoLoading(true);
+    setPhotoError("");
+    try {
+        const video = videoRef.current;
+        const photo = photoRef.current;
+        const ctx = photo.getContext('2d');
+        
+        photo.width = video.videoWidth;
+        photo.height = video.videoHeight;
+        
+        ctx.drawImage(video, 0, 0, photo.width, photo.height);
+        
+        const imageData = photo.toDataURL('image/jpeg');
+        const cloudinaryResponse = await axios.post(
+            "https://api.cloudinary.com/v1_1/dus9hgplo/image/upload",
+            {file: imageData, upload_preset: "vh0llv8b"}
+        );
+        
+        setCapturedImage(cloudinaryResponse.data.secure_url);
+        await axios.post(`${api}/pic`, {
+            id: team._id,
+            photo: cloudinaryResponse.data.secure_url
+        });
+        
+        stopCamera();
+    } catch (err) {
+        setPhotoError("Failed to upload image. Please try again.");
+        console.error("Photo upload error:", err);
+    } finally {
+        setPhotoLoading(false);
+    }
 };
 
 function Clock() {
@@ -204,7 +223,22 @@ function Clock() {
                 return '';
         }
     };
-
+    const handleProblemStatement = async () => {
+        setProblemSubmitting(true);
+        setProblemError("");
+        try {
+            const res = await axios.post(`${api}/problemSta`, {
+                id: team._id,
+                PS: ProblemStatement
+            });
+            setFinalProblemStatement(res.data);
+        } catch (err) {
+            setProblemError("Failed to submit problem statement. Please try again.");
+            console.error("Problem statement error:", err);
+        } finally {
+            setProblemSubmitting(false);
+        }
+    };
     const Navbar = () => (
         <nav className="bg-gradient-to-r from-[#1a1a1a]/80 to-[#333]/80 backdrop-blur-md p-3 fixed w-full top-0 z-50 border-b border-white/10">
             <div className="container mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
@@ -356,6 +390,114 @@ function Clock() {
         </Modal>
     );
 
+    const CameraSection = () => (
+        <div className="flex flex-col justify-center items-center w-full md:w-1/2 mt-4 md:mt-0">
+            {photoError && (
+                <div className="text-red-500 bg-red-100/10 p-3 rounded mb-4">
+                    {photoError}
+                </div>
+            )}
+            {showCamera ? (
+                <div className="flex flex-col">
+                    <video
+                        ref={videoRef}
+                        autoPlay
+                        playsInline
+                        className="h-40 md:h-56 w-[400px] rounded-2xl"
+                    />
+                    <canvas ref={photoRef} style={{ display: 'none' }} />
+                    <button 
+                        onClick={capturePhoto}
+                        disabled={photoLoading}
+                        className={`
+                            bg-[#34D4BA] px-4 py-2 mt-10 rounded-full text-white
+                            hover:bg-[#f73e90] transition-colors
+                            ${photoLoading ? 'opacity-50 cursor-not-allowed' : ''}
+                        `}
+                    >
+                        {photoLoading ? (
+                            <div className="flex items-center justify-center gap-2">
+                                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                                Uploading...
+                            </div>
+                        ) : 'Capture'}
+                    </button>
+                </div>
+            ) : capturedImage || team.GroupPic ? (
+                <div className="flex flex-col">
+                    <img 
+                        src={capturedImage || team.GroupPic} 
+                        alt="Team Photo" 
+                        className="h-40 md:h-56 rounded-xl w-[400px]"
+                    />
+                    <button 
+                        className="mt-5 bg-[#34D4BA] px-4 py-2 rounded-full text-white hover:bg-[#f73e90]" 
+                        onClick={startCamera}
+                    >
+                        Retake Photo
+                    </button>
+                </div>
+            ) : (
+                <>
+                    <img src={logo} className="h-40 md:h-56 rounded-xl"/>
+                    <button 
+                        onClick={startCamera}
+                        className="bg-[#34D4BA] mt-5 border-white border-2 hover:bg-[#f73e90] 
+                                 rounded-4xl p-2 w-full md:w-[300px] h-[50px] flex items-center 
+                                 justify-center gap-2"
+                    >
+                        <span>📸</span> Take A Photo!
+                    </button>
+                </>
+            )}
+        </div>
+    );
+
+    const ProblemStatementSection = () => (
+        <div className="w-full md:w-1/2">
+            <div className="bg-[#D2003F] h-full rounded-2xl p-4 md:p-6">
+                <h2 className="text-xl md:text-2xl text-center mb-4 text-white text">
+                    PROBLEM STATEMENT
+                </h2>
+                {problemError && (
+                    <div className="text-red-500 bg-red-100/10 p-3 rounded mb-4">
+                        {problemError}
+                    </div>
+                )}
+                {FinalProblemStatement || team.ProblemStatement ? (
+                    <div className="bg-white/10 p-4 rounded-xl">
+                        <p className="text-white">{team.ProblemStatement}</p>
+                    </div>
+                ) : (
+                    <div className="space-y-4"> 
+                        <textarea 
+                            placeholder="Your problem statement here..."
+                            onChange={(e) => setProblemStatement(e.target.value)}
+                            maxLength="100"
+                            className="w-full h-[180px] md:h-[207px] p-4 bg-white/20 border border-white/30 
+                                     rounded-xl text-white placeholder-white/50 resize-none
+                                     focus:outline-none focus:border-white"
+                            value={ProblemStatement}
+                        />
+                        <button 
+                            className="border rounded-2xl p-4 w-full hover:bg-white/10 transition-all
+                                     disabled:opacity-50 disabled:cursor-not-allowed"
+                            onClick={handleProblemStatement}
+                            disabled={problemSubmitting || !ProblemStatement.trim()}
+                        >
+                            {problemSubmitting ? (
+                                <div className="flex items-center justify-center gap-2">
+                                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                                    Submitting...
+                                </div>
+                            ) : 'Submit'}
+                        </button>
+                    </div>
+                )}
+            </div>
+        </div>
+    );
+
     return (
         <div className="bg-black min-h-screen text-white flex flex-col">
             <Navbar />
@@ -409,7 +551,6 @@ function Clock() {
         </h2>
     </div>
     <div className="space-y-4">
-        {/* Team Leader Card */}
         <div className="bg-gradient-to-r from-[#FFD700]/20 to-[#FFA500]/20 backdrop-blur-sm 
                         rounded-xl p-4 border border-[#FFD700]">
             <div className="flex items-center gap-4">
@@ -425,7 +566,6 @@ function Clock() {
             </div>
         </div>
 
-        {/* Team Members Cards */}
         {team.teamMembers.map((member, index) => (
             <div key={index} 
                  className="bg-gradient-to-r from-white/10 to-white/5 backdrop-blur-sm 
@@ -446,49 +586,7 @@ function Clock() {
     </div>
 </div>
 
-                                <div className="flex flex-col justify-center items-center w-full md:w-1/2 mt-4 md:mt-0">
-    {showCamera ? (
-        <div className=" flex flex-col">
-            <video
-                ref={videoRef}
-                autoPlay
-                playsInline
-                className="h-40 md:h-56 w-[400px] rounded-2xl"
-            />
-            <canvas ref={photoRef} style={{ display: 'none' }} />
-            <button 
-                onClick={capturePhoto}
-                className=" 
-                         bg-[#34D4BA] px-4 py-2 mt-10 rounded-full text-white
-                         hover:bg-[#f73e90] transition-colors"
-            >
-                 Capture
-            </button>
-        </div>
-    ) : capturedImage ? (
-        <div className=" flex flex-col">
-            <img 
-                src={capturedImage} 
-                alt="Captured" 
-                className="h-40 md:h-56 rounded-xl w-[400px]"
-            />
-            <button className=" mt-5 bg-[#34D4BA] px-4 py-2 rounded-full text-white
-">Submit</button>
-        </div>
-    ) : (
-        <>
-            <img src={logo} className="h-40 md:h-56 rounded-xl"/>
-            <button 
-                onClick={startCamera}
-                className="bg-[#34D4BA] mt-5 border-white border-2 hover:bg-[#f73e90] 
-                         rounded-4xl p-2 w-full md:w-[300px] h-[50px] flex items-center 
-                         justify-center gap-2"
-            >
-                <span>📸</span> Take A Photo!
-            </button>
-        </>
-    )}
-</div>
+                                <CameraSection />
                             </div>
                             <div className="overflow-x-auto mb-6 bg-black border border-white mt-10 rounded-lg p-2 md:p-4">
                                 <h2 className="text-xl md:text-2xl text-center  mb-4 text">ATTENDANCE TRACKER</h2>
@@ -633,18 +731,7 @@ function Clock() {
 
                             <div className="mt-6 flex flex-col md:flex-row gap-6">
                                 {team.Domain && (
-                                    <div className="w-full md:w-1/2">
-                                        <div className="bg-[#D2003F] h-full rounded-2xl p-4 md:p-6">
-                                            <h2 className="text-xl md:text-2xl text-center  mb-4 text-white text">PROBLEM STATEMENT</h2>
-                                            <textarea 
-                                                placeholder="Your problem statement here..."
-                                                className="w-full h-[180px] md:h-[207px] p-4 bg-white/20 border border-white/30 
-                                                         rounded-xl text-white placeholder-white/50 resize-none
-                                                         focus:outline-none focus:border-white"
-                                            />
-                                            <button className=" border rounded-2xl p-4">Submit</button>
-                                        </div>
-                                    </div>
+                                    <ProblemStatementSection />
                                 )}
                                 <div className="w-full md:w-1/2">
                                     <div className="h-full rounded-lg p-4 md:p-6 shadow-lg bg-white/20 backdrop-blur-2xl"
@@ -659,8 +746,6 @@ function Clock() {
                                     </div>
                                 </div>
                             </div>
-
-                          
 
                         </div>
                     ) : (
