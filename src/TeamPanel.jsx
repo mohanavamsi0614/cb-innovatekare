@@ -392,7 +392,7 @@ function Clock() {
                             }} 
                             className="flex flex-col md:flex-row justify-center items-center p-4">
                                 <div className="flex flex-col w-full md:w-1/2">
-                                    <div className="w-full  text md:w-[400px] flex items-center h-[62px] text-center text-[#f73e91] text-[28px] md:text-[34px] font-normal font-['Game Of Squids'] leading-[19px] tracking-widest">
+                                    <div className="w-full  text  md:w-[400px] flex items-center h-[62px] text-center text-[#f73e91] text-[28px] md:text-[34px] font-normal font-['Game Of Squids'] leading-[19px] tracking-widest">
                                     PLAYERS PROFILE
                                     </div>
                                     <div className=" flex items-center m-2"> <div className="w-[45px] h-[45px] flex justify-center items-center bg-[#ffcc00] rounded-full shadow-[inset_17px_15px_9.100000381469727px_-7px_rgba(189,152,6,0.51)] shadow-[inset_-4px_-5px_4px_0px_rgba(225,180,2,1.00)] border border-black mr-5" >👑</div>{team.name}</div>
@@ -448,7 +448,7 @@ function Clock() {
 </div>
                             </div>
                             <div className="overflow-x-auto mb-6 bg-black border border-white mt-10 rounded-lg p-2 md:p-4">
-                                <h2 className="text-xl md:text-2xl  mb-4 text">ATTENDANCE TRACKER</h2>
+                                <h2 className="text-xl md:text-2xl text-center  mb-4 text">ATTENDANCE TRACKER</h2>
                                 <div className="inline-block min-w-full align-middle">
                                     <table className="min-w-full divide-y divide-gray-700 text-sm md:text-base">
                                         <thead>
@@ -502,7 +502,7 @@ function Clock() {
                                     <div className="relative z-10">
                                         <div className="flex items-center justify-center gap-2 mb-6">
                                             <span className="text-3xl">🏆</span>
-                                            <h1 className="text-3xl  text">SCOREBOARD</h1>
+                                            <h1 className="text-3xl text-center  text">SCOREBOARD</h1>
                                         </div>
                                         <div className="space-y-3">
                                             {leaderboard.map((item, index) => (
@@ -547,7 +547,7 @@ function Clock() {
                                         <img src={squido} className="h-full w-full object-cover rounded-2xl"/>
                                     </div>
                                     <div className="rounded-2xl p-6 bg-gradient-to-r from-[#3BEACE] to-[#20D4B7] h-96 flex flex-col justify-center items-center">
-                                        <h2 className="text-2xl  text-black mb-4 text">YOUR DOMAIN</h2>
+                                        <h2 className="text-2xl  text-black mb-4 text-center text">YOUR DOMAIN</h2>
                                         {!team.Domain ? (
                                             <div className="text-center">
                                                 <button
@@ -576,7 +576,7 @@ function Clock() {
                                 {team.Domain && (
                                     <div className="w-full md:w-1/2">
                                         <div className="bg-[#D2003F] h-full rounded-2xl p-4 md:p-6">
-                                            <h2 className="text-xl md:text-2xl  mb-4 text-white text">PROBLEM STATEMENT</h2>
+                                            <h2 className="text-xl md:text-2xl text-center  mb-4 text-white text">PROBLEM STATEMENT</h2>
                                             <textarea 
                                                 placeholder="Your problem statement here..."
                                                 className="w-full h-[180px] md:h-[207px] p-4 bg-white/20 border border-white/30 
@@ -591,7 +591,7 @@ function Clock() {
                                     <div className="h-full rounded-lg p-4 md:p-6 shadow-lg bg-white/20 backdrop-blur-2xl"
                                         style={{background: 'linear-gradient(109.53deg, rgba(255, 255, 255, 0.23) 3.27%, rgba(145, 145, 145, 0.47) 96.91%)'}}
                                     >
-                                        <h2 className="text-xl md:text-2xl  mb-4 text-white text">EVENT UPDATES</h2>
+                                        <h2 className="text-xl md:text-2xl text-center  mb-4 text-white text">EVENT UPDATES</h2>
                                         <div className="h-[180px] md:h-[207px] overflow-y-auto rounded-lg p-4">
                                             <div className="animate-pulse text-center text-gray-400">
                                                 Live updates will appear here...
