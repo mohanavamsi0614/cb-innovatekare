@@ -219,8 +219,8 @@ function Clock() {
 
     const attendanceClass = (attendance) => {
         switch(attendance) {
-            case 'P':
-                return 'bg-green-500/ border-3 border-white rounded-full w-8 h-8 mx-auto flex items-center text-white justify-center shadow-[inset_0_0_8px_rgba(34,197,94,0.4)] text-green-500 text-lg font-bold';
+            case 'Present':
+                return 'bg-green-500 border-3 border-white rounded-full w-8 h-8 mx-auto flex items-center text-white justify-center shadow-[inset_0_0_8px_rgba(34,197,94,0.4)] text-green-500 text-lg font-bold';
             case 'Absent':
                 return 'bg-red-500 border-3 border-white rounded-full w-8 h-8 mx-auto flex items-center justify-center shadow-[inset_0_0_8px_rgba(239,68,68,0.4)] text-red-500 text-lg font-bold text-white';
             default:
@@ -613,23 +613,23 @@ function Clock() {
                                             <tr>
                                                 <td className="border border-gray-300 px-4 py-2">{team.name}</td>
                                                 <td className="border border-gray-300 px-4 py-2">
-                                                    <div className={attendanceClass(team?.FirstAttd)}>
-                                                        {attendanceIcon(team?.FirstAttd)}
+                                                    <div className={attendanceClass(team?.lead.FirstAttd)}>
+                                                        {attendanceIcon(team?.lead.FirstAttd)}
                                                     </div>
                                                 </td>
                                                 <td className="border border-gray-300 px-4 py-2">
-                                                    <div className={attendanceClass(team?.SecondAttd)}>
-                                                        {attendanceIcon(team?.SecondAttd)}
+                                                    <div className={attendanceClass(team?.lead.SecondAttd)}>
+                                                        {attendanceIcon(team?.lead.SecondAttd)}
                                                     </div>
                                                 </td>
                                                 <td className="border border-gray-300 px-4 py-2">
-                                                    <div className={attendanceClass(team?.ThirdAttd)}>
+                                                    <div className={attendanceClass(team?.lead.ThirdAttd)}>
                                                         {attendanceIcon(team?.ThirdAttd)}
                                                     </div>
                                                 </td>
                                                 <td className="border border-gray-300 px-4 py-2">
-                                                    <div className={attendanceClass(team?.FourthAttd)}>
-                                                        {attendanceIcon(team?.FourthAttd)}
+                                                    <div className={attendanceClass(team?.lead.FourthAttd)}>
+                                                        {attendanceIcon(team?.lead.FourthAttd)}
                                                     </div>
                                                 </td>
                                             </tr>
