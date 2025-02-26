@@ -560,7 +560,7 @@ function Clock() {
     </div>
     <div className="space-y-4">
         <div className="bg-gradient-to-r from-[#FFD700]/20 to-[#FFA500]/20 backdrop-blur-sm 
-                        rounded-xl p- border border-[#FFD700]">
+                        rounded-xl p-4 border border-[#FFD700]">
             <div className="flex items-center gap-4">
                 <div className="w-[50px] h-[50px] flex justify-center items-center 
                               bg-[#ffcc00] rounded-full shadow-[0_0_15px_rgba(255,204,0,0.5)] 
