@@ -33,7 +33,6 @@ function TeamPanel() {
     const [DomainData,setDomainData]=useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [ProblemStatement,setProblemStatement]=useState("")
-    const [FinalProblemStatement,setFinalProblemStatement]=useState(team?.ProblemStatement || "")
     const [photoLoading, setPhotoLoading] = useState(false);
     const [problemSubmitting, setProblemSubmitting] = useState(false);
     const [photoError, setPhotoError] = useState("");
@@ -42,10 +41,21 @@ function TeamPanel() {
     const handleDomainSelect = (domainId) => {
         setSelectedDomain(domainId)
     };
-    const handleDomain=()=>{
+    const handleDomain = async () => {
         setDomainLoading(true);
-        socket.emit("domainSelected", { teamId: team._id, domain: selectedDomain });
-    }
+        try {
+            socket.emit("domainSelected", { teamId: team._id, domain: selectedDomain });
+            socket.once("domainSelected", (updatedTeam) => {
+                setTeam(updatedTeam);
+                setDomainLoading(false);
+                setIsModalOpen(false);
+                toast.success("Domain selected successfully!");
+            });
+        } catch (error) {
+            setDomainLoading(false);
+            toast.error("Failed to select domain. Please try again.");
+        }
+    };
           
 const [showCamera, setShowCamera] = useState(false);
 const [capturedImage, setCapturedImage] = useState(null);
@@ -56,7 +66,11 @@ const startCamera = async () => {
     setShowCamera(true);
     try {
         const stream = await navigator.mediaDevices.getUserMedia({ 
-            video: { facingMode: "user" }, 
+            video: { 
+                facingMode: "user",
+                width: { ideal: 1920 },
+                height: { ideal: 1080 }
+            }, 
             audio: false 
         });
         if (videoRef.current) {
@@ -64,6 +78,7 @@ const startCamera = async () => {
         }
     } catch (err) {
         console.error("Error accessing camera:", err);
+        setPhotoError("Failed to access camera. Please check permissions.");
     }
 };
 
@@ -224,14 +239,26 @@ function Clock() {
         }
     };
     const handleProblemStatement = async () => {
+        if (!ProblemStatement.trim()) {
+            setProblemError("Please enter a problem statement");
+            return;
+        }
+
         setProblemSubmitting(true);
         setProblemError("");
+
         try {
-            const res = await axios.post(`${api}/problemSta`, {
+            const response = await axios.post(`${api}/problemSta`, {
                 id: team._id,
-                PS: ProblemStatement
+                PS: ProblemStatement.trim()
             });
-            setFinalProblemStatement(res.data);
+
+            if (response.data) {
+                setTeam(prev => ({
+                    ...prev,
+                    ProblemStatement: ProblemStatement.trim()
+                }));
+            }
         } catch (err) {
             setProblemError("Failed to submit problem statement. Please try again.");
             console.error("Problem statement error:", err);
@@ -239,6 +266,7 @@ function Clock() {
             setProblemSubmitting(false);
         }
     };
+
     const Navbar = () => (
         <nav className="bg-gradient-to-r from-[#1a1a1a]/80 to-[#333]/80 backdrop-blur-md p-3 fixed w-full top-0 z-50 border-b border-white/10">
             <div className="container mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
@@ -391,112 +419,92 @@ function Clock() {
     );
 
     const CameraSection = () => (
-        <div className="flex flex-col justify-center items-center w-full md:w-1/2 mt-4 md:mt-0">
+        <div className="flex flex-col justify-center ml-3 items-center w-full md:w-1/2 mt-4 md:mt-0">
             {photoError && (
                 <div className="text-red-500 bg-red-100/10 p-3 rounded mb-4">
                     {photoError}
                 </div>
             )}
             {showCamera ? (
-                <div className="flex flex-col">
-                    <video
-                        ref={videoRef}
-                        autoPlay
-                        playsInline
-                        className="h-40 md:h-56 w-[400px] rounded-2xl"
-                    />
+                <div className="flex flex-col w-full ml-10">
+                    <div className="relative w-full aspect-video">
+                        <video
+                            ref={videoRef}
+                            autoPlay
+                            playsInline
+                            className="absolute top-0 left-0 w-full h-full object-cover rounded-2xl border-2 border-[#34D4BA]"
+                        />
+                        <div className="absolute top-4 right-4 flex gap-2">
+                            <button 
+                                onClick={stopCamera}
+                                className="bg-red-500 p-2 rounded-full hover:bg-red-600 transition-colors"
+                            >
+                                ✕
+                            </button>
+                        </div>
+                    </div>
                     <canvas ref={photoRef} style={{ display: 'none' }} />
-                    <button 
-                        onClick={capturePhoto}
-                        disabled={photoLoading}
-                        className={`
-                            bg-[#34D4BA] px-4 py-2 mt-10 rounded-full text-white
-                            hover:bg-[#f73e90] transition-colors
-                            ${photoLoading ? 'opacity-50 cursor-not-allowed' : ''}
-                        `}
-                    >
-                        {photoLoading ? (
-                            <div className="flex items-center justify-center gap-2">
-                                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                                Uploading...
-                            </div>
-                        ) : 'Capture'}
-                    </button>
+                    <div className="flex justify-center mt-4">
+                        <button 
+                            onClick={capturePhoto}
+                            disabled={photoLoading}
+                            className={`
+                                bg-[#34D4BA] px-6 py-3 rounded-full text-white
+                                hover:bg-[#f73e90] transition-colors flex items-center gap-2
+                                ${photoLoading ? 'opacity-50 cursor-not-allowed' : ''}
+                            `}
+                        >
+                            {photoLoading ? (
+                                <>
+                                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                                    Uploading...
+                                </>
+                            ) : (
+                                <>
+                                    📸 Capture Photo
+                                </>
+                            )}
+                        </button>
+                    </div>
                 </div>
             ) : capturedImage || team.GroupPic ? (
-                <div className="flex flex-col">
-                    <img 
-                        src={capturedImage || team.GroupPic} 
-                        alt="Team Photo" 
-                        className="h-40 md:h-56 rounded-xl w-[400px]"
-                    />
+                <div className="flex flex-col items-center w-full">
+                    <div className="relative w-full aspect-video">
+                        <img 
+                            src={capturedImage || team.GroupPic} 
+                            alt="Team Photo" 
+                            className="w-full h-full object-cover rounded-xl"
+                        />
+                    </div>
                     <button 
-                        className="mt-5 bg-[#34D4BA] px-4 py-2 rounded-full text-white hover:bg-[#f73e90]" 
+                        className="mt-5 bg-[#34D4BA] px-6 py-3 rounded-full text-white hover:bg-[#f73e90] transition-colors" 
                         onClick={startCamera}
                     >
                         Retake Photo
                     </button>
                 </div>
             ) : (
-                <>
-                    <img src={logo} className="h-40 md:h-56 w-96 rounded-xl"/>
+                <div className="flex flex-col items-center w-full">
+                    <div className="relative w-full aspect-video">
+                        <img 
+                            src={logo} 
+                            className="w-full h-full object-cover rounded-xl"
+                            alt="Default"
+                        />
+                    </div>
                     <button 
                         onClick={startCamera}
                         className="bg-[#34D4BA] mt-5 border-white border-2 hover:bg-[#f73e90] 
-                                 rounded-4xl p-2 w-full md:w-[300px] h-[50px] flex items-center 
-                                 justify-center gap-2"
+                                 rounded-full px-6 py-3 flex items-center gap-2"
                     >
-                        <span>📸</span> Take A Photo!
+                        📸 Take A Photo!
                     </button>
-                </>
+                </div>
             )}
         </div>
     );
 
-    const ProblemStatementSection = () => (
-        <div className="w-full md:w-1/2">
-            <div className="bg-[#D2003F] h-full rounded-2xl p-4 md:p-6">
-                <h2 className="text-xl md:text-2xl text-center mb-4 text-white text">
-                    PROBLEM STATEMENT
-                </h2>
-                {problemError && (
-                    <div className="text-red-500 bg-red-100/10 p-3 rounded mb-4">
-                        {problemError}
-                    </div>
-                )}
-                {FinalProblemStatement || team.ProblemStatement ? (
-                    <div className="bg-white/10 p-4 rounded-xl">
-                        <p className="text-white">{team.ProblemStatement}</p>
-                    </div>
-                ) : (
-                    <div className="space-y-4"> 
-                        <textarea 
-                            placeholder="Your problem statement here..."
-                            onChange={(e) => setProblemStatement(e.target.value)}
-                            maxLength="100"
-                            className="w-full h-[180px] md:h-[207px] p-4 bg-white/20 border border-white/30 
-                                     rounded-xl text-white placeholder-white/50 resize-none
-                                     focus:outline-none focus:border-white"
-                            value={ProblemStatement}
-                        />
-                        <button 
-                            className="border rounded-2xl p-4 w-full hover:bg-white/10 transition-all
-                                     disabled:opacity-50 disabled:cursor-not-allowed"
-                            onClick={handleProblemStatement}
-                            disabled={problemSubmitting || !ProblemStatement.trim()}
-                        >
-                            {problemSubmitting ? (
-                                <div className="flex items-center justify-center gap-2">
-                                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                                    Submitting...
-                                </div>
-                            ) : 'Submit'}
-                        </button>
-                    </div>
-                )}
-            </div>
-        </div>
-    );
+
 
     return (
         <div className="bg-black min-h-screen text-white flex flex-col">
@@ -729,11 +737,74 @@ function Clock() {
                                 </div>
                             </div>
 
-                            <div className="mt-6 flex flex-col md:flex-row gap-6">
+                            <div className="mt-6 flex-col  md:flex gap-6">
                                 {team.Domain && (
-                                    <ProblemStatementSection />
-                                )}
-                                <div className="w-full md:w-1/2">
+                                    <div className="w-full ">
+            <div className="bg-[#D2003F] h-full rounded-2xl p-4 md:p-6">
+                <h2 className="text-xl md:text-2xl text-center mb-4 text-white text">
+                    PROBLEM STATEMENT
+                </h2>
+                {problemError && (
+                    <div className="text-red-500 bg-red-100/10 p-3 rounded mb-4">
+                        {problemError}
+                    </div>
+                )}
+                {team.ProblemStatement ? (
+                    <div className="bg-white/10 p-4 rounded-xl">
+                        <p className="text-white whitespace-pre-wrap">{team.ProblemStatement}</p>
+                    </div>
+                ) : (
+                    <div className="space-y-4"> 
+                        <div className="relative">
+                            <textarea 
+                                placeholder="Describe your problem statement here..."
+                                onChange={(e) => setProblemStatement(e.target.value)}
+                                value={ProblemStatement}
+                                maxLength={200}
+                                className="w-full h-[180px] md:h-[207px] p-4 
+                                         bg-white/20 border border-white/30 
+                                         rounded-xl text-white placeholder-white/50 
+                                          focus:outline-none focus:border-white
+                                         "
+                            />
+                            <div className="absolute bottom-2 right-2 text-white/50 text-sm 
+                                          bg-black/20 px-2 py-1 rounded-full">
+                                {ProblemStatement.length}/200
+                            </div>
+                        </div>
+                        <div className="flex gap-3">
+                            <button 
+                                className="flex-1 bg-white/20 hover:bg-white/30 transition-all
+                                         px-6 py-3 rounded-xl text-white font-medium
+                                         disabled:opacity-50 disabled:cursor-not-allowed
+                                         flex items-center justify-center gap-2"
+                                onClick={() => setProblemStatement("")}
+                                disabled={!ProblemStatement.trim() || problemSubmitting}
+                            >
+                                Clear
+                            </button>
+                            <button 
+                                className="flex-1 bg-white/20 hover:bg-white/30 transition-all
+                                         px-6 py-3 rounded-xl text-white font-medium
+                                         disabled:opacity-50 disabled:cursor-not-allowed
+                                         flex items-center justify-center gap-2"
+                                onClick={handleProblemStatement}
+                                disabled={problemSubmitting || !ProblemStatement.trim()}
+                            >
+                                {problemSubmitting ? (
+                                    <>
+                                        <div className="w-5 h-5 border-2 border-white border-t-transparent 
+                                                      rounded-full animate-spin" />
+                                        Submitting...
+                                    </>
+                                ) : 'Submit Statement'}
+                            </button>
+                        </div>
+                    </div>
+                )}
+            </div>
+        </div>                                )}
+                                <div className="w-full mt-10">
                                     <div className="h-full rounded-lg p-4 md:p-6 shadow-lg bg-white/20 backdrop-blur-2xl"
                                         style={{background: 'linear-gradient(109.53deg, rgba(255, 255, 255, 0.23) 3.27%, rgba(145, 145, 145, 0.47) 96.91%)'}}
                                     >
