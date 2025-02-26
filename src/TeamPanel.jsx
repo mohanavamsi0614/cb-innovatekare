@@ -21,6 +21,7 @@ const socket = io(api);
 
 function TeamPanel() {
     const [pass, setPass] = useState(localStorage.getItem("token") || "");
+    const [EventUp,setEventUp]=useState("")
     const [team, setTeam] = useState(null);
     const [DomainLoading,setDomainLoading]=useState(false)
     const [link, setLink] = useState();
@@ -49,11 +50,9 @@ function TeamPanel() {
                 setTeam(updatedTeam);
                 setDomainLoading(false);
                 setIsModalOpen(false);
-                toast.success("Domain selected successfully!");
             });
         } catch (error) {
             setDomainLoading(false);
-            toast.error("Failed to select domain. Please try again.");
         }
     };
           
@@ -190,6 +189,10 @@ function Clock() {
                 .finally(() => {
                     setLoading(false);
                 });
+            socket.on("eventupdates",(text)=>{
+                document.querySelector(".htmlcon").innerHTML=text
+                setEventUp(text)
+            })
             socket.on("team", (team) => {
                 setTeam(team);
                 console.log(team)
@@ -623,7 +626,7 @@ function Clock() {
                                                     </div>
                                                 </td>
                                                 <td className="border border-gray-300 px-4 py-2">
-                                                    <div className={attendanceClass(team?.lead.ThirdAttd)}>
+                                                    <div className={attendanceClass(team?.ThirdAttd)}>
                                                         {attendanceIcon(team?.ThirdAttd)}
                                                     </div>
                                                 </td>
@@ -810,12 +813,12 @@ function Clock() {
                                     >
                                         <h2 className="text-xl md:text-2xl text-center  mb-4 text-white text">EVENT UPDATES</h2>
                                         <div className="h-[180px] md:h-[207px] overflow-y-auto rounded-lg p-4">
-                                            <div className="animate-pulse text-center text-gray-400">
-                                                Live updates will appear here...
+                                            <div className="animate-pulse text-center  htmlcon">
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+
                             </div>
 
                         </div>
