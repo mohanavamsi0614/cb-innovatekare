@@ -586,7 +586,7 @@ function Clock() {
                                     </div>
                                     <div className="flex items-center gap-4">
                                         <div className="hidden sm:flex h-12 w-px bg-white/20" />
-                                        <div className=" p-4 bg-white flex font-bold text-center border rounded-md sector border-black text-black text-xl">
+                                        <div className=" p-4  flex font-bold text-center border rounded-md sector border-black text-black text-xl">
                                             <p>Sector: {team.Sector}</p>
                                             {
                                                 team.Sector==="001" ? <img className=" size-15" src={one} alt="Character 001" /> :
