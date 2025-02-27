@@ -8,7 +8,7 @@ function Attd() {
     const [teams, setTeams] = useState([]);
     const [loading, setLoading] = useState(true);
     const [currentSector, setCurrentSector] = useState(0);
-    const sectors = ["Alpha", "Beta", "Gamma", "Delta", "Sigma","Omega"];
+    const sectors = ["456", "067", "101", "001", "218","199"];
 
     useEffect(() => {
         async function data() {

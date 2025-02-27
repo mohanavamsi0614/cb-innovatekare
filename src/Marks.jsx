@@ -9,12 +9,12 @@ function Marks() {
     const [current, setCurrent] = useState(0);
     const [submitting, setSubmitting] = useState(false);
     const [submitStatus, setSubmitStatus] = useState(null);
-    const sectors = ["Alpha", "Beta", "Gamma", "Delta", "Sigma","Omega"];
+    const sectors = ["456", "067", "101", "001", "218","199"];
     const [scores, setScores] = useState({
-        problemUnderstanding: { criteria: "Understanding & Clarity", marks: 0 },
-        feasibilityRelevance: { criteria: "Feasibility & Relevance of Solution", marks: 0 },
-        technicalApproach: { criteria: "Technical Approach & Feasibility", marks: 0 },
-        prototypeProgress: { criteria: "Prototype / Early Development Progress", marks: 0 }
+        problemUnderstanding: { criteria: "Understanding & Clarity", marks: 0,max:10 },
+        feasibilityRelevance: { criteria: "Feasibility & Relevance of Solution", marks: 0,max:10 },
+        technicalApproach: { criteria: "Technical Approach & Feasibility", marks: 0,max:10 },
+        prototypeProgress: { criteria: "Prototype / Early Development Progress", marks: 0,max:10 }
     });
 
     useEffect(() => {
@@ -38,6 +38,11 @@ function Marks() {
         setScores(prev => ({ ...prev, [key]: { ...prev[key], marks: value } }));
     };
 
+    // Calculate total marks
+    const calculateTotalMarks = () => {
+        return Object.values(scores).reduce((total, item) => total + item.marks, 0);
+    };
+
     const handleSubmitScores = async () => {
         const sectorTeams = getSectorTeams(currentSector);
         if (!sectorTeams[current]?._id) {
@@ -46,10 +51,11 @@ function Marks() {
         }
         setSubmitting(true);
         setSubmitStatus(null);
+        console.log(scores)
         try {
-            await axios.post(`${api}/team/score/${teams[current]._id}`, {
-                teamId: sectorTeams[current]._id,
-                scores: Object.fromEntries(Object.entries(scores).map(([k, v]) => [k, v.marks]))
+            await axios.post(`${api}/event//team/score/${teams[current]._id}`, {
+                score: calculateTotalMarks(),
+                FirstReview: scores
             });
             setSubmitStatus({ type: 'success', message: 'Scores submitted successfully!' });
             setCurrent(prev => Math.min(prev + 1, sectorTeams.length - 1));
@@ -127,6 +133,7 @@ function Marks() {
                 {Object.keys(scores).map((key) => (
                     <div key={key} className="flex justify-between items-center mb-4">
                         <span className="font-medium">{scores[key].criteria}:</span>
+                        <div className=" flex justify-center items-center">
                         <input
                             type="number"
                             min="0"
@@ -134,19 +141,29 @@ function Marks() {
                             value={scores[key].marks}
                             onChange={(e) => handleScoreChange(key, e.target.value)}
                             className="w-16 px-2 py-1 rounded bg-gray-700 text-white border border-gray-500 text-center"
-                        />
+                        /> 
+                        <p className=" ml-3">/ {scores[key].max}</p>
+                        </div>
                     </div>
                 ))}
+                <div className="flex justify-between items-center mb-4 border-t border-gray-600 pt-3 mt-2">
+                    <span className="font-bold text-xl">Total:</span>
+                    {teams[current].FirstReviewScore ?<span className="font-bold text-xl">{teams[current].FirstReviewScore} / 40</span>:
+                    <span className="font-bold text-xl">{calculateTotalMarks()} / 40</span>
+
+                }
+                </div>
                 {submitStatus && (
                     <div className={`mt-4 p-3 rounded-lg text-center ${submitStatus.type === 'success' ? 'bg-green-600' : 'bg-red-600'}`}>{submitStatus.message}</div>
                 )}
-                <button
+                {!teams[current].FirstReview && (                <button
                     className="mt-4 w-full bg-blue-600 hover:bg-blue-500 text-white px-5 py-2 rounded-lg font-semibold disabled:bg-gray-500"
                     onClick={handleSubmitScores}
                     disabled={submitting}
                 >
                     {submitting ? "Submitting..." : "Submit Scores"}
-                </button>
+                </button>)}
+
             </div>
         </div>
     );

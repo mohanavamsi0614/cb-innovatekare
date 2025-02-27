@@ -23,6 +23,8 @@ import onezeroone from "/public/Chars/101.png"
 import oneninenine from "/public/Chars/101.png"
 import twooneeight from "/public/Chars/218.png"
 import fourfivesix from "/public/Chars/456.png"
+import attd from "/public/download-removebg-preview (8).png"
+import prob from "/public/prob.png"
 const socket = io(api);
 
 function TeamPanel() {
@@ -285,6 +287,17 @@ function Clock() {
         }
     };
 
+    const scrollToSection = (sectionId) => {
+        const section = document.getElementById(sectionId);
+        if (section) {
+            section.scrollIntoView({ behavior: 'smooth' });
+            if (sectionId === 'event-updates') {
+                setHasNewUpdate(false);
+                setNotificationVisible(false);
+            }
+        }
+    };
+
     const Navbar = () => (
         <nav className="bg-gradient-to-r from-[#1a1a1a]/80 to-[#333]/80 backdrop-blur-md p-3 fixed w-full top-0 z-50 border-b border-white/10">
             <div className="container mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
@@ -298,16 +311,20 @@ function Clock() {
                 <img src={expra} className=" relative w-27  bottom-4.5"/>
                 </div>                </div>
                 <div className="flex flex-wrap justify-center gap-6">
-                    {['Event Schedule', 'Leaderboard', 'Resources'].map((item, index) => (
+                    {[
+                        { name: 'Event Updates', id: 'event-updates' },
+                        { name: 'Leaderboard', id: 'leaderboard' },
+                        { name: 'Problem Statement', id: 'problem-statement' }
+                    ].map((item, index) => (
                         <a 
                             key={index}
-                            href={`#${item.toLowerCase().replace(' ', '-')}`} 
+                            onClick={() => scrollToSection(item.id)}
                             className="relative text-white/90 hover:text-white font-[Poppins] text-[16px] sm:text-[18px] font-bold 
                                      transition-all duration-300 after:content-[''] after:absolute after:w-0 after:h-0.5 
                                      after:bg-[#34D4BA] after:left-0 after:-bottom-1 hover:after:w-full after:transition-all 
-                                     after:duration-300"
+                                     after:duration-300 cursor-pointer"
                         >
-                            {item}
+                            {item.name}
                         </a>
                     ))}
                 </div>
@@ -468,7 +485,7 @@ function Clock() {
                             disabled={photoLoading}
                             className={`
                                 bg-[#34D4BA] px-6 py-3 rounded-full text-white
-                                hover:bg-[#f73e90] transition-colors flex items-center gap-2
+                                hover:bg-[#f73e90] transition-colors relative top-5 right-3 flex items-center gap-2
                                 ${photoLoading ? 'opacity-50 cursor-not-allowed' : ''}
                             `}
                         >
@@ -505,8 +522,8 @@ function Clock() {
                     </button>
                 </div>
             ) : (
-                <div className="flex flex-col items-center w-full">
-                    <div className="relative w-full aspect-video">
+                <div className="flex flex-col items-center justify-center w-full">
+                    <div className="relative w-full flex justify-center aspect-video top-12">
                         <img 
                             src={logo} 
                             className="w-full h-full object-cover rounded-xl"
@@ -515,8 +532,8 @@ function Clock() {
                     </div>
                     <button 
                         onClick={startCamera}
-                        className="bg-[#34D4BA] mt-5 border-white border-2 hover:bg-[#f73e90] 
-                                 rounded-full px-6 py-3 flex items-center gap-2"
+                        className="bg-[#34D4BA] mt-15 border-white border-2 hover:bg-[#f73e90] 
+                                 rounded-full px-6 py-3 flex items-center gap-2 "
                     >
                         📸 Take A Photo!
                     </button>
@@ -526,12 +543,7 @@ function Clock() {
     );
 
     const scrollToEventUpdates = () => {
-        const eventUpdatesSection = document.querySelector('.event-updates-section');
-        if (eventUpdatesSection) {
-            eventUpdatesSection.scrollIntoView({ behavior: 'smooth' });
-            setHasNewUpdate(false);
-            setNotificationVisible(false);
-        }
+        scrollToSection('event-updates');
     };
 
     const NotificationBell = () => (
@@ -571,7 +583,7 @@ function Clock() {
                         
                         <div className="w-full max-w-7xl p-2 sm:p-6 mx-auto">
                         
-                            <div className="bg-gradient-to-r from-[#34D4BA] to-[#20D4B7] rounded-md p-1 mb-10 mt-5">
+                            <div className="bg-gradient-to-r from-[#34D4BA] to-[#20D4B7] rounded-md p-1 mb-10 mt-3 ">
                                 <div className="bg-gradient-to-r from-[#34D4BA]/10 to-[#20D4B7]/10 backdrop-blur-sm rounded p-4 flex flex-col sm:flex-row justify-between items-center gap-4">
                                     <div className="flex items-center gap-4">
                                         <div className="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center text-2xl animate-bounce">
@@ -586,8 +598,7 @@ function Clock() {
                                     </div>
                                     <div className="flex items-center gap-4">
                                         <div className="hidden sm:flex h-12 w-px bg-white/20" />
-                                        <div className=" p-4  flex justify-center items-center font-bold text-center border rounded-md sector border-black text-black text-xl">
-                                            <p className=" text-2xl">Sector: {team.Sector}</p>
+                                        <div className=" p-3  flex flex-col justify-center items-center font-bold text-center border rounded-md sector border-black text-black text-xl w-56">
                                             {
                                                 team.Sector==="001" ? <img className=" size-15" src={one} alt="Character 001" /> :
                                                 team.Sector==="067" ? <img className=" size-15" src={sixtyseven} alt="Character 067" /> :
@@ -597,11 +608,9 @@ function Clock() {
                                                 team.Sector==="456" ? <img className=" size-15" src={fourfivesix} alt="Character 456" /> :
                                                 null
                                             }
+                                            <p className=" text-2xl">Sector: {team.Sector}</p>
                                         </div>
-                                        <div className="hidden sm:block text-black text-sm">
-                                            <div>Hackathon</div>
-                                            <div className="font-bold">24 Hours</div>
-                                        </div>
+                                       
                                     </div>
                                 </div>
                             </div>
@@ -616,7 +625,7 @@ function Clock() {
                             className="flex flex-col md:flex-row justify-center items-center p-4">
                                 <div className="flex flex-col w-full md:w-1/2">
     <div className="w-full text-center md:w-[400px] mb-6">
-        <h2 className="text-[#f73e91] text-[32px] font-['Game Of Squids'] tracking-widest">
+        <h2 className="text-[#f73e91] text-[32px] font-['Game Of Squids'] tracking-widest text">
             PLAYERS PROFILE
         </h2>
     </div>
@@ -659,7 +668,7 @@ function Clock() {
                                 <CameraSection />
                             </div>
                             <div className="overflow-x-auto mb-6 bg-black border border-white mt-10 rounded-lg p-2 md:p-4">
-                                <h2 className="text-xl md:text-2xl text-center  mb-4 text">ATTENDANCE TRACKER</h2>
+                               <div className=" flex justify-center items-center"> <img src={attd} className=" w-14 relative bottom-2"/><h2 className="text-xl md:text-2xl text-center  mb-4 text">ATTENDANCE TRACKER</h2></div>
                                 <div className="inline-block min-w-full align-middle">
                                     <table className="min-w-full divide-y divide-gray-700 text-sm md:text-base">
                                         <thead>
@@ -725,7 +734,7 @@ function Clock() {
                                 </div>
                             </div>
                             <div className="flex flex-col md:flex-row justify-evenly gap-6 mt-10">
-                                <div className="w-full md:w-1/2 rounded-2xl p-4 md:p-6 bg-gradient-to-br bg-yellow-300/50">
+                                <div id="leaderboard" className="w-full md:w-1/2 rounded-2xl p-4 md:p-6 bg-gradient-to-br bg-yellow-300/50">
                                     <div className="relative z-10">
                                         <div className="flex items-center justify-center gap-2 mb-6">
                                             <span className="text-3xl">🏆</span>
@@ -774,7 +783,7 @@ function Clock() {
                                         <img src={squido} className="h-full w-full object-cover rounded-2xl"/>
                                     </div>
                                     <div className="rounded-2xl p-6 bg-gradient-to-r from-[#3BEACE] to-[#20D4B7] h-96 flex flex-col justify-center items-center">
-                                        <h2 className="text-2xl  text-black mb-4 text-center text">YOUR DOMAIN</h2>
+                                        <h2 className="text-2xl  text-black mb-4 text-center text">🌐YOUR DOMAIN</h2>
                                         {!team.Domain ? (
                                             <div className="text-center">
                                                 <button
@@ -801,11 +810,14 @@ function Clock() {
 
                             <div className="mt-6 flex-col  md:flex gap-6">
                                 {team.Domain && (
-                                    <div className="w-full ">
+                                    <div id="problem-statement" className="w-full">
             <div className="bg-[#D2003F] h-full rounded-2xl p-4 md:p-6">
+            <div className=" flex justify-center items-center w-full">
+            <img src={prob} className=" w-12 relative bottom-2"/>
                 <h2 className="text-xl md:text-2xl text-center mb-4 text-white text">
                     PROBLEM STATEMENT
                 </h2>
+                </div>
                 {problemError && (
                     <div className="text-red-500 bg-red-100/10 p-3 rounded mb-4">
                         {problemError}
@@ -866,10 +878,14 @@ function Clock() {
                 )}
             </div>
         </div>                                )}
-                                <div className="w-full mt-10 event-updates-section">
+                                <div id="event-updates" className="w-full mt-10 event-updates-section">
                                     <div className="h-full rounded-lg p-4 md:p-6 shadow-lg bg-white/20 backdrop-blur-2xl"
                                         style={{background: 'linear-gradient(109.53deg, rgba(255, 255, 255, 0.23) 3.27%, rgba(145, 145, 145, 0.47) 96.91%)'}}
-                                    >
+                                    >  
+                                    <div className=" flex justify-center items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-10 relative bottom-2 w-10 animate-swing" fill="yellow" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                </svg>
                                         <h2 className="text-xl md:text-2xl text-center mb-4 text-white text">
                                             EVENT UPDATES 
                                             {hasNewUpdate && (
@@ -877,7 +893,7 @@ function Clock() {
                                                     New!
                                                 </span>
                                             )}
-                                        </h2>
+                                        </h2></div>
                                         <div className="h-full md:h-full overflow-y-auto rounded-lg p-4">
                                             <div className="htmlcon"></div>
                                         </div>
@@ -891,7 +907,7 @@ function Clock() {
                         <p className="text-center text-xl mt-10">Failed to load team data. Please try again later.</p>
                     )
                 )}
-                <footer className="mt-auto border-t border-gray-800">
+                <footer className="mt-auto border-t border-gray-800"></footer>
                     <p className="text-center p-4 text-white text" >Made with 💖 By Coding Blocks KARE</p>
                 </footer>
             </div>
