@@ -5,7 +5,9 @@
   font-weight: normal;
   font-style: normal;
 }
-
+.sector{
+  font-family: "Big Shoulders Stencil Text", serif;
+}
 .home {
   background-size: cover;
   background-repeat: no-repeat;

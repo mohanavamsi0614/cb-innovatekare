@@ -63,13 +63,13 @@ function AttenCard({ team }) {
                 <p className="text-gray-800 text-lg">Registration Number: {team.registrationNumber}</p>
                 <div className="flex space-x-4 mt-4">
                     <button
-                        className={`px-6 py-2 rounded ${leadAttendance === 'Present' || team.lead.FirstAttd=='Present' ? 'bg-green-500 text-white' : 'bg-gray-200'}`}
+                        className={`px-6 py-2 rounded ${leadAttendance === 'Present' || team.lead?.FirstAttd=='Present' ? 'bg-green-500 text-white' : 'bg-gray-200'}`}
                         onClick={() => toggleLeadAttendance('Present')}
                     >
                         Present
                     </button>
                     <button
-                        className={`px-6 py-2 rounded ${leadAttendance === 'Absent' || team.lead.FirstAttd=='Absent' ? 'bg-red-500 text-white' : 'bg-gray-200'}`}
+                        className={`px-6 py-2 rounded ${leadAttendance === 'Absent' || team.lead?.FirstAttd=='Absent' ? 'bg-red-500 text-white' : 'bg-gray-200'}`}
                         onClick={() => toggleLeadAttendance('Absent')}
                     >
                         Absent

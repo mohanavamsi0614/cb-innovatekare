@@ -17,6 +17,12 @@ import scorecraft from "/public/scorecraft.jpg"
 import card from "/public/card.png"
 import card1 from "/public/card1.png"
 import Modal from 'react-modal';
+import one from "/public/Chars/001.png"
+import sixtyseven from "/public/Chars/067.png"
+import onezeroone from "/public/Chars/101.png"
+import oneninenine from "/public/Chars/101.png"
+import twooneeight from "/public/Chars/218.png"
+import fourfivesix from "/public/Chars/456.png"
 const socket = io(api);
 
 function TeamPanel() {
@@ -38,6 +44,8 @@ function TeamPanel() {
     const [problemSubmitting, setProblemSubmitting] = useState(false);
     const [photoError, setPhotoError] = useState("");
     const [problemError, setProblemError] = useState("");
+    const [hasNewUpdate, setHasNewUpdate] = useState(false);
+    const [notificationVisible, setNotificationVisible] = useState(false);
     
     const handleDomainSelect = (domainId) => {
         setSelectedDomain(domainId)
@@ -86,6 +94,7 @@ const stopCamera = () => {
     if (stream) {
         const tracks = stream.getTracks();
         tracks.forEach(track => track.stop());
+        videoRef.current.srcObject = null;
     }
     setShowCamera(false);
 };
@@ -116,6 +125,7 @@ const capturePhoto = async () => {
         });
         
         stopCamera();
+        window.location.reload()
     } catch (err) {
         setPhotoError("Failed to upload image. Please try again.");
         console.error("Photo upload error:", err);
@@ -192,6 +202,11 @@ function Clock() {
             socket.on("eventupdates",(text)=>{
                 document.querySelector(".htmlcon").innerHTML=text
                 setEventUp(text)
+                setHasNewUpdate(true);
+                setNotificationVisible(true);
+                setTimeout(() => {
+                    setNotificationVisible(false);
+                }, 10000);
             })
             socket.on("team", (team) => {
                 setTeam(team);
@@ -275,7 +290,7 @@ function Clock() {
             <div className="container mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
                 <div className="flex items-center gap-4">
                     <div className="flex items-center gap-3">
-                        <img src={cb} className="w-12 h-12 sm:w-14 sm:h-14 rounded-full relative hover:scale-105 transition-transform" alt="Logo" />
+                        <img src={cb} className="w-16 h-16 sm:w-16 sm:h-16 rounded-full relative hover:scale-105 transition-transform" alt="Logo" />
                         <div className="h-8 w-px bg-white/20 hidden sm:block" />
                     </div>
                     <div>
@@ -374,7 +389,7 @@ function Clock() {
         >
             <div className="text-white">
                 <div className="flex justify-between items-center mb-6">
-                    <h2 className="text-2xl font-bold text-[#34D4BA]">Choose Your Domain</h2>
+                    <h2 className="text-2xl font-bold text-[#34D4BA]">🌐 Choose Your Domain</h2>
                     <button 
                         onClick={() => setIsModalOpen(false)}
                         className="text-white/60 hover:text-white transition-colors"
@@ -430,7 +445,7 @@ function Clock() {
             )}
             {showCamera ? (
                 <div className="flex flex-col w-full ml-10">
-                    <div className="relative w-full aspect-video">
+                    <div className="relative w-full aspect-video right-6 top-5">
                         <video
                             ref={videoRef}
                             autoPlay
@@ -471,7 +486,7 @@ function Clock() {
                     </div>
                 </div>
             ) : capturedImage || team.GroupPic ? (
-                <div className="flex flex-col items-center w-full">
+                <div className="flex flex-col items-center w-full relative top-6">
                     <div className="relative w-full aspect-video">
                         <img 
                             src={capturedImage || team.GroupPic} 
@@ -481,7 +496,10 @@ function Clock() {
                     </div>
                     <button 
                         className="mt-5 bg-[#34D4BA] px-6 py-3 rounded-full text-white hover:bg-[#f73e90] transition-colors" 
-                        onClick={startCamera}
+                        onClick={() => {
+                            stopCamera(); // Call stopCamera first to ensure any existing streams are closed
+                            startCamera();
+                        }}
                     >
                         Retake Photo
                     </button>
@@ -507,11 +525,41 @@ function Clock() {
         </div>
     );
 
+    const scrollToEventUpdates = () => {
+        const eventUpdatesSection = document.querySelector('.event-updates-section');
+        if (eventUpdatesSection) {
+            eventUpdatesSection.scrollIntoView({ behavior: 'smooth' });
+            setHasNewUpdate(false);
+            setNotificationVisible(false);
+        }
+    };
 
+    const NotificationBell = () => (
+        <div 
+            className={`fixed bottom-4 right-4 bg-gradient-to-r from-[#34D4BA] to-[#f73e91] text-white 
+                      p-4 rounded-lg shadow-lg z-50 flex items-center gap-3 cursor-pointer
+                      transform transition-all duration-300 ${notificationVisible ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0'}`}
+            onClick={scrollToEventUpdates}
+        >
+            <div className="relative">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 animate-swing" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                </svg>
+                <span className="absolute -top-1 -right-1 bg-red-500 text-xs rounded-full h-4 w-4 flex items-center justify-center animate-pulse">
+                    1
+                </span>
+            </div>
+            <div>
+                <p className="font-bold">New Update!</p>
+                <p className="text-sm">Click to view</p>
+            </div>
+        </div>
+    );
 
     return (
         <div className="bg-black min-h-screen text-white flex flex-col">
             <Navbar />
+            <NotificationBell />
             <div className="pt-24 sm:pt-28 px-2">
                 {loading ? (
                     <div className="w-full h-[80vh] flex flex-col justify-center items-center">
@@ -537,8 +585,19 @@ function Clock() {
                                         </div>
                                     </div>
                                     <div className="flex items-center gap-4">
-                                        <Clock />
                                         <div className="hidden sm:flex h-12 w-px bg-white/20" />
+                                        <div className=" p-4 bg-white flex font-bold text-center border rounded-md sector border-black text-black text-xl">
+                                            <p>Sector: {team.Sector}</p>
+                                            {
+                                                team.Sector==="001" ? <img className=" size-15" src={one} alt="Character 001" /> :
+                                                team.Sector==="067" ? <img className=" size-15" src={sixtyseven} alt="Character 067" /> :
+                                                team.Sector==="101" ? <img className=" size-15" src={onezeroone} alt="Character 101" /> :
+                                                team.Sector==="199" ? <img className=" size-15" src={oneninenine} alt="Character 199" /> :
+                                                team.Sector==="218" ? <img className=" size-15" src={twooneeight} alt="Character 218" /> :
+                                                team.Sector==="456" ? <img className=" size-15" src={fourfivesix} alt="Character 456" /> :
+                                                null
+                                            }
+                                        </div>
                                         <div className="hidden sm:block text-black text-sm">
                                             <div>Hackathon</div>
                                             <div className="font-bold">24 Hours</div>
@@ -807,14 +866,20 @@ function Clock() {
                 )}
             </div>
         </div>                                )}
-                                <div className="w-full mt-10">
+                                <div className="w-full mt-10 event-updates-section">
                                     <div className="h-full rounded-lg p-4 md:p-6 shadow-lg bg-white/20 backdrop-blur-2xl"
                                         style={{background: 'linear-gradient(109.53deg, rgba(255, 255, 255, 0.23) 3.27%, rgba(145, 145, 145, 0.47) 96.91%)'}}
                                     >
-                                        <h2 className="text-xl md:text-2xl text-center  mb-4 text-white text">EVENT UPDATES</h2>
-                                        <div className="h-[180px] md:h-[207px] overflow-y-auto rounded-lg p-4">
-                                            <div className="animate-pulse text-center  htmlcon">
-                                            </div>
+                                        <h2 className="text-xl md:text-2xl text-center mb-4 text-white text">
+                                            EVENT UPDATES 
+                                            {hasNewUpdate && (
+                                                <span className="inline-block ml-2 bg-red-500 text-white text-xs px-2 py-0.5 rounded-full animate-pulse">
+                                                    New!
+                                                </span>
+                                            )}
+                                        </h2>
+                                        <div className="h-full md:h-full overflow-y-auto rounded-lg p-4">
+                                            <div className="htmlcon"></div>
                                         </div>
                                     </div>
                                 </div>

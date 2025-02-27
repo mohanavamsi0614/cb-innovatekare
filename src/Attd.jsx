@@ -28,9 +28,9 @@ function Attd() {
     const getSectorTeams = (sectorIndex) => {
         const start = sectorIndex * 15;
         const end = start + 15;
+        console.log(teams.slice(start, end))
         return teams.slice(start, end);
     };
-
     return (
         <div className="bg-gray-900 flex flex-col min-h-screen p-4">
             <h1 className="text-3xl text-white text-center mt-4 mb-6">Attendance Dashboard</h1>
