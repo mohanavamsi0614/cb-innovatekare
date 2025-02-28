@@ -24,8 +24,11 @@ import oneninenine from "/public/Chars/101.png"
 import twooneeight from "/public/Chars/218.png"
 import fourfivesix from "/public/Chars/456.png"
 import attd from "/public/download-removebg-preview (8).png"
+import king from "/public/king.png"
 import prob from "/public/prob.png"
-const socket = io(api);
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+const socket = io("http://localhost:3001");
 
 function TeamPanel() {
     const [pass, setPass] = useState(localStorage.getItem("token") || "");
@@ -40,6 +43,7 @@ function TeamPanel() {
     const sym=[square,circle,umbr,triangle]
     const [selectedDomain, setSelectedDomain] = useState();
     const [DomainData,setDomainData]=useState([]);
+    const [domain,setDomain]=useState("")
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [ProblemStatement,setProblemStatement]=useState("")
     const [photoLoading, setPhotoLoading] = useState(false);
@@ -56,13 +60,9 @@ function TeamPanel() {
         setDomainLoading(true);
         try {
             socket.emit("domainSelected", { teamId: team._id, domain: selectedDomain });
-            socket.once("domainSelected", (updatedTeam) => {
-                setTeam(updatedTeam);
-                setDomainLoading(false);
-                setIsModalOpen(false);
-            });
         } catch (error) {
             setDomainLoading(false);
+            console.log(error)
         }
     };
           
@@ -165,9 +165,7 @@ function Clock() {
                 const data = res.data;
                 localStorage.setItem("token", pass);
                 setTeam(data);
-                setProblemID(data.ProblemID)
-                console.log(ProblemID)
-                setLeaderboard(data.sort((a, b) => b.score - a.score));
+                setLeaderboard(data.sort((a, b) => b.SquidScore - a.SquidScore));
             })
             .catch(() => {
                 setError("Invalid password. Please try again.");
@@ -177,16 +175,15 @@ function Clock() {
             });
             axios.get(`${api}/event/students`).then((res) => {
                 const data = res.data;
-                setLeaderboard(data.sort((a, b) => b.HuntScore - a.HuntScore).slice(0, 10));
+                setLeaderboard(data.sort((a, b) => b.SquidScore - a.SquidScore).slice(0, 10));
             });
     };
-
     useEffect(() => {
         if (localStorage.getItem("token")) {
             setLoading(true);
             axios.get(`${api}/event/students`).then((res) => {
                 const data = res.data;
-                setLeaderboard(data.sort((a, b) => b.HuntScore - a.HuntScore).slice(0, 10));
+                setLeaderboard(data.sort((a, b) => b.SquidScore - a.SquidScore).slice(0, 10));
             });
             axios.post(`${api}/event/team/${pass}`)
                 .then((res) => {
@@ -210,19 +207,43 @@ function Clock() {
                     setNotificationVisible(false);
                 }, 10000);
             })
+            socket.on("domainSelected", (data) => {
+                if(data=="fulled"){
+                    alert("Sorry domain got fulled try again now!")
+                    axios.get(`${api}/event/students//${pass}`).then((res) => {
+                        const data = res.data;
+                        setLoading(true)
+                        setTeam(data);
+                    });
+                }
+                setDomainLoading(false);
+                console.log(data)
+                setIsModalOpen(false);
+                setLoading(true)
+                axios.get(`${api}/event/students/${pass}`).then((res) => {
+                    const data = res.data;
+                    setLoading(true)
+                    setTeam(data);
+                });
+    
+            });
+            socket.on("prevevent",(text)=>{
+                setEventUp(text)
+            })
             socket.on("team", (team) => {
                 setTeam(team);
                 console.log(team)
             });
             socket.emit("domaindat","")
-            socket.on("domainSelected",(res)=>{
-                window.location.reload()
-                setDomainLoading(false)
-            })
             socket.on("domaindata",(res)=>{
-                console.log(res)
+                console.log("update",res)
                 setDomainData(res)
             })
+            socket.on("leaderboard", (leaderboard) => {
+                
+                setLeaderboard(leaderboard.slice(0, 10));
+                console.log("the",leaderboard)
+            });
         }
     }, []);
 
@@ -232,10 +253,7 @@ function Clock() {
         }
     }, [team]);
 
-        socket.on("leaderboard", (leaderboard) => {
-            setLeaderboard(leaderboard.slice(0, 10));
-            console.log(leaderboard)
-        });
+    
 
     const attendanceClass = (attendance) => {
         switch(attendance) {
@@ -415,7 +433,20 @@ function Clock() {
                     </button>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {DomainData.map((domain) => (
+                    {DomainData.map((domain) => {
+                        if(domain.slots==0){
+                            return(
+                                <div key={domain.id} className={`
+                                cursor-pointer p-4 rounded-xl transition-all duration-300
+                                     bg-red-600 hover:bg-white/10 border-2 border-white/10
+                                
+                            `}>
+                                <p className=" text-xl">Slots Filled</p>
+                                <p>{domain.name}</p>
+                                </div>
+                            )
+                        }
+                        return(
                         <div 
                             key={domain.id}
                             onClick={() => handleDomainSelect(domain.id)}
@@ -424,12 +455,13 @@ function Clock() {
                                 ${domain.id === selectedDomain 
                                     ? 'bg-[#34D4BA] text-black border-2 border-[#34D4BA]' 
                                     : 'bg-white/5 hover:bg-white/10 border-2 border-white/10'}
+                                
                             `}
                         >
-                            <h3 className="text-xl font-bold mb-2">{domain.name}</h3>
+                            <h3 className="text-xl font-bold mb-2">{domain.name} ({domain.slots}/10)</h3>
                             <p className="text-sm opacity-80 line-clamp-3">{domain.description}</p>
                         </div>
-                    ))}
+                    )})}
                 </div>
                 <div className="mt-6 flex justify-end gap-4">
                     <button 
@@ -441,7 +473,6 @@ function Clock() {
                     <button 
                         onClick={() => {
                             handleDomain();
-                            setIsModalOpen(false);
                         }}
                         className="px-6 py-2 rounded-full bg-[#34D4BA] text-black hover:bg-[#2ba898] transition-colors"
                         disabled={!selectedDomain || DomainLoading}
@@ -572,7 +603,8 @@ function Clock() {
         <div className="bg-black min-h-screen text-white flex flex-col">
             <Navbar />
             <NotificationBell />
-            <div className="pt-24 sm:pt-28 px-2">
+            <ToastContainer theme="dark" />
+            <div className="pt-42 md:pt-30 px-2">
                 {loading ? (
                     <div className="w-full h-[80vh] flex flex-col justify-center items-center">
                         <div className="animate-pulse"><img src={lod} className="w-32 h-32 sm:w-48 sm:h-48 rounded-full" /></div>
@@ -636,7 +668,7 @@ function Clock() {
                 <div className="w-[50px] h-[50px] flex justify-center items-center 
                               bg-[#ffcc00] rounded-full shadow-[0_0_15px_rgba(255,204,0,0.5)] 
                               border-2 border-[#FFD700] text">
-                    <p className="font-['Game Of Squids']">👑</p>
+                              <img src={king}/>
                 </div>
                 <div>
                     <p className="font-bold text-[#FFD700] text-lg">{team.name}({team.registrationNumber})</p>
@@ -668,7 +700,7 @@ function Clock() {
                                 <CameraSection />
                             </div>
                             <div className="overflow-x-auto mb-6 bg-black border border-white mt-10 rounded-lg p-2 md:p-4">
-                               <div className=" flex justify-center items-center"> <img src={attd} className=" w-14 relative bottom-2"/><h2 className="text-xl md:text-2xl text-center  mb-4 text">ATTENDANCE TRACKER</h2></div>
+                               <div className=" flex justify-center items-center"> <img src={attd} className=" w-10 mr-0.5 relative bottom-2"/><h2 className="text-xl md:text-2xl text-center  mb-4 text">ATTENDANCE TRACKER</h2></div>
                                 <div className="inline-block min-w-full align-middle">
                                     <table className="min-w-full divide-y divide-gray-700 text-sm md:text-base">
                                         <thead>
@@ -738,7 +770,7 @@ function Clock() {
                                     <div className="relative z-10">
                                         <div className="flex items-center justify-center gap-2 mb-6">
                                             <span className="text-3xl">🏆</span>
-                                            <h1 className="text-3xl text-center  text">SCOREBOARD</h1>
+                                            <h1 className="text-3xl text-center  text">GAME SCOREBOARD</h1>
                                         </div>
                                         <div className="space-y-3">
                                             {leaderboard.map((item, index) => (
@@ -768,7 +800,7 @@ function Clock() {
                                                         <div className="flex items-center gap-2">
                                                             <span className="text-sm font-medium text-black">Score:</span>
                                                             <span className="font-bold text-black bg-white/30 px-3 py-1 rounded-full">
-                                                                {item.score || 0}
+                                                                {item.SquidScore || 0}
                                                             </span>
                                                         </div>
                                                     </div>
@@ -784,7 +816,7 @@ function Clock() {
                                     </div>
                                     <div className="rounded-2xl p-6 bg-gradient-to-r from-[#3BEACE] to-[#20D4B7] h-96 flex flex-col justify-center items-center">
                                         <h2 className="text-2xl  text-black mb-4 text-center text">🌐YOUR DOMAIN</h2>
-                                        {!team.Domain ? (
+                                        {!team.Domain  ? (
                                             <div className="text-center">
                                                 <button
                                                     onClick={() => setIsModalOpen(true)}
@@ -796,12 +828,7 @@ function Clock() {
                                             </div>
                                         ) : (
                                             <div className="bg-white/20 p-6 rounded-xl w-full max-w-md">
-                                                <h3 className="text-xl font-bold text-black mb-2">{team.Domain}</h3>
-                                                {DomainData.find(d => d.name === team.Domain)?.description && (
-                                                    <p className="text-black/80">
-                                                        {DomainData.find(d => d.name === team.Domain).description}
-                                                    </p>
-                                                )}
+                                                <h3 className="text-xl font-bold text-black mb-2">{team?.Domain || domain}</h3>
                                             </div>
                                         )}
                                     </div>
@@ -813,12 +840,13 @@ function Clock() {
                                     <div id="problem-statement" className="w-full">
             <div className="bg-[#D2003F] h-full rounded-2xl p-4 md:p-6">
             <div className=" flex justify-center items-center w-full">
-            <img src={prob} className=" w-12 relative bottom-2"/>
+            <img src={prob} className=" w-10 relative bottom-2"/>
                 <h2 className="text-xl md:text-2xl text-center mb-4 text-white text">
                     PROBLEM STATEMENT
                 </h2>
                 </div>
                 {problemError && (
+
                     <div className="text-red-500 bg-red-100/10 p-3 rounded mb-4">
                         {problemError}
                     </div>
@@ -907,7 +935,7 @@ function Clock() {
                         <p className="text-center text-xl mt-10">Failed to load team data. Please try again later.</p>
                     )
                 )}
-                <footer className="mt-auto border-t border-gray-800"></footer>
+                <footer className="mt-auto border-t border-gray-800">
                     <p className="text-center p-4 text-white text" >Made with 💖 By Coding Blocks KARE</p>
                 </footer>
             </div>

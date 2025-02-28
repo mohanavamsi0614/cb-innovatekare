@@ -4,7 +4,7 @@ import PaymentCard from "./components/PaymentVeriy";
 import axios from "axios";
 import api from "./api";
 import { io } from "socket.io-client";
-const socket=io(api)
+import SquidGame from "./SquidGame";
 function Admin() {
     const [teams, setTeams] = useState([]);
     const [verifiedCount, setVerifiedCount] = useState(0);
@@ -53,7 +53,8 @@ function Admin() {
                     {teams.map((team, i) => (
                         <div key={team._id} className="col-span-1">
                             <p className="text-white">{i + 1}</p>
-                            <PaymentCard team={team} />
+                            {/* <PaymentCard team={team} /> */}
+                            <SquidGame team={team}/>
                         </div>
                     ))}
                 </div>
