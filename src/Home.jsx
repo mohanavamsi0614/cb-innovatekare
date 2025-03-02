@@ -155,7 +155,7 @@ function Home() {
                     onClick={() => nav("/registration")}
                     disabled={true}
                 >
-                Registration Are Closed 😔
+                Registration Are Closed 
                 </motion.button>
 
         </motion.div>
