@@ -28,7 +28,7 @@ import king from "/public/king.png"
 import prob from "/public/prob.png"
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-const socket = io("http://localhost:3001");
+const socket = io(api);
 
 function TeamPanel() {
     const [pass, setPass] = useState(localStorage.getItem("token") || "");
@@ -240,7 +240,7 @@ function Clock() {
                 setDomainData(res)
             })
             socket.on("leaderboard", (leaderboard) => {
-                
+
                 setLeaderboard(leaderboard.slice(0, 10));
                 console.log("the",leaderboard)
             });

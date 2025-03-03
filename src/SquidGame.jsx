@@ -2,7 +2,7 @@ import { useState } from "react";
 import { io } from "socket.io-client";
 import api from "./api";
 
-const socket = io("http://localhost:3001");
+const socket = io(api);
 
 function SquidGame({ team }) {
   const [score, setScore] = useState(0);
