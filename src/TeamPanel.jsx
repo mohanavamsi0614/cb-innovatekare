@@ -23,9 +23,11 @@ import onezeroone from "/public/Chars/101.png"
 import oneninenine from "/public/Chars/101.png"
 import twooneeight from "/public/Chars/218.png"
 import fourfivesix from "/public/Chars/456.png"
-import attd from "/public/download-removebg-preview (8).png"
+import attd from "/public/attd.png"
 import king from "/public/king.png"
 import prob from "/public/prob.png"
+import domains from "/public/domains.png"
+import profile from "/public/Players_Profile.png"
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 const socket = io(api);
@@ -227,14 +229,12 @@ function Clock() {
                 });
     
             });
-            socket.on("prevevent",(text)=>{
-                setEventUp(text)
-            })
             socket.on("team", (team) => {
                 setTeam(team);
                 console.log(team)
             });
             socket.emit("domaindat","")
+            socket.emit("prevevent","")
             socket.on("domaindata",(res)=>{
                 console.log("update",res)
                 setDomainData(res)
@@ -424,7 +424,8 @@ function Clock() {
         >
             <div className="text-white">
                 <div className="flex justify-between items-center mb-6">
-                    <h2 className="text-2xl font-bold text-[#34D4BA]">🌐 Choose Your Domain</h2>
+
+                    <h2 className="text-2xl font-bold text-[#34D4BA]">Choose Your Domain</h2>
                     <button 
                         onClick={() => setIsModalOpen(false)}
                         className="text-white/60 hover:text-white transition-colors"
@@ -656,7 +657,8 @@ function Clock() {
                             }} 
                             className="flex flex-col md:flex-row justify-center items-center p-4">
                                 <div className="flex flex-col w-full md:w-1/2">
-    <div className="w-full text-center md:w-[400px] mb-6">
+    <div className="w-full flex justify-center items-center text-center md:w-[400px] mb-6">
+        <img src={profile} className=" w-12"/>
         <h2 className="text-[#f73e91] text-[32px] font-['Game Of Squids'] tracking-widest text">
             PLAYERS PROFILE
         </h2>
@@ -815,7 +817,9 @@ function Clock() {
                                         <img src={squido} className="h-full w-full object-cover rounded-2xl"/>
                                     </div>
                                     <div className="rounded-2xl p-6 bg-gradient-to-r from-[#3BEACE] to-[#20D4B7] h-96 flex flex-col justify-center items-center">
-                                        <h2 className="text-2xl  text-black mb-4 text-center text">🌐YOUR DOMAIN</h2>
+                                        <div className=" flex justify-center items-center w-full">
+                                        <img src={domains} className=" w-9 relative bottom-1" />
+                                        <h2 className="text-2xl  text-black mb-4 text-center text">YOUR DOMAIN</h2></div>
                                         {!team.Domain  ? (
                                             <div className="text-center">
                                                 <button
