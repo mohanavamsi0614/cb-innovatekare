@@ -28,8 +28,6 @@ import king from "/public/king.png"
 import prob from "/public/prob.png"
 import domains from "/public/domains.png"
 import profile from "/public/Players_Profile.png"
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 const socket = io(api);
 
 function TeamPanel() {
@@ -38,6 +36,7 @@ function TeamPanel() {
     const [team, setTeam] = useState(null);
     const [DomainLoading,setDomainLoading]=useState(false)
     const [link, setLink] = useState();
+    const [DomainOpen,setDomainOpen]=useState(false)
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     const [leaderboard, setLeaderboard] = useState([]);
@@ -212,9 +211,10 @@ function Clock() {
             socket.on("domainSelected", (data) => {
                 if(data=="fulled"){
                     alert("Sorry domain got fulled try again now!")
+                   setLoading(true)
                     axios.get(`${api}/event/students//${pass}`).then((res) => {
                         const data = res.data;
-                        setLoading(true)
+                        setLoading(false)
                         setTeam(data);
                     });
                 }
@@ -224,7 +224,7 @@ function Clock() {
                 setLoading(true)
                 axios.get(`${api}/event/students/${pass}`).then((res) => {
                     const data = res.data;
-                    setLoading(true)
+                    setLoading(false)
                     setTeam(data);
                 });
     
@@ -235,6 +235,10 @@ function Clock() {
             });
             socket.emit("domaindat","")
             socket.emit("prevevent","")
+            socket.emit("domainStat","")
+            socket.on("domainStat",(res)=>{
+                setDomainOpen(res)
+            })
             socket.on("domaindata",(res)=>{
                 console.log("update",res)
                 setDomainData(res)
@@ -353,10 +357,10 @@ function Clock() {
     if (!localStorage.getItem("token")) {
         return (
             <div className="bg-black w-full h-screen flex justify-center flex-col items-center font-mono">
-                <div className="w-full flex justify-center items-center mb-10">
+               <div className="w-full flex justify-center items-center mb-6">
                     <img src={kalasalingam} className="size-20" alt="Kalasalingam Logo" />
-                    <img src={cb} className="size-20 relative border border-white ml-5 rounded-full" alt="Coding Blocks Logo" />
-                    <img src={scorecraft} className="size-20 relative ml-5 rounded-full" alt="Coding Blocks Logo"/>
+                    <img src={cb} className="size-20 ml-4 rounded-full" alt="Coding Blocks Logo" />
+                    <img src={scorecraft} className="size-20 ml-4 rounded-3xl"/>
                 </div>
                 <p className="text-3xl font-bold text-center text-white">
                 CODING BLOCKS KARE & SCORECRAFT KARE                </p>
@@ -374,6 +378,7 @@ function Clock() {
                         <label htmlFor="pass" className="text-lg mb-2">Enter Password:</label>
                         <input
                             id="pass"
+                            type="password"
                             placeholder="Enter passcode"
                             className="border border-white h-12 px-3 rounded-md"
                             value={pass}
@@ -604,7 +609,6 @@ function Clock() {
         <div className="bg-black min-h-screen text-white flex flex-col">
             <Navbar />
             <NotificationBell />
-            <ToastContainer theme="dark" />
             <div className="pt-42 md:pt-30 px-2">
                 {loading ? (
                     <div className="w-full h-[80vh] flex flex-col justify-center items-center">
@@ -657,11 +661,12 @@ function Clock() {
                             }} 
                             className="flex flex-col md:flex-row justify-center items-center p-4">
                                 <div className="flex flex-col w-full md:w-1/2">
-    <div className="w-full flex justify-center items-center text-center md:w-[400px] mb-6">
-        <img src={profile} className=" w-12"/>
-        <h2 className="text-[#f73e91] text-[32px] font-['Game Of Squids'] tracking-widest text">
+    <div className="w-full flex justify-center items-center text-center  mb-6">
+        
+        <div className=" flex justify-center w-full items-center"><img src={profile} className=" w-12 mr-3 relative bottom-1"/>
+        <h2 className="text-[#f73e91] text-[32px]  tracking-widest text">
             PLAYERS PROFILE
-        </h2>
+        </h2></div>
     </div>
     <div className="space-y-4">
         <div className="bg-gradient-to-r from-[#FFD700]/20 to-[#FFA500]/20 backdrop-blur-sm 
@@ -818,21 +823,33 @@ function Clock() {
                                     </div>
                                     <div className="rounded-2xl p-6 bg-gradient-to-r from-[#3BEACE] to-[#20D4B7] h-96 flex flex-col justify-center items-center">
                                         <div className=" flex justify-center items-center w-full">
-                                        <img src={domains} className=" w-9 relative bottom-1" />
+                                        <img src={domains} className=" w-8 relative bottom-2 right-1" />
                                         <h2 className="text-2xl  text-black mb-4 text-center text">YOUR DOMAIN</h2></div>
                                         {!team.Domain  ? (
                                             <div className="text-center">
+                                            {DomainOpen ? (                                                
                                                 <button
                                                     onClick={() => setIsModalOpen(true)}
                                                     className="px-8 py-4 bg-white/20 hover:bg-white/30 transition-colors rounded-xl text-black font-bold"
                                                 >
                                                     Select Your Domain
+                                                </button>) : (
+                                                    <button
+                                                    onClick={() => setIsModalOpen(true)}
+                                                    disabled={true}
+                                                    className="px-8 py-4 bg-white/20 hover:bg-white/30 transition-colors rounded-xl text-black font-bold"
+                                                >
+                                                    Will Be Opened Soon...
                                                 </button>
+                                                )
+                                                }
+
                                                 <DomainSelectionModal />
                                             </div>
                                         ) : (
                                             <div className="bg-white/20 p-6 rounded-xl w-full max-w-md">
                                                 <h3 className="text-xl font-bold text-black mb-2">{team?.Domain || domain}</h3>
+                             <h2 className="text-xl font-bold text-black mb-2">{DomainData.filter((i)=>{return i.name==team.Domain})[0]?.description}</h2>
                                             </div>
                                         )}
                                     </div>
@@ -844,7 +861,7 @@ function Clock() {
                                     <div id="problem-statement" className="w-full">
             <div className="bg-[#D2003F] h-full rounded-2xl p-4 md:p-6">
             <div className=" flex justify-center items-center w-full">
-            <img src={prob} className=" w-10 relative bottom-2"/>
+            <img src={prob} className=" w-10 relative bottom-3"/>
                 <h2 className="text-xl md:text-2xl text-center mb-4 text-white text">
                     PROBLEM STATEMENT
                 </h2>

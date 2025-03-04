@@ -5,6 +5,7 @@ import axios from "axios";
 import api from "./api";
 import { io } from "socket.io-client";
 import SquidGame from "./SquidGame";
+const socket=io(api)
 function Admin() {
     const [teams, setTeams] = useState([]);
     const [verifiedCount, setVerifiedCount] = useState(0);

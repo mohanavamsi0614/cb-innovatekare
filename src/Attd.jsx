@@ -8,6 +8,9 @@ function Attd() {
     const [teams, setTeams] = useState([]);
     const [loading, setLoading] = useState(true);
     const [currentSector, setCurrentSector] = useState(0);
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [password, setPassword] = useState(sessionStorage.getItem("password"));
+    const [error, setError] = useState("");
     const sectors = ["456", "067", "101", "001", "218","199"];
 
     useEffect(() => {
@@ -22,8 +25,24 @@ function Attd() {
                 setLoading(false);
             }
         }
-        data();
-    }, []);
+        if(password == "kluitkare2025"){
+            setIsAuthenticated(true)
+        }
+        if (isAuthenticated) {
+            data();
+        }
+    }, [isAuthenticated]);
+
+    const handleLogin = (e) => {
+        e.preventDefault();
+        if (password === "kluitkare2025") {
+            setIsAuthenticated(true);
+            sessionStorage.setItem("password",password)
+            setError("");
+        } else {
+            setError("Incorrect password. Please try again.");
+        }
+    };
 
     const getSectorTeams = (sectorIndex) => {
         const start = sectorIndex * 15;
@@ -31,6 +50,37 @@ function Attd() {
         console.log(teams.slice(start, end))
         return teams.slice(start, end);
     };
+
+    if (!isAuthenticated) {
+        return (
+            <div className="bg-gray-900 flex flex-col items-center justify-center min-h-screen p-4">
+                <div className="w-full max-w-md bg-gray-800 rounded-lg shadow-md p-6">
+                    <h2 className="text-2xl text-white text-center mb-6">Attendance Dashboard Login</h2>
+                    <form onSubmit={handleLogin} className="space-y-4">
+                        <div>
+                            <label htmlFor="password" className="block text-white mb-2">Password</label>
+                            <input 
+                                type="password"
+                                id="password"
+                                className="w-full px-4 py-2 bg-gray-700 text-white rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                required
+                            />
+                        </div>
+                        {error && <p className="text-red-500 text-sm">{error}</p>}
+                        <button 
+                            type="submit" 
+                            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                            Login
+                        </button>
+                    </form>
+                </div>
+            </div>
+        );
+    }
+    
     return (
         <div className="bg-gray-900 flex flex-col min-h-screen p-4">
             <h1 className="text-3xl text-white text-center mt-4 mb-6">Attendance Dashboard</h1>
@@ -71,6 +121,14 @@ function Attd() {
                                 </details>
                             ))}
                         </div>
+                    </div>
+                    <div className="text-right mt-4">
+                        <button 
+                            onClick={() => setIsAuthenticated(false)} 
+                            className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded"
+                        >
+                            Logout
+                        </button>
                     </div>
                 </>
             )}
