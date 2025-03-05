@@ -51,6 +51,9 @@ function Admin() {
                 </div>
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <button onClick={()=>{
+                        socket.emit("domainOpen")
+                    }}>Open</button>
                     {teams.map((team, i) => (
                         <div key={team._id} className="col-span-1">
                             <p className="text-white">{i + 1}</p>
