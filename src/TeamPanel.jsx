@@ -3,6 +3,8 @@ import logo from "/public/squid-game-2-smile.jpg";
 import axios from "axios";
 import api from "./api";
 import { io } from "socket.io-client";
+import { driver } from "driver.js";
+import "driver.js/dist/driver.css";
 import kalasalingam from "/public/kalasalingam.png"
 import cb from "/public/KARE(latest).png"
 import lod from "/image_processing20210907-13511-1juj33d.gif"
@@ -54,6 +56,14 @@ function TeamPanel() {
     const [hasNewUpdate, setHasNewUpdate] = useState(false);
     const [notificationVisible, setNotificationVisible] = useState(false);
     
+    // Add state to track if tour has been shown
+    const [tourShown, setTourShown] = useState(
+        localStorage.getItem("kare_tourShown") === "true"
+    );
+    
+    // Reference for driver instance
+    const driverRef = useRef(null);
+
     const handleDomainSelect = (domainId) => {
         setSelectedDomain(domainId)
     };
@@ -157,6 +167,105 @@ function Clock() {
   );
 }
 
+// Function to initialize and start the tour
+const startTour = () => {
+    // Initialize a new driver instance
+    const driverObj = driver({
+        showProgress: true,
+        steps: [
+            {
+                element: '#team-profile',
+                popover: {
+                    title: 'Team Profile',
+                    description: 'This section shows your team information and sector assignment',
+                    side: 'bottom',
+                    align: 'center'
+                }
+            },
+            {
+                element: '#team-members',
+                popover: {
+                    title: 'Team Members',
+                    description: 'Here you can see all your team members and their details',
+                    side: 'right',
+                    align: 'center'
+                }
+            },
+            {
+                element: '#attendance-tracker',
+                popover: {
+                    title: 'Attendance Tracker',
+                    description: 'Keep track of your team\'s attendance status here',
+                    side: 'top',
+                    align: 'center'
+                }
+            },
+            {
+                element: '#leaderboard',
+                popover: {
+                    title: 'Leaderboard',
+                    description: 'Check your rankings and scores against other teams',
+                    side: 'left',
+                    align: 'center'
+                }
+            },
+            {
+                element: '#domain-selection',
+                popover: {
+                    title: 'Domain Selection',
+                    description: 'Choose your project domain from the available options',
+                    side: 'left',
+                    align: 'center'
+                }
+            },
+            {
+                element: '#problem-statement',
+                popover: {
+                    title: 'Problem Statement',
+                    description: 'Define your problem statement for the hackathon here',
+                    side: 'top',
+                    align: 'center'
+                }
+            },
+            {
+                element: '#event-updates',
+                popover: {
+                    title: 'Event Updates',
+                    description: 'Important announcements and updates will appear here',
+                    side: 'top',
+                    align: 'center'
+                }
+            }
+        ],
+        nextBtnText: 'Next',
+        prevBtnText: 'Previous',
+        doneBtnText: 'Done',
+        closeBtnText: 'Skip'
+    });
+    
+    driverRef.current = driverObj;
+    driverObj.drive();
+    
+    localStorage.setItem("kare_tourShown", "true");
+    setTourShown(true);
+};
+
+useEffect(() => {
+    if (team && !tourShown) {
+        const timer = setTimeout(() => {
+            startTour();
+        }, 1500);
+        return () => clearTimeout(timer);
+    }
+}, [team, tourShown]);
+
+const restartTour = () => {
+    if (driverRef.current) {
+        driverRef.current.drive();
+    } else {
+        startTour();
+    }
+};
 
     const verify = () => {
         setLoading(true);
@@ -349,6 +458,18 @@ function Clock() {
                             {item.name}
                         </a>
                     ))}
+                    
+                    {/* Add Help button to restart tour */}
+                    <button 
+                        onClick={restartTour}
+                        className="relative text-[#34D4BA] hover:text-white font-[Poppins] text-[16px] sm:text-[18px] font-bold 
+                                 transition-all duration-300 flex items-center gap-1"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
+                        </svg>
+                        Help
+                    </button>
                 </div>
             </div>
         </nav>
@@ -620,7 +741,7 @@ function Clock() {
                         
                         <div className="w-full max-w-7xl p-2 sm:p-6 mx-auto">
                         
-                            <div className="bg-gradient-to-r from-[#34D4BA] to-[#20D4B7] rounded-md p-1 mb-10 mt-3 ">
+                            <div id="team-profile" className="bg-gradient-to-r from-[#34D4BA] to-[#20D4B7] rounded-md p-1 mb-10 mt-3 ">
                                 <div className="bg-gradient-to-r from-[#34D4BA]/10 to-[#20D4B7]/10 backdrop-blur-sm rounded p-4 flex flex-col sm:flex-row justify-between items-center gap-4">
                                     <div className="flex items-center gap-4">
                                         <div className="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center text-2xl animate-bounce">
@@ -652,7 +773,7 @@ function Clock() {
                                 </div>
                             </div>
                             
-                            <div style={{
+                            <div id="team-members" style={{
                                 width: "100%", 
                                 minHeight: "464px",
                                 background: 'linear-gradient(98deg, rgba(191.25, 191.25, 191.25, 0.40) 0%, rgba(102, 102, 102, 0.36) 100%)', 
@@ -706,7 +827,7 @@ function Clock() {
 
                                 <CameraSection />
                             </div>
-                            <div className="overflow-x-auto mb-6 bg-black border border-white mt-10 rounded-lg p-2 md:p-4">
+                            <div id="attendance-tracker" className="overflow-x-auto mb-6 bg-black border border-white mt-10 rounded-lg p-2 md:p-4">
                                <div className=" flex justify-center items-center"> <img src={attd} className=" w-10 mr-0.5 relative bottom-2"/><h2 className="text-xl md:text-2xl text-center  mb-4 text">ATTENDANCE TRACKER</h2></div>
                                 <div className="inline-block min-w-full align-middle">
                                     <table className="min-w-full divide-y divide-gray-700 text-sm md:text-base">
@@ -817,7 +938,7 @@ function Clock() {
                                     </div>
                                 </div>
 
-                                <div className="w-full md:w-1/2 flex flex-col gap-4">
+                                <div id="domain-selection" className="w-full md:w-1/2 flex flex-col gap-4">
                                     <div className="rounded-2xl h-1/2">
                                         <img src={squido} className="h-full w-full object-cover rounded-2xl"/>
                                     </div>

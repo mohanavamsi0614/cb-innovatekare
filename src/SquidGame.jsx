@@ -26,7 +26,7 @@ function SquidGame({ team }) {
   return (
     <div className=" flex w-full justify-center">
     <div className="bg-white h-full  text-black p-6 rounded-lg shadow-lg w-80">
-      <h2 className="text-xl font-bold mb-4 text-center">Update Score</h2>
+      <h2 className="text-xl font-bold mb-4 text-center">{team.teamname}</h2>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
