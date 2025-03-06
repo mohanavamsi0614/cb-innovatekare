@@ -8,7 +8,6 @@ function SquidGame({ team }) {
   const [score, setScore] = useState(0);
   const [error, setError] = useState("");
   const [final,setfinal]=useState(team.SquidScore)
-
   function handleSubmit(e) {
     e.preventDefault();
 
