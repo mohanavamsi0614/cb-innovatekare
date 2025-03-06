@@ -794,8 +794,8 @@ const restartTour = () => {
                         rounded-xl p-4 border border-[#FFD700]">
             <div className="flex items-center gap-4">
                 <div className="w-[50px] h-[50px] flex justify-center items-center 
-                              bg-[#ffcc00] rounded-full shadow-[0_0_15px_rgba(255,204,0,0.5)] 
-                              border-2 border-[#FFD700] text">
+                              bg-[#ffcc50] rounded-full shadow-[0_0_15px_rgba(255,204,0,0.5)] 
+                              border-2 border-[#FFD720] text">
                               <img src={king}/>
                 </div>
                 <div>
