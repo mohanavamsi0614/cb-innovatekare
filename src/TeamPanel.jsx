@@ -1078,7 +1078,7 @@ const restartTour = () => {
                     )
                 )}
                 <footer className="mt-auto border-t border-gray-800">
-                    <p className="text-center p-4 text-white text" >Made with 💖 By Coding Blocks KARE</p>
+                    <p className="text-center p-4 text-white text" >Made and designed By Vamsi And Sushma</p>
                 </footer>
             </div>
         </div>
