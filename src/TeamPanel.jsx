@@ -244,7 +244,7 @@ const startTour = () => {
                 element:"footer",
                 popover: {
                     title: 'The Devloper and Designer',
-                    description: 'Desgined By Sushmitha 🖌️ And Devloped By Vamsi ⚡',
+                    description: 'Desgined By Sushma, UI UX Lead @ CB-Kare 🖌️ And Devloped By Vamsi Web-Dev Lead @ CB-KARE ⚡',
                     side: 'top',
                     align: 'center'
                 }
@@ -260,8 +260,15 @@ const startTour = () => {
     driverObj.drive();
     
     localStorage.setItem("kare_tourShown", "true");
+  
     setTourShown(true);
 };
+const spek=new SpeechSynthesisUtterance()
+spek.pitch=1
+spek.rate=1
+spek.voice=
+spek.text="Welcome to Innovative-kare Team "+team.teamname+". From Coding Blocks-kare  and scorecraft-kare and let build something awsome"
+speechSynthesis.speak(spek)
 
 useEffect(() => {
     if (team && !tourShown) {
@@ -455,7 +462,8 @@ const restartTour = () => {
 
         setProblemSubmitting(true);
         setProblemError("");
-
+        const ans=prompt("Please type Innovative-kare to confirm")
+        if(ans=="Innovative-kare"){
         try {
             const response = await axios.post(`${api}/problemSta`, {
                 id: team._id,
@@ -474,6 +482,11 @@ const restartTour = () => {
         } finally {
             setProblemSubmitting(false);
         }
+    }
+    else{
+        setProblemSubmitting(true);
+        alert("Please confirm")
+    }
     };
 
     const scrollToSection = (sectionId) => {

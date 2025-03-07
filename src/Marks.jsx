@@ -127,6 +127,7 @@ function Marks() {
             }, 500); // Small delay to ensure UI updates properly
             
         } catch (error) {
+            alert("something went wrong")
             setSubmitStatus({ type: 'error', message: 'Failed to submit scores. Please try again.' });
         } finally {
             setSubmitting(false);
