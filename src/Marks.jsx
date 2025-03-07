@@ -51,9 +51,6 @@ function Marks() {
         }
     }, [isAuthenticated]);
 
-    // Completely remove the useEffect that resets scores on team change
-    // We'll handle this differently
-
     const handleLogin = (e) => {
         e.preventDefault();
         if (password === "kluitkare2025") {
