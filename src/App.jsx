@@ -10,6 +10,7 @@ import EventUp from './EventUp';
 import Marks from './Marks';
 import Leaderboard from './LeaderBoard';
 import AttdDetail from './AttdDetail';
+import Food from './Food';
 
 function App() {
     return (
@@ -24,7 +25,7 @@ function App() {
         <Route path='/marks' element={<Marks/>}/>
         <Route path='/balaya' element={<Leaderboard/>}/>
         <Route path='/babu' element={<AttdDetail/>}/>
-        
+        <Route path='/food' element={<Food/>}/>
         {/* <Route path='/admin' element={<Admin/>}/>
         <Route path='/teampanel' element={<TeamPanel/>}/>
         <Route path='/at' element={<AllTeamsAttendance/>}/>

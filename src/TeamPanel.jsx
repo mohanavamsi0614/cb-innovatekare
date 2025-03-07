@@ -398,6 +398,7 @@ const restartTour = () => {
         if (team) {
             socket.emit("join", team.teamname);
         }
+        localStorage.setItem("team",JSON.stringify(team))
     }, [team]);
 
     // Add the countdown timer function
