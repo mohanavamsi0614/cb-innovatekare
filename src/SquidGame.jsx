@@ -12,7 +12,7 @@ function SquidGame({ team }) {
     e.preventDefault();
 
     if (!score || isNaN(score)) {
-      setError("Please enter a valid numeric score.");
+      setError("Please enter a valid numeric score");
       return;
     }
 
