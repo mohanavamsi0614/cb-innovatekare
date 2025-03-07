@@ -209,7 +209,7 @@ const startTour = () => {
                 element: '#leaderboard',
                 popover: {
                     title: 'Leaderboard',
-                    description: 'Check your rankings and scores against other teams',
+                    description: 'Check your rankings and scores against other teams for the games we will conduct',
                     side: 'left',
                     align: 'center'
                 }
@@ -237,6 +237,14 @@ const startTour = () => {
                 popover: {
                     title: 'Event Updates',
                     description: 'Important announcements and updates will appear here',
+                    side: 'top',
+                    align: 'center'
+                }
+            },{
+                element:"footer",
+                popover: {
+                    title: 'The Devloper and Designer',
+                    description: 'Desgined By Sushmitha 🖌️ And Devloped By Vamsi ⚡',
                     side: 'top',
                     align: 'center'
                 }
