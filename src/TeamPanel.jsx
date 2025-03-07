@@ -39,6 +39,13 @@ function TeamPanel() {
     const [DomainLoading,setDomainLoading]=useState(false)
     const [link, setLink] = useState();
     const [DomainOpen,setDomainOpen]=useState(false)
+    const [domainOpenTime, setDomainOpenTime] = useState(null); // Add this state for storing domain open time
+    const [countdownTime, setCountdownTime] = useState({
+        days: 0,
+        hours: 0,
+        minutes: 0,
+        seconds: 0,
+    });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     const [leaderboard, setLeaderboard] = useState([]);
@@ -56,12 +63,10 @@ function TeamPanel() {
     const [hasNewUpdate, setHasNewUpdate] = useState(false);
     const [notificationVisible, setNotificationVisible] = useState(false);
     
-    // Add state to track if tour has been shown
     const [tourShown, setTourShown] = useState(
         localStorage.getItem("kare_tourShown") === "true"
     );
     
-    // Reference for driver instance
     const driverRef = useRef(null);
 
     const handleDomainSelect = (domainId) => {
@@ -346,8 +351,22 @@ const restartTour = () => {
             socket.emit("prevevent","")
             socket.emit("domainStat","")
             socket.on("domainStat",(res)=>{
-                setDomainOpen(res)
-            })
+                // Handle the timestamp format
+                if (res && !DomainOpen) {
+                    setDomainOpenTime(res);
+                    const timeLeft = calculateTimeLeft(res);
+                    setCountdownTime(timeLeft);
+                    
+                    // If the time has already passed, set DomainOpen to true
+                    if (new Date(res) <= new Date()) {
+                        setDomainOpen(true);
+                    } else {
+                        setDomainOpen(false);
+                    }
+                } else {
+                    setDomainOpen(!!res);
+                }
+            });
             socket.on("domaindata",(res)=>{
                 console.log("update",res)
                 setDomainData(res)
@@ -366,7 +385,38 @@ const restartTour = () => {
         }
     }, [team]);
 
-    
+    // Add the countdown timer function
+    const calculateTimeLeft = (targetDate) => {
+        const difference = new Date(targetDate) - new Date();
+        if (difference <= 0) {
+            setDomainOpen(true);
+            return { days: 0, hours: 0, minutes: 0, seconds: 0 };
+        }
+
+        return {
+            days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+            hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+            minutes: Math.floor((difference / 1000 / 60) % 60),
+            seconds: Math.floor((difference / 1000) % 60),
+        };
+    };
+
+    // Add a useEffect for the countdown timer
+    useEffect(() => {
+        if (!domainOpenTime || DomainOpen) return;
+
+        const timer = setInterval(() => {
+            const timeLeft = calculateTimeLeft(domainOpenTime);
+            setCountdownTime(timeLeft);
+            
+            if (timeLeft.days === 0 && timeLeft.hours === 0 && timeLeft.minutes === 0 && timeLeft.seconds === 0) {
+                setDomainOpen(true);
+                clearInterval(timer);
+            }
+        }, 1000);
+
+        return () => clearInterval(timer);
+    }, [domainOpenTime, DomainOpen]);
 
     const attendanceClass = (attendance) => {
         switch(attendance) {
@@ -726,6 +776,85 @@ const restartTour = () => {
         </div>
     );
 
+    // Create a CountdownDisplay component
+    const CountdownDisplay = () => (
+        <div className="flex flex-col items-center space-y-2">
+            <p className="text-black font-semibold">Domain selection opens in:</p>
+            <div className="grid grid-flow-col gap-2 text-center auto-cols-max">
+                {countdownTime.days > 0 && (
+                    <div className="flex flex-col p-2 bg-black/20 rounded-lg">
+                        <span className="text-2xl font-bold text-black">
+                            {countdownTime.days}
+                        </span>
+                        <span className="text-black/70 text-xs">days</span>
+                    </div>
+                )}
+                <div className="flex flex-col p-2 bg-black/20 rounded-lg">
+                    <span className="text-2xl font-bold text-black">
+                        {countdownTime.hours.toString().padStart(2, "0")}
+                    </span>
+                    <span className="text-black/70 text-xs">hours</span>
+                </div>
+                <div className="flex flex-col p-2 bg-black/20 rounded-lg">
+                    <span className="text-2xl font-bold text-black">
+                        {countdownTime.minutes.toString().padStart(2, "0")}
+                    </span>
+                    <span className="text-black/70 text-xs">min</span>
+                </div>
+                <div className="flex flex-col p-2 bg-black/20 rounded-lg">
+                    <span className="text-2xl font-bold text-black">
+                        {countdownTime.seconds.toString().padStart(2, "0")}
+                    </span>
+                    <span className="text-black/70 text-xs">sec</span>
+                </div>
+            </div>
+        </div>
+    );
+
+    const DomainSelectionSection = () => (
+        <div id="domain-selection" className="w-full md:w-1/2 flex flex-col gap-4">
+            <div className="rounded-2xl h-1/2">
+                <img src={squido} className="h-full w-full object-cover rounded-2xl"/>
+            </div>
+            <div className="rounded-2xl p-6 bg-gradient-to-r from-[#3BEACE] to-[#20D4B7] h-96 flex flex-col justify-center items-center">
+                <div className="flex justify-center items-center w-full">
+                    <img src={domains} className="w-8 relative bottom-2 right-1" />
+                    <h2 className="text-2xl text-black mb-4 text-center text">YOUR DOMAIN</h2>
+                </div>
+                {!team.Domain ? (
+                    <div className="text-center">
+                        {DomainOpen ? (
+                            <button
+                                onClick={() => setIsModalOpen(true)}
+                                className="px-8 py-4 bg-white/20 hover:bg-white/30 transition-colors rounded-xl text-black font-bold"
+                            >
+                                Select Your Domain
+                            </button>
+                        ) : (
+                            <div className="flex flex-col items-center space-y-4">
+                                <CountdownDisplay />
+                                <button
+                                    disabled={true}
+                                    className="px-8 py-4 bg-white/20 opacity-60 cursor-not-allowed transition-colors rounded-xl text-black font-bold"
+                                >
+                                    Domain Selection Locked
+                                </button>
+                            </div>
+                        )}
+                        <DomainSelectionModal />
+                    </div>
+                ) : (
+                    <div className="bg-white/20 p-6 rounded-xl w-full max-w-md">
+                        <h3 className="text-xl font-bold text-black mb-2">{team?.Domain || domain}</h3>
+                        <h2 className="text-xl font-bold text-black mb-2">
+                            {DomainData.filter((i) => { return i.name == team.Domain })[0]?.description}
+                        </h2>
+                    </div>
+                )}
+            </div>
+        </div>
+    );
+
     return (
         <div className="bg-black min-h-screen text-white flex flex-col">
             <Navbar />
@@ -938,43 +1067,7 @@ const restartTour = () => {
                                     </div>
                                 </div>
 
-                                <div id="domain-selection" className="w-full md:w-1/2 flex flex-col gap-4">
-                                    <div className="rounded-2xl h-1/2">
-                                        <img src={squido} className="h-full w-full object-cover rounded-2xl"/>
-                                    </div>
-                                    <div className="rounded-2xl p-6 bg-gradient-to-r from-[#3BEACE] to-[#20D4B7] h-96 flex flex-col justify-center items-center">
-                                        <div className=" flex justify-center items-center w-full">
-                                        <img src={domains} className=" w-8 relative bottom-2 right-1" />
-                                        <h2 className="text-2xl  text-black mb-4 text-center text">YOUR DOMAIN</h2></div>
-                                        {!team.Domain  ? (
-                                            <div className="text-center">
-                                            {DomainOpen ? (                                                
-                                                <button
-                                                    onClick={() => setIsModalOpen(true)}
-                                                    className="px-8 py-4 bg-white/20 hover:bg-white/30 transition-colors rounded-xl text-black font-bold"
-                                                >
-                                                    Select Your Domain
-                                                </button>) : (
-                                                    <button
-                                                    onClick={() => setIsModalOpen(true)}
-                                                    disabled={true}
-                                                    className="px-8 py-4 bg-white/20 hover:bg-white/30 transition-colors rounded-xl text-black font-bold"
-                                                >
-                                                    Will Be Opened Soon...
-                                                </button>
-                                                )
-                                                }
-
-                                                <DomainSelectionModal />
-                                            </div>
-                                        ) : (
-                                            <div className="bg-white/20 p-6 rounded-xl w-full max-w-md">
-                                                <h3 className="text-xl font-bold text-black mb-2">{team?.Domain || domain}</h3>
-                             <h2 className="text-xl font-bold text-black mb-2">{DomainData.filter((i)=>{return i.name==team.Domain})[0]?.description}</h2>
-                                            </div>
-                                        )}
-                                    </div>
-                                </div>
+                                <DomainSelectionSection />
                             </div>
 
                             <div className="mt-6 flex-col  md:flex gap-6">

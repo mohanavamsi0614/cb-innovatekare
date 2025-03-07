@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import "./admin.css";
-import PaymentCard from "./components/PaymentVeriy";
 import axios from "axios";
 import api from "./api";
 import { io } from "socket.io-client";
@@ -44,6 +43,10 @@ function Admin() {
                     <h2 className="text-2xl font-semibold">Total Teams</h2>
                     <p className="text-4xl mt-2">{teams.length}</p>
                 </div>
+                <button className=" p-4 bg-green-300 text-white rounded-2xl" onClick={() => {
+        const futureTime = new Date(Date.now() + 10 * 60 * 1000).toISOString();
+        socket.emit("domainOpen", { open: futureTime });
+                    }}>Open</button>
             </div>
             {loading ? (
                 <div className="flex justify-center items-center">
@@ -51,9 +54,7 @@ function Admin() {
                 </div>
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <button onClick={()=>{
-                        socket.emit("domainOpen")
-                    }}>Open</button>
+                  
                     {teams.map((team, i) => (
                         <div key={team._id} className="col-span-1">
                             <p className="text-white">{i + 1}</p>
