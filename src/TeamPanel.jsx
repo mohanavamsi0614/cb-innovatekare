@@ -260,15 +260,15 @@ const startTour = () => {
     driverObj.drive();
     
     localStorage.setItem("kare_tourShown", "true");
-  
+    const spek=new SpeechSynthesisUtterance()
+    spek.pitch=1
+    spek.rate=1
+    spek.voice=
+    spek.text="Welcome to Innovative-kare Team "+team.teamname+". From Coding Blocks-kare  and scorecraft-kare and let build something awsome"
+    speechSynthesis.speak(spek)
+    
     setTourShown(true);
 };
-const spek=new SpeechSynthesisUtterance()
-spek.pitch=1
-spek.rate=1
-spek.voice=
-spek.text="Welcome to Innovative-kare Team "+team.teamname+". From Coding Blocks-kare  and scorecraft-kare and let build something awsome"
-speechSynthesis.speak(spek)
 
 useEffect(() => {
     if (team && !tourShown) {
