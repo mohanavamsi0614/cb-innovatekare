@@ -111,7 +111,7 @@ function EventUp() {
         </table>
 
         <div class="mt-6 text-center">
-            <a href="https://res.cloudinary.com/dus9hgplo/raw/upload/v1741102606/InnovativeKare.pptx" download class="bg-red-600 text-white px-6 py-3 rounded-lg shadow hover:bg-red-700 text-lg font-bold flex items-center justify-center gap-2">
+            <a href="https://res.cloudinary.com/dus9hgplo/raw/upload/v1741403183/PPT_Template_Innovate_KARE.pptx" download class="bg-red-600 text-white px-6 py-3 rounded-lg shadow hover:bg-red-700 text-lg font-bold flex items-center justify-center gap-2">
                 📥 Download Template 🚀
             </a>
         </div>

@@ -259,14 +259,7 @@ const startTour = () => {
     driverRef.current = driverObj;
     driverObj.drive();
     
-    localStorage.setItem("kare_tourShown", "true");
-    const spek=new SpeechSynthesisUtterance()
-    spek.pitch=1
-    spek.rate=1
-    spek.voice=
-    spek.text="Welcome to Innovative-kare Team "+team.teamname+". From Coding Blocks-kare  and scorecraft-kare and let build something awsome"
-    speechSynthesis.speak(spek)
-    
+    localStorage.setItem("kare_tourShown", "true");  
     setTourShown(true);
 };
 
@@ -329,13 +322,21 @@ const restartTour = () => {
                     setLoading(false);
                 });
             socket.on("eventupdates",(text)=>{
+                if(text != ""){
                 document.querySelector(".htmlcon").innerHTML=text
                 setEventUp(text)
                 setHasNewUpdate(true);
                 setNotificationVisible(true);
+                try{
+                new Notification("Event Update",{body:"Check your teampanel",icon:cb})
+                }
+                catch{
+                    console.log("not supported")
+                }
                 setTimeout(() => {
                     setNotificationVisible(false);
                 }, 10000);
+            }
             })
             socket.on("domainSelected", (data) => {
                 if(data=="fulled"){
@@ -399,8 +400,12 @@ const restartTour = () => {
             socket.emit("join", team.teamname);
         }
         localStorage.setItem("team",JSON.stringify(team))
+        Notification.requestPermission().then((res)=>{
+            if(res !="enied"){
+            alert("please allow")
+            }
+        })
     }, [team]);
-
     // Add the countdown timer function
     const calculateTimeLeft = (targetDate) => {
         const difference = new Date(targetDate) - new Date();
@@ -945,7 +950,7 @@ const restartTour = () => {
                         rounded-xl p-4 border border-[#FFD700]">
             <div className="flex items-center gap-4">
                 <div className="w-[50px] h-[50px] flex justify-center items-center 
-                              bg-[#ffcc50] rounded-full shadow-[0_0_15px_rgba(255,204,0,0.5)] 
+                              bg-yellow-400/70 rounded-full shadow-[0_0_15px_rgba(255,204,0,0.5)] 
                               border-2 border-[#FFD720] text">
                               <img src={king}/>
                 </div>
@@ -979,7 +984,7 @@ const restartTour = () => {
                                 <CameraSection />
                             </div>
                             <div id="attendance-tracker" className="overflow-x-auto mb-6 bg-black border border-white mt-10 rounded-lg p-2 md:p-4">
-                               <div className=" flex justify-center items-center"> <img src={attd} className=" w-10 mr-0.5 relative bottom-2"/><h2 className="text-xl md:text-2xl text-center  mb-4 text">ATTENDANCE TRACKER</h2></div>
+                               <div className=" flex justify-center items-center"> <img src={attd} className=" w-14 mr-0.5 relative bottom-2"/><h2 className="text-xl md:text-2xl text-center  mb-4 text">ATTENDANCE TRACKER</h2></div>
                                 <div className="inline-block min-w-full align-middle">
                                     <table className="min-w-full divide-y divide-gray-700 text-sm md:text-base">
                                         <thead>
