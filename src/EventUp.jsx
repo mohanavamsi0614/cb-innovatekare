@@ -37,29 +37,24 @@ function EventUp() {
             <thead>
                 <tr class="bg-gray-700 text-gray-200">
                     <th class="border border-gray-600 p-2 text-left">📌 Criteria</th>
-                    <th class="border border-gray-600 p-2 text-center">🎯 Marks</th>
                     <th class="border border-gray-600 p-2 text-left">📖 Description</th>
                 </tr>
             </thead>
             <tbody>
                 <tr class="bg-gray-800">
                     <td class="border border-gray-700 p-2">💡 Problem Understanding & Clarity</td>
-                    <td class="border border-gray-700 p-2 text-center">🔟</td>
                     <td class="border border-gray-700 p-2">How clearly is the problem within the university/college identified? Is it well-defined and justified?</td>
                 </tr>
                 <tr class="bg-gray-900">
                     <td class="border border-gray-700 p-2">🛠️ Feasibility & Relevance of Solution</td>
-                    <td class="border border-gray-700 p-2 text-center">🔟</td>
                     <td class="border border-gray-700 p-2">Is the proposed solution realistically implementable in a university setting? Does it directly address the identified problem?</td>
                 </tr>
                 <tr class="bg-gray-800">
                     <td class="border border-gray-700 p-2">⚙️ Technical Approach & Feasibility</td>
-                    <td class="border border-gray-700 p-2 text-center">🔟</td>
                     <td class="border border-gray-700 p-2">Are the chosen technologies/tools appropriate? Is the implementation approach sound and achievable within the hackathon timeframe?</td>
                 </tr>
                 <tr class="bg-gray-900">
                     <td class="border border-gray-700 p-2">🚀 Prototype / Early Development Progress</td>
-                    <td class="border border-gray-700 p-2 text-center">🔟</td>
                     <td class="border border-gray-700 p-2">Has the team started coding or designing a working prototype? Is there visible progress beyond just an idea?</td>
                 </tr>
             </tbody>
@@ -82,29 +77,24 @@ function EventUp() {
             <thead>
                 <tr class="bg-gray-700 text-gray-200">
                     <th class="border border-gray-600 p-2 text-left">📌 Criteria</th>
-                    <th class="border border-gray-600 p-2 text-center">🎯 Marks</th>
                     <th class="border border-gray-600 p-2 text-left">📖 Description</th>
                 </tr>
             </thead>
             <tbody>
                 <tr class="bg-gray-800">
                     <td class="border border-gray-700 p-2">💡 Problem Understanding & Clarity</td>
-                    <td class="border border-gray-700 p-2 text-center">🔟</td>
                     <td class="border border-gray-700 p-2">How clearly is the problem within the university/college identified? Is it well-defined and justified?</td>
                 </tr>
                 <tr class="bg-gray-900">
                     <td class="border border-gray-700 p-2">🛠️ Feasibility & Relevance of Solution</td>
-                    <td class="border border-gray-700 p-2 text-center">🔟</td>
                     <td class="border border-gray-700 p-2">Is the proposed solution realistically implementable in a university setting? Does it directly address the identified problem?</td>
                 </tr>
                 <tr class="bg-gray-800">
                     <td class="border border-gray-700 p-2">⚙️ Technical Approach & Feasibility</td>
-                    <td class="border border-gray-700 p-2 text-center">🔟</td>
                     <td class="border border-gray-700 p-2">Are the chosen technologies/tools appropriate? Is the implementation approach sound and achievable within the hackathon timeframe?</td>
                 </tr>
                 <tr class="bg-gray-900">
                     <td class="border border-gray-700 p-2">🚀 Prototype / Early Development Progress</td>
-                    <td class="border border-gray-700 p-2 text-center">🔟</td>
                     <td class="border border-gray-700 p-2">Has the team started coding or designing a working prototype? Is there visible progress beyond just an idea?</td>
                 </tr>
             </tbody>
@@ -117,6 +107,7 @@ function EventUp() {
         </div>
     </div>`).then(()=>{console.log("done")})
 }}>Copy</button>
+
             </div>
         </div>
     );
