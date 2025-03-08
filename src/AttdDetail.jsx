@@ -32,8 +32,9 @@ function AttdDetail() {
                     teamId: team._id,
                     role: "Team Lead",
                     FirstAttd:team.lead.FirstAttd,
-                    hasAttended: team.lead.SecondAttd =="Present" ? true : false
-                });
+                    SecondAttd:team.lead.SecondAttd,
+                    hasAttended: team.lead.ThirdAttd=="Present" ? true : false
+            });
             }
             
             if (team.teamMembers && team.teamMembers.length > 0) {
@@ -44,7 +45,8 @@ function AttdDetail() {
                         teamId: team._id,
                         role: "Member",
                         FirstAttd:member.FirstAttd,
-                        hasAttended: member.SecondAttd=="Present" ? true : false
+                        SecondAttd:member.SecondAttd,
+                        hasAttended: member.ThirdAttd=="Present" ? true : false
                     });
                 });
             }
@@ -110,6 +112,7 @@ function AttdDetail() {
                                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Name</th>
                                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">First </th>
                                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Secound</th>
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Third</th>
 
                                 </tr>
                             </thead>
@@ -118,15 +121,21 @@ function AttdDetail() {
                                     <tr key={index} className={index % 2 === 0 ? 'bg-gray-800' : 'bg-gray-750'}>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm">{member.name || 'N/A'}</td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm">
-                                            <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${member.FirstAttd ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}>
-                                                {member.FirstAttd ? "Present" : "Absent"}
+                                            <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${member.FirstAttd=="Present" ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}>
+                                                {member.FirstAttd=="Present" ? "Present" : "Absent"}
                                             </span>
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm">
-                                            <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${member.SecondAttd ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}>
-                                                {member.SecondAttd ? "Present" : "Absent"}
+                                            <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${member.SecondAttd=="Present" ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}>
+                                                {member.SecondAttd=="Present" ? "Present" : "Absent"}
                                             </span>
-                                        </td>                                    </tr>
+                                        </td>          
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm">
+                                            <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${member.ThirdAttd=="Present" ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}>
+                                                {member.ThirdAttd=="Present" ? "Present" : "Absent"}
+                                            </span>
+                                        </td>                 
+                                    </tr>
                                 ))}
                                 
                                 {allMembers.length === 0 && (

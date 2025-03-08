@@ -26,7 +26,7 @@ function App() {
         <Route path='/teampanel' element={<TeamPanel/>}/>
         <Route path='/event' element={<EventUp/>}/>
         <Route path='/marks' element={<Marks/>}/>
-        {/* <Route path='/balaya' element={<Leaderboard/>}/> */}
+        <Route path='/balaya' element={<Leaderboard/>}/>
         <Route path='/babu' element={<AttdDetail/>}/>
         <Route path='/food' element={<Food/>}/>
         <Route path='/photos'  element={<Pics/>}/>
