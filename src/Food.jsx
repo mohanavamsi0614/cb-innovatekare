@@ -19,31 +19,14 @@ const foodItems = [
 function Food() {
   const [cart, setCart] = useState([]);
   const [team, setTeam] = useState(JSON.parse(localStorage.getItem("team")));
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [orderSubmitting, setOrderSubmitting] = useState(false);
   const [orderSuccess, setOrderSuccess] = useState(false);
   const [filterCategory, setFilterCategory] = useState('All');
   const [showVegOnly, setShowVegOnly] = useState(false);
   
-  // Get unique categories for filter
   const categories = ['All', ...new Set(foodItems.map(item => item.category))];
-  
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      setLoading(true);
-      axios.post(`${api}/event/team/${token}`)
-        .then(res => {
-          setTeam(res.data);
-        })
-        .catch(err => {
-          console.error("Error fetching team data:", err);
-        })
-        .finally(() => {
-          setLoading(false);
-        });
-    }
-  }, []);
+
 
   const addToCart = (item) => {
     const existingItem = cart.find(cartItem => cartItem.id === item.id);
@@ -82,31 +65,21 @@ function Food() {
     
     setOrderSubmitting(true);
     
-    // Create order object
     const order = {
-      teamId: team?._id,
-      teamName: team?.teamname,
-      items: cart,
-      totalAmount: calculateTotal(),
-      timestamp: new Date(),
+      teamname: team?.teamname,
+      food: cart,
+      price: calculateTotal(),
     };
-    
-    // In a real app, you would send this to your backend
-    console.log("Submitting order:", order);
-    
-    // Simulate API call
-    setTimeout(() => {
+    axios.post(`${api}/food`,order).then(()=>{
       setOrderSubmitting(false);
-      setOrderSuccess(true);
-      // Clear cart after successful order
-      setCart([]);
-      
-      // Reset success message after 5 seconds
-      setTimeout(() => {
-        setOrderSuccess(false);
-      }, 5000);
-    }, 1500);
-    
+          setOrderSuccess(true);
+          setCart([]);
+
+    })    .catch(err => {
+          setOrderSubmitting(false);
+          console.error("Error submitting order:", err);
+        });
+    }; 
     // For a real implementation:
     // axios.post(`${api}/order`, order)
     //   .then(res => {
@@ -118,7 +91,7 @@ function Food() {
     //     setOrderSubmitting(false);
     //     console.error("Error submitting order:", err);
     //   });
-  };
+  
 
   // Filter items based on category and veg/non-veg selection
   const filteredItems = foodItems.filter(item => {
