@@ -13,7 +13,7 @@ import AttdDetail from './AttdDetail';
 import Food from './Food';
 import Pics from './pics';
 import DomainStats from './DomainStats';
-// import FoodOrders from './foodDet';
+import FoodOrders from './foodDet';
 
 function App() {
     return (
@@ -31,7 +31,7 @@ function App() {
         <Route path='/food' element={<Food/>}/>
         <Route path='/photos'  element={<Pics/>}/>
         <Route path='/domain' element={<DomainStats/>}/>
-        {/* <Route path='/foods' element={<FoodOrders/>}/> */}
+        <Route path='/foods' element={<FoodOrders/>}/>
         {/* <Route path='/admin' element={<Admin/>}/>
         <Route path='/teampanel' element={<TeamPanel/>}/>
         <Route path='/at' element={<AllTeamsAttendance/>}/>

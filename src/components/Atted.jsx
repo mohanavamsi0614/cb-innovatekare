@@ -3,12 +3,12 @@ import io from 'socket.io-client';
 import api from '../api';
 
 function AttenCard({ team }) {
-    const [leadAttendance, setLeadAttendance] = useState(team.lead?.FirstAttd || null);
-    const [done, setDone] = useState(!!team.lead?.FirstAttd);
+    const [leadAttendance, setLeadAttendance] = useState(team.lead?.SecondAttd || null);
+    const [done, setDone] = useState(!!team.lead?.SecondAttd);
     const [socket, setSocket] = useState(null);
     const [memberAttendance, setMemberAttendance] = useState(
         team.teamMembers.reduce((acc, member) => {
-            acc[member.name] = member.FirstAttd || null;
+            acc[member.name] = member.SecondAttd || null;
             return acc;
         }, {})
     );
@@ -44,10 +44,10 @@ function AttenCard({ team }) {
 
         const attendanceData = {
             name: team.teamname,
-            lead: { ...team.lead, FirstAttd: leadAttendance },
+            lead: { ...team.lead, SecondAttd: leadAttendance },
             teamMembers: team.teamMembers.map(member => ({
                 ...member,
-                FirstAttd: memberAttendance[member.name]
+                SecondAttd: memberAttendance[member.name]
             }))
         };
         
@@ -63,13 +63,13 @@ function AttenCard({ team }) {
                 <p className="text-gray-800 text-lg">Registration Number: {team.registrationNumber}</p>
                 <div className="flex space-x-4 mt-4">
                     <button
-                        className={`px-6 py-2 rounded ${leadAttendance === 'Present' || team.lead?.FirstAttd=='Present' ? 'bg-green-500 text-white' : 'bg-gray-200'}`}
+                        className={`px-6 py-2 rounded ${leadAttendance === 'Present' || team.lead?.SecondAttd=='Present' ? 'bg-green-500 text-white' : 'bg-gray-200'}`}
                         onClick={() => toggleLeadAttendance('Present')}
                     >
                         Present
                     </button>
                     <button
-                        className={`px-6 py-2 rounded ${leadAttendance === 'Absent' || team.lead?.FirstAttd=='Absent' ? 'bg-red-500 text-white' : 'bg-gray-200'}`}
+                        className={`px-6 py-2 rounded ${leadAttendance === 'Absent' || team.lead?.SecondAttd=='Absent' ? 'bg-red-500 text-white' : 'bg-gray-200'}`}
                         onClick={() => toggleLeadAttendance('Absent')}
                     >
                         Absent
@@ -81,13 +81,13 @@ function AttenCard({ team }) {
                         <p className="text-gray-800 text-lg">Registration Number: {i.registrationNumber}</p>
                         <div className="flex space-x-4 mt-4">
                             <button
-                                className={`px-6 py-2 rounded ${memberAttendance[i.name] === 'Present' || i.FirstAttd === 'Present' ? 'bg-green-500 text-white' : 'bg-gray-200'}`}
+                                className={`px-6 py-2 rounded ${memberAttendance[i.name] === 'Present' || i.SecondAttd === 'Present' ? 'bg-green-500 text-white' : 'bg-gray-200'}`}
                                 onClick={() => toggleMemberAttendance(i.name, 'Present')}
                             >
                                 Present
                             </button>
                             <button
-                                className={`px-6 py-2 rounded ${memberAttendance[i.name] === 'Absent' || i.FirstAttd === 'Absent' ? 'bg-red-500 text-white' : 'bg-gray-200'}`}
+                                className={`px-6 py-2 rounded ${memberAttendance[i.name] === 'Absent' || i.SecondAttd === 'Absent' ? 'bg-red-500 text-white' : 'bg-gray-200'}`}
                                 onClick={() => toggleMemberAttendance(i.name, 'Absent')}
                             >
                                 Absent

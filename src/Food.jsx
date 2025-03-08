@@ -2,18 +2,21 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import api from './api';
 
-
 const foodItems = [
-  { id: 1, name: "Veg Biriyani", price: 120, image: "https://img.freepik.com/free-photo/chicken-biryani-5_1223-1082.jpg", category: "Main Course", isVeg: true },
-  { id: 2, name: "Chicken Biriyani", price: 180, image: "https://img.freepik.com/free-photo/chicken-biryani-8_1223-1104.jpg", category: "Main Course", isVeg: false },
-  { id: 3, name: "Paneer Butter Masala", price: 150, image: "https://img.freepik.com/free-photo/traditional-indian-soup-lentils-indian-dhal-spicy-curry-bowl-spices-herbs-rustic-black-wooden-table_2829-18717.jpg", category: "Main Course", isVeg: true },
-  { id: 4, name: "Butter Naan", price: 30, image: "https://img.freepik.com/free-photo/naan-flatbread_1339-1401.jpg", category: "Bread", isVeg: true },
-  { id: 5, name: "Gulab Jamun", price: 50, image: "https://img.freepik.com/free-photo/indian-sweet-food-gulab-jamun-served-round-ceramic-bowl_466689-74220.jpg", category: "Dessert", isVeg: true },
-  { id: 6, name: "Samosa", price: 25, image: "https://img.freepik.com/free-photo/samosa-samosa-plate-with-sauce_505751-6.jpg", category: "Snacks", isVeg: true },
-  { id: 7, name: "Masala Dosa", price: 80, image: "https://img.freepik.com/free-photo/dosa-also-called-dosai-dosey-south-indian-breakfast-recipe-served-with-sambar-coconut-chutney-selective-focus_466689-27504.jpg", category: "Breakfast", isVeg: true },
-  { id: 8, name: "Mango Lassi", price: 60, image: "https://img.freepik.com/free-photo/refreshing-summer-drink-mango-lassi-glasses-wooden-table_1150-44367.jpg", category: "Beverages", isVeg: true },
-  { id: 9, name: "Chicken 65", price: 160, image: "https://img.freepik.com/free-photo/chicken-fried_1339-2393.jpg", category: "Starters", isVeg: false },
-  { id: 10, name: "Fresh Lime Soda", price: 40, image: "https://img.freepik.com/free-photo/fresh-lemon-juice-glass-dark-surface_1150-45234.jpg", category: "Beverages", isVeg: true }
+  { id: 1, name: "Parota", price: 10, image: "https://th.bing.com/th/id/R.c6819a6d8099487a159e93cf29ca6470?rik=rOAxfwQRhsmUFQ&riu=http%3a%2f%2fcookeryshow.com%2fwp-content%2fuploads%2f2017%2f01%2fhow-to-make-wheat-soft-parotta-k.jpg&ehk=3LUcvDOWmIrHBbOZkcJuz13QJJzaEocdaqXkt3g4Ook%3d&risl=&pid=ImgRaw&r=0", category: "Main Course", isVeg: true },
+  { id: 2, name: "Chicken Rice / Noodels", price: 90, image: "https://www.kannammacooks.com/wp-content/uploads/street-style-chicken-rice-recipe-1-3.jpg", category: "Main Course", isVeg: false },
+  { id: 3, name: "Egg Rice/ Noodles", price: 80, image: "https://th.bing.com/th/id/OIP.7435pyGh3N-M-3J9oyj-xwAAAA?rs=1&pid=ImgDetMain", category: "Main Course", isVeg: false },
+  { id: 4, name: "Veg Rice / Noodles", price: 70, image: "https://recipesofhome.com/wp-content/uploads/2020/06/veg-fried-rice-recipe.jpg", category: "Bread", isVeg: true },
+  { id: 5, name: "Chiken Kothu parota", price: 90, image: "https://img.freepik.com/free-photo/indian-sweet-food-gulab-jamun-served-round-ceramic-bowl_466689-74220.jpg", category: "Dessert", isVeg: false },
+  { id: 6, name: "Veg Kothu parota", price: 90, image: "https://c.ndtvimg.com/2023-06/vnhgan8_kothu-parotta_625x300_26_June_23.jpg?im=FaceCrop", category: "Beverages", isVeg: false },
+  { id: 7, name: "Egg Kothu parota", price: 80, image: "https://th.bing.com/th/id/OIP.l75tXJXjwudVCbRTUrMzPQHaFj?rs=1&pid=ImgDetMain", category: "Snacks", isVeg: true },
+  { id: 8, name: "Dosai", price: 20, image: "https://jfwonline.com/wp-content/uploads/2016/11/Plain-dosa-JFW-Article.jpg", category: "Breakfast", isVeg: true },
+  { id: 9, name: "Egg Dosai", price: 35, image: "https://th.bing.com/th/id/OIP.aDt6QlpQUoeyPZ2oRMtq0AHaEK?rs=1&pid=ImgDetMain", category: "Beverages", isVeg: false},
+  { id: 10, name: "Spl Dosai", price: 40, image: "https://th.bing.com/th/id/OIP.n8xhBfNFDuwju98y9Xm0vwHaEK?rs=1&pid=ImgDetMain", category: "Starters", isVeg: true },
+  { id: 11, name: "Chicken roast Dosai", price: 90, image: "https://www.shutterstock.com/shutterstock/photos/2073252083/display_1500/stock-photo-dosa-dosai-ghee-roast-with-chicken-curry-popular-south-indian-breakfast-food-kerala-tamil-nadu-2073252083.jpg", category: "Beverages", isVeg: false },
+  { id: 12, name: "Onion roast Dosai", price: 60, image: "https://i.pinimg.com/originals/5d/c4/99/5dc4990a497d4d9cd96cbf592dad3cbb.jpg", category: "Beverages", isVeg: true },
+  { id: 13, name: "Omlete", price: 15, image: "https://th.bing.com/th/id/R.9eafdb4139f771d6f30985a99cad2114?rik=fIGJqUfs3i9PrA&riu=http%3a%2f%2fwww.elizabethpeddey.com.au%2fwp-content%2fuploads%2f2020%2f04%2fOMELETTE-scaled.jpg&ehk=uW9E4LaCXiDOMfJZ1x%2focqEG7Yjl46YbspiXgBQog%2fI%3d&risl=&pid=ImgRaw&r=0", category: "Beverages", isVeg: false },
+  { id: 14, name: "Poriyal", price: 20, image: "https://www.kamalascorner.com/wp-content/uploads/2007/07/Poriyal1.jpg", category: "Beverages", isVeg: true } 
 ];
 
 function Food() {
@@ -118,7 +121,7 @@ function Food() {
           <h2 className="text-2xl mb-4">Authentication Required</h2>
           <p>Please log in to access the food ordering system</p>
           <button 
-            onClick={() => window.location.href = '/'}
+            onClick={() => window.location.href = '/teampanel'}
             className="mt-4 px-6 py-2 bg-[#34D4BA] text-black rounded-full hover:bg-[#2ba898]"
           >
             Back to Login
@@ -136,6 +139,7 @@ function Food() {
           <div className="flex items-center gap-2">
             <span className="text-[#34D4BA] text-2xl">🍽️</span>
             <h1 className="text-xl font-bold">Innovative Kare Food Service</h1>
+            <h1 className=' bg-purple-400 text-white p-2 rounded-lg'>Powered By Eatzu ⚡</h1>
           </div>
           <div>
             <button 

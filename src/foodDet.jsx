@@ -1,207 +1,178 @@
-import React, { useState, useEffect } from 'react';
-import { 
-  Container, Typography, Paper, Grid, Card, CardContent, 
-  List, ListItem, ListItemText, Divider, Button, 
-  CircularProgress, Box, Chip
-} from '@mui/material';
-import FastfoodIcon from '@mui/icons-material/Fastfood';
-import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import GroupIcon from '@mui/icons-material/Group';
+import axios from "axios";
+import { useEffect, useState } from "react";
+import api from "./api";
+import "./foodDet.css";
 
-const FoodOrders = () => {
-  const [orders, setOrders] = useState([]);
+function FoodDet() {
+  const [teams, setTeams] = useState([]);
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState({
     totalOrders: 0,
-    pendingOrders: 0,
-    averagePreparationTime: 0
+    totalItems: 0,
+    totalRevenue: 0,
+    pendingOrders: 0
   });
+  const [selectedTeam, setSelectedTeam] = useState(null);
 
-  // Mock data - replace with actual API call
   useEffect(() => {
-    // Simulate API call
-    setTimeout(() => {
-      const mockOrders = [
-        {
-          id: '1',
-          teamName: 'Engineering',
-          food: ['Burger', 'Fries', 'Soda'],
-          price: 25.99,
-          timestamp: new Date(Date.now() - 15 * 60000),
-          status: 'pending'
-        },
-        {
-          id: '2',
-          teamName: 'Marketing',
-          food: ['Pizza', 'Garlic Bread', 'Salad'],
-          price: 32.50,
-          timestamp: new Date(Date.now() - 30 * 60000),
-          status: 'preparing'
-        },
-        {
-          id: '3',
-          teamName: 'HR',
-          food: ['Pasta', 'Breadsticks'],
-          price: 18.75,
-          timestamp: new Date(Date.now() - 5 * 60000),
-          status: 'pending'
-        }
-      ];
-      
-      setOrders(mockOrders);
-      setStats({
-        totalOrders: mockOrders.length,
-        pendingOrders: mockOrders.filter(order => order.status === 'pending').length,
-        averagePreparationTime: 22 // minutes
-      });
-      setLoading(false);
-    }, 1000);
+    async function fetchData() {
+      try {
+        setLoading(true);
+        let res = await axios.get(`${api}/food`);
+        const teamsData = res.data;
+        setTeams(teamsData);
+
+        // Calculate stats
+        const totalOrders = teamsData.length;
+        let totalItems = 0;
+        let totalRevenue = 0;
+        let pendingOrders = 0;
+
+        teamsData.forEach(team => {
+          if (team.food && Array.isArray(team.food)) {
+            totalItems += team.food.reduce((sum, item) => sum + (item.quantity || 0), 0);
+          }
+          totalRevenue += team.price || 0;
+          if (!team.foodDelivered) {
+            pendingOrders++;
+          }
+        });
+
+        setStats({
+          totalOrders,
+          totalItems,
+          totalRevenue,
+          pendingOrders
+        });
+
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching teams:", error);
+        setLoading(false);
+      }
+    }
+
+    fetchData();
   }, []);
 
-  const getWaitingTime = (timestamp) => {
-    const now = new Date();
-    const orderTime = new Date(timestamp);
-    const diffInMinutes = Math.floor((now - orderTime) / (1000 * 60));
-    return diffInMinutes;
-  };
+  const markAsDelivered = async (teamId) => {
+    try {
+      await axios.put(`${api}/event/markFoodDelivered/${teamId}`);
+      
+      // Update local state
+      setTeams(teams.map(team => {
+        if (team._id === teamId) {
+          return { ...team, foodDelivered: true };
+        }
+        return team;
+      }));
 
-  const markAsDelivered = (id) => {
-    setOrders(orders.map(order => {
-      if (order.id === id) {
-        return {...order, status: 'delivered'};
-      }
-      return order;
-    }));
-    
-    // Update stats
-    setStats(prev => ({
-      ...prev,
-      pendingOrders: prev.pendingOrders - 1
-    }));
-  };
+      // Update stats
+      setStats({
+        ...stats,
+        pendingOrders: stats.pendingOrders - 1
+      });
 
-  const getStatusColor = (status) => {
-    switch(status) {
-      case 'pending': return 'warning';
-      case 'preparing': return 'info';
-      case 'delivered': return 'success';
-      default: return 'default';
+    } catch (error) {
+      console.error("Error marking food as delivered:", error);
     }
+  };
+
+  const handleTeamClick = (team) => {
+    setSelectedTeam(selectedTeam?._id === team._id ? null : team);
   };
 
   if (loading) {
     return (
-      <Container sx={{ textAlign: 'center', py: 5 }}>
-        <CircularProgress />
-        <Typography variant="h6" mt={2}>Loading food orders...</Typography>
-      </Container>
+      <div className="food-loading">
+        <div className="spinner"></div>
+        <p>Loading food orders...</p>
+      </div>
     );
   }
 
   return (
-    <Container maxWidth="lg" sx={{ py: 4 }}>
-      <Typography variant="h4" component="h1" gutterBottom>
-        Food Orders Dashboard
-      </Typography>
-
-      {/* Stats Section */}
-      <Grid container spacing={3} mb={4}>
-        <Grid item xs={12} md={4}>
-          <Paper elevation={2} sx={{ p: 3, textAlign: 'center', backgroundColor: '#f5f5f5' }}>
-            <Typography variant="h6">Total Orders</Typography>
-            <Typography variant="h3">{stats.totalOrders}</Typography>
-          </Paper>
-        </Grid>
-        <Grid item xs={12} md={4}>
-          <Paper elevation={2} sx={{ p: 3, textAlign: 'center', backgroundColor: '#fff8e1' }}>
-            <Typography variant="h6">Pending Orders</Typography>
-            <Typography variant="h3">{stats.pendingOrders}</Typography>
-          </Paper>
-        </Grid>
-        <Grid item xs={12} md={4}>
-          <Paper elevation={2} sx={{ p: 3, textAlign: 'center', backgroundColor: '#e8f5e9' }}>
-            <Typography variant="h6">Avg. Preparation Time</Typography>
-            <Typography variant="h3">{stats.averagePreparationTime} min</Typography>
-          </Paper>
-        </Grid>
-      </Grid>
-
-      {/* Orders List */}
-      <Typography variant="h5" component="h2" gutterBottom>
-        Current Orders
-      </Typography>
+    <div className="food-container">
+      <h1 className="food-title">Food Orders Dashboard</h1>
       
-      <Grid container spacing={3}>
-        {orders.map((order) => (
-          <Grid item xs={12} md={6} key={order.id}>
-            <Card 
-              elevation={3} 
-              sx={{ 
-                mb: 2, 
-                border: order.status === 'pending' ? '2px solid #ff9800' : 'none',
-                position: 'relative'
-              }}
-            >
-              <CardContent>
-                <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
-                  <Box display="flex" alignItems="center">
-                    <GroupIcon color="primary" sx={{ mr: 1 }} />
-                    <Typography variant="h6">{order.teamName}</Typography>
-                  </Box>
-                  <Chip 
-                    label={order.status.toUpperCase()} 
-                    color={getStatusColor(order.status)}
-                    size="small"
-                  />
-                </Box>
-                
-                <List dense>
-                  {order.food.map((item, index) => (
-                    <ListItem key={index}>
-                      <FastfoodIcon fontSize="small" sx={{ mr: 1 }} />
-                      <ListItemText primary={item} />
-                    </ListItem>
+      <div className="food-stats-container">
+        <div className="food-stat-box">
+          <div className="stat-icon">📋</div>
+          <div className="stat-value">{stats.totalOrders}</div>
+          <div className="stat-label">Total Orders</div>
+        </div>
+        <div className="food-stat-box">
+          <div className="stat-icon">🍽️</div>
+          <div className="stat-value">{stats.totalItems}</div>
+          <div className="stat-label">Total Items</div>
+        </div>
+        <div className="food-stat-box">
+          <div className="stat-icon">💰</div>
+          <div className="stat-value">₹{stats.totalRevenue.toFixed(2)}</div>
+          <div className="stat-label">Revenue</div>
+        </div>
+        <div className="food-stat-box">
+          <div className="stat-icon">⏱️</div>
+          <div className="stat-value">{stats.pendingOrders}</div>
+          <div className="stat-label">Pending</div>
+        </div>
+      </div>
+
+      <div className="food-teams-container">
+        <h2>Team Orders</h2>
+        
+        {teams.length === 0 && (
+          <div className="food-no-orders">No food orders found</div>
+        )}
+
+        {teams.map((team) => (
+          <div 
+            key={team._id} 
+            className={`food-team-card ${team.foodDelivered ? 'delivered' : ''} ${selectedTeam?._id === team._id ? 'expanded' : ''}`}
+            onClick={() => handleTeamClick(team)}
+          >
+            <div className="food-team-header">
+              <h3>{team.teamname}</h3>
+              <div className={`food-status ${team.foodDelivered ? 'status-delivered' : 'status-pending'}`}>
+                {team.foodDelivered ? 'Delivered' : 'Pending'}
+              </div>
+            </div>
+
+            <div className="food-team-details">
+              {team.food && team.food.length > 0 ? (
+                <div className="food-items-list">
+                  {team.food.map((item, idx) => (
+                    <div key={idx} className="food-item">
+                      <span className="food-item-name">{item.name}</span>
+                      <span className="food-item-qty">x{item.quantity}</span>
+                    </div>
                   ))}
-                </List>
+                </div>
+              ) : (
+                <div className="food-no-items">No items ordered</div>
+              )}
+
+              <div className="food-team-footer">
+                <div className="food-price">Total: ₹{team.price?.toFixed(2) || "0.00"}</div>
                 
-                <Divider sx={{ my: 1 }} />
-                
-                <Box display="flex" justifyContent="space-between" alignItems="center">
-                  <Typography variant="h6" color="primary">
-                    ${order.price.toFixed(2)}
-                  </Typography>
-                  <Box display="flex" alignItems="center">
-                    <AccessTimeIcon fontSize="small" sx={{ mr: 0.5 }} />
-                    <Typography variant="body2">
-                      Waiting: {getWaitingTime(order.timestamp)} min
-                    </Typography>
-                  </Box>
-                </Box>
-                
-                {order.status !== 'delivered' && (
-                  <Button 
-                    variant="contained" 
-                    color="success" 
-                    fullWidth 
-                    sx={{ mt: 2 }}
-                    onClick={() => markAsDelivered(order.id)}
+                {!team.foodDelivered && (
+                  <button 
+                    className="food-deliver-btn"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      markAsDelivered(team._id);
+                    }}
                   >
-                    Mark as Delivered
-                  </Button>
+                    Mark Delivered
+                  </button>
                 )}
-              </CardContent>
-            </Card>
-          </Grid>
+              </div>
+            </div>
+          </div>
         ))}
-      </Grid>
-
-      {orders.length === 0 && (
-        <Paper sx={{ p: 3, textAlign: 'center', bgcolor: '#f5f5f5' }}>
-          <Typography variant="h6">No orders found</Typography>
-        </Paper>
-      )}
-    </Container>
+      </div>
+    </div>
   );
-};
+}
 
-export default FoodOrders;
+export default FoodDet;
