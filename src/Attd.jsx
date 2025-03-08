@@ -110,8 +110,8 @@ function Attd() {
                                     <summary className="text-white cursor-pointer p-4 hover:bg-gray-700 transition-colors">
                                         <div className="flex items-center justify-between">
                                             <span>{currentSector * 15 + i + 1}. {team.teamname}</span>
-                                            <span className={`text-sm ${team.lead?.FirstAttd ? 'text-green-500' : 'text-gray-400'}`}>
-                                                {team.lead?.FirstAttd ? 'Submitted' : 'Pending'}
+                                            <span className={`text-sm ${team.lead?.SecondAttd ? 'text-green-500' : 'text-gray-400'}`}>
+                                                {team.lead?.SecondAttd ? 'Submitted' : 'Pending'}
                                             </span>
                                         </div>
                                     </summary>

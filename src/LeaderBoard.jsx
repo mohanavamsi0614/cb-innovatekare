@@ -106,13 +106,32 @@ function Leaderboard() {
                                     className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
                                     onClick={() => sortTeams("FirstReviewScore")}
                                 >
+                                    FirstScore {renderSortIcon("FirstReviewScore")}
+                                </th>
+                                <th 
+                                    scope="col" 
+                                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+                                    onClick={() => sortTeams("FirstReviewScore")}
+                                >
+                                    SecoundScore {renderSortIcon("FirstReviewScore")}
+                                </th>                                <th 
+                                    scope="col" 
+                                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+                                    onClick={() => sortTeams("FirstReviewScore")}
+                                >
                                     Score {renderSortIcon("FirstReviewScore")}
                                 </th>
                                 <th 
                                     scope="col" 
                                     className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                                 >
-                                    Status
+                                    FirstStatus
+                                </th>
+                                <th 
+                                    scope="col" 
+                                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                >
+                                    SecoundStatus
                                 </th>
                             </tr>
                         </thead>
@@ -130,6 +149,19 @@ function Leaderboard() {
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                         {team.FirstReviewScore ? (
+                                            <span className="font-semibold">{team.FirstReviewScore}</span>
+                                        ) : (
+                                            <span className="text-gray-500">Not scored</span>
+                                        )}
+                                    </td> <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                        {team.SecoundReviewScore ? (
+                                            <span className="font-semibold">{team.SecoundReviewScore}</span>
+                                        ) : (
+                                            <span className="text-gray-500">Not scored</span>
+                                        )}
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                        {team.FinalScore ? (
                                             <span className="font-semibold">{team.FinalScore}</span>
                                         ) : (
                                             <span className="text-gray-500">Not scored</span>
@@ -137,6 +169,17 @@ function Leaderboard() {
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm">
                                         {team.FirstReviewScore ? (
+                                            <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                                Reviewed
+                                            </span>
+                                        ) : (
+                                            <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                                                Pending
+                                            </span>
+                                        )}
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm">
+                                        {team.SecoundReviewScore ? (
                                             <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
                                                 Reviewed
                                             </span>

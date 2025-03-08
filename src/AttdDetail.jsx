@@ -31,7 +31,8 @@ function AttdDetail() {
                     teamName: team.teamname,
                     teamId: team._id,
                     role: "Team Lead",
-                    hasAttended: team.lead.FirstAttd =="Present" ? true : false
+                    FirstAttd:team.lead.FirstAttd,
+                    hasAttended: team.lead.SecondAttd =="Present" ? true : false
                 });
             }
             
@@ -42,7 +43,8 @@ function AttdDetail() {
                         teamName: team.teamname,
                         teamId: team._id,
                         role: "Member",
-                        hasAttended: member.FirstAttd=="Present" ? true : false
+                        FirstAttd:member.FirstAttd,
+                        hasAttended: member.SecondAttd=="Present" ? true : false
                     });
                 });
             }
@@ -72,6 +74,7 @@ function AttdDetail() {
     
     const stats = getAttendanceStats();
     const allMembers = getAllMembers();
+    console.log(allMembers)
 
     return (
         <div className="min-h-screen bg-gray-900 text-white p-5">
@@ -105,27 +108,25 @@ function AttdDetail() {
                             <thead className="bg-gray-700">
                                 <tr>
                                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Name</th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Team</th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Role</th>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">First Round</th>
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">First </th>
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Secound</th>
+
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-gray-600">
                                 {allMembers.map((member, index) => (
                                     <tr key={index} className={index % 2 === 0 ? 'bg-gray-800' : 'bg-gray-750'}>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm">{member.name || 'N/A'}</td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm">{member.teamName || 'N/A'}</td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm">
-                                            <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${member.role === "Team Lead" ? "bg-purple-100 text-purple-800" : "bg-blue-100 text-blue-800"}`}>
-                                                {member.role}
+                                            <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${member.FirstAttd ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}>
+                                                {member.FirstAttd ? "Present" : "Absent"}
                                             </span>
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm">
-                                            <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${member.hasAttended ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}>
-                                                {member.hasAttended ? "Present" : "Absent"}
+                                            <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${member.SecondAttd ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}>
+                                                {member.SecondAttd ? "Present" : "Absent"}
                                             </span>
-                                        </td>
-                                    </tr>
+                                        </td>                                    </tr>
                                 ))}
                                 
                                 {allMembers.length === 0 && (

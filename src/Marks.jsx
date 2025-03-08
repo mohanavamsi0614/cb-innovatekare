@@ -14,20 +14,26 @@ function Marks() {
     const [error, setError] = useState("");
     const sectors = ["456", "067", "101", "001", "218","199"];
     const [scores, setScores] = useState({
-        problemUnderstanding: { criteria: "Understanding & Clarity", marks: "",max:10 },
-        feasibilityRelevance: { criteria: "Feasibility & Relevance of Solution", marks: "",max:10 },
-        technicalApproach: { criteria: "Technical Approach & Feasibility", marks: "",max:10 },
-        prototypeProgress: { criteria: "Prototype / Early Development Progress", marks: "",max:10 }
-    });
+        implementationFunctionality: { criteria: "Implementation & Functionality", marks: "", max: 15 },
+        innovationCreativity: { criteria: "Innovation & Creativity", marks: "", max: 10 },
+        userExperienceDesign: { criteria: "User Experience & Design", marks: "", max: 10 },
+        impactPracticality: { criteria: "Impact & Practicality", marks: "", max: 10 },
+        presentationCommunication: { criteria: "Presentation & Communication", marks: "", max: 10 },
+        completionEffort: { criteria: "Completion & Effort", marks: "", max: 5 }
+    }
+    );
 
     // Reset scores function to clear scores
     const resetScores = () => {
         setScores({
-            problemUnderstanding: { criteria: "Understanding & Clarity", marks: 0, max: 10 },
-            feasibilityRelevance: { criteria: "Feasibility & Relevance of Solution", marks: 0, max: 10 },
-            technicalApproach: { criteria: "Technical Approach & Feasibility", marks: 0, max: 10 },
-            prototypeProgress: { criteria: "Prototype / Early Development Progress", marks: 0, max: 10 }
-        });
+            implementationFunctionality: { criteria: "Implementation & Functionality", marks: "", max: 15 },
+            innovationCreativity: { criteria: "Innovation & Creativity", marks: "", max: 10 },
+            userExperienceDesign: { criteria: "User Experience & Design", marks: "", max: 10 },
+            impactPracticality: { criteria: "Impact & Practicality", marks: "", max: 10 },
+            presentationCommunication: { criteria: "Presentation & Communication", marks: "", max: 10 },
+            completionEffort: { criteria: "Completion & Effort", marks: "", max: 5 }
+        }
+        );
     };
 
     useEffect(() => {
@@ -65,8 +71,8 @@ function Marks() {
     const getSectorTeams = (sectorIndex) => teams.slice(sectorIndex * 15, (sectorIndex + 1) * 15);
 
     const handleScoreChange = (key, value) => {
-        if(Number(value)<=10){
-        value = Math.min(10, Math.max(0, parseInt(value) || 0));
+        if(Number(value)<=scores[key].max){
+        value = Math.min(scores[key].max, Math.max(0, parseInt(value) || 0));
         setScores(prev => ({ ...prev, [key]: { ...prev[key], marks: value } }));
         }
     };
@@ -101,18 +107,17 @@ function Marks() {
         setSubmitStatus(null);
         
         try {
-            await axios.post(`${api}/event//team/score/${currentTeam._id}`, {
+            await axios.post(`${api}/event/team/score/${currentTeam._id}`, {
                 score: calculateTotalMarks(),
-                FirstReview: scores
+                SecoundReview: scores
             });
             
-            // Update the teams array with the new score so UI reflects the change
             const updatedTeams = [...teams];
             const teamIndex = currentSector * 15 + current;
             updatedTeams[teamIndex] = {
                 ...updatedTeams[teamIndex],
-                FirstReviewScore: calculateTotalMarks(),
-                FirstReview: true
+                SecoundReviewScore: calculateTotalMarks(),
+                SecoundReview: true
             };
             setTeams(updatedTeams);
             
@@ -247,12 +252,12 @@ function Marks() {
                 ))}
                 <div className="flex justify-between items-center mb-4 border-t border-gray-600 pt-3 mt-2">
                     <span className="font-bold text-xl">Total:</span>
-                    {currentTeam && currentTeam.FirstReviewScore ?
-                        <span className="font-bold text-xl">{currentTeam.FirstReviewScore} / 40</span> :
+                    {currentTeam && currentTeam.SecoundReviewScore ?
+                        <span className="font-bold text-xl">{currentTeam.SecoundReviewScore} / 40</span> :
                         <span className="font-bold text-xl">{calculateTotalMarks()} / 40</span>
                     }
                 </div>
-                {currentTeam && !currentTeam.FirstReview && (
+                {currentTeam && !currentTeam.SecoundReview && (
                     <button
                         className="mt-4 w-full bg-blue-600 hover:bg-blue-500 text-white px-5 py-2 rounded-lg font-semibold disabled:bg-gray-500"
                         onClick={handleSubmitScores}

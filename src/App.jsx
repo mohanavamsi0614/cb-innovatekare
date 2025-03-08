@@ -26,12 +26,12 @@ function App() {
         <Route path='/teampanel' element={<TeamPanel/>}/>
         <Route path='/event' element={<EventUp/>}/>
         <Route path='/marks' element={<Marks/>}/>
-        <Route path='/balaya' element={<Leaderboard/>}/>
+        {/* <Route path='/balaya' element={<Leaderboard/>}/> */}
         <Route path='/babu' element={<AttdDetail/>}/>
         <Route path='/food' element={<Food/>}/>
         <Route path='/photos'  element={<Pics/>}/>
         <Route path='/domain' element={<DomainStats/>}/>
-        <Route path='/foods' element={<FoodOrders/>}/>
+        {/* <Route path='/foods' element={<FoodOrders/>}/> */}
         {/* <Route path='/admin' element={<Admin/>}/>
         <Route path='/teampanel' element={<TeamPanel/>}/>
         <Route path='/at' element={<AllTeamsAttendance/>}/>
