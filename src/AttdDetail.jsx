@@ -33,6 +33,8 @@ function AttdDetail() {
                     role: "Team Lead",
                     FirstAttd:team.lead.FirstAttd,
                     SecondAttd:team.lead.SecondAttd,
+                    sector:team.Sector,
+                    reg:team.registrationNumber,
                     hasAttended: team.lead.ThirdAttd=="Present" ? true : false
             });
             }
@@ -46,6 +48,8 @@ function AttdDetail() {
                         role: "Member",
                         FirstAttd:member.FirstAttd,
                         SecondAttd:member.SecondAttd,
+                        sector:team.Sector,
+                        reg:member.registrationNumber,
                         hasAttended: member.ThirdAttd=="Present" ? true : false
                     });
                 });
@@ -109,7 +113,9 @@ function AttdDetail() {
                         <table className="min-w-full">
                             <thead className="bg-gray-700">
                                 <tr>
-                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Name</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Sector</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Name</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Registration Number</th>
                                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">First </th>
                                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Secound</th>
                                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Third</th>
@@ -119,7 +125,9 @@ function AttdDetail() {
                             <tbody className="divide-y divide-gray-600">
                                 {allMembers.map((member, index) => (
                                     <tr key={index} className={index % 2 === 0 ? 'bg-gray-800' : 'bg-gray-750'}>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm">{member.name || 'N/A'}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm">{member.sector}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm">{member.name || 'N/A'}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm">{member.reg || 'N/A'}</td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm">
                                             <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${member.FirstAttd=="Present" ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}>
                                                 {member.FirstAttd=="Present" ? "Present" : "Absent"}
