@@ -401,7 +401,7 @@ const restartTour = () => {
         }
         localStorage.setItem("team",JSON.stringify(team))
         Notification.requestPermission().then((res)=>{
-            if(res !="enied"){
+            if(res == "denied"){
             alert("please allow")
             }
         })
