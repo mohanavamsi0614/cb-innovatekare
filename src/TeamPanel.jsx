@@ -1011,7 +1011,7 @@ const restartTour = () => {
                                                 </td>
                                                 <td className="border border-gray-300 px-4 py-2">
                                                     <div className={attendanceClass(team?.lead.ThirdAttd)}>
-                                                        {attendanceIcon(team?.ThirdAttd)}
+                                                        {attendanceIcon(team?.lead.ThirdAttd)}
                                                     </div>
                                                 </td>
                                                 <td className="border border-gray-300 px-4 py-2">
