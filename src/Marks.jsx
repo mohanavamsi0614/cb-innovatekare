@@ -253,8 +253,8 @@ function Marks() {
                 <div className="flex justify-between items-center mb-4 border-t border-gray-600 pt-3 mt-2">
                     <span className="font-bold text-xl">Total:</span>
                     {currentTeam && currentTeam.SecoundReviewScore ?
-                        <span className="font-bold text-xl">{currentTeam.SecoundReviewScore} / 40</span> :
-                        <span className="font-bold text-xl">{calculateTotalMarks()} / 40</span>
+                        <span className="font-bold text-xl">{currentTeam.SecoundReviewScore} / 60</span> :
+                        <span className="font-bold text-xl">{calculateTotalMarks()} / 60</span>
                     }
                 </div>
                 {currentTeam && !currentTeam.SecoundReview && (
