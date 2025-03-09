@@ -33,9 +33,10 @@ function AttdDetail() {
                     role: "Team Lead",
                     FirstAttd:team.lead.FirstAttd,
                     SecondAttd:team.lead.SecondAttd,
+                    ThirdAttd:team.lead.ThirdAttd,
                     sector:team.Sector,
                     reg:team.registrationNumber,
-                    hasAttended: team.lead.ThirdAttd=="Present" ? true : false
+                    hasAttended: team.lead.FourthAttd=="Present" ? true : false
             });
             }
             
@@ -48,9 +49,10 @@ function AttdDetail() {
                         role: "Member",
                         FirstAttd:member.FirstAttd,
                         SecondAttd:member.SecondAttd,
+                        ThirdAttd:member.ThirdAttd,
                         sector:team.Sector,
                         reg:member.registrationNumber,
-                        hasAttended: member.ThirdAttd=="Present" ? true : false
+                        hasAttended: member.FourthAttd=="Present" ? true : false
                     });
                 });
             }
@@ -119,6 +121,7 @@ function AttdDetail() {
                                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">First </th>
                                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Secound</th>
                                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Third</th>
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Forth</th>
 
                                 </tr>
                             </thead>
@@ -141,6 +144,10 @@ function AttdDetail() {
                                         <td className="px-6 py-4 whitespace-nowrap text-sm">
                                             <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${member.ThirdAttd=="Present" ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}>
                                                 {member.ThirdAttd=="Present" ? "Present" : "Absent"}
+                                            </span>
+                                        </td>       <td className="px-6 py-4 whitespace-nowrap text-sm">
+                                            <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${member.ThirdAttd=="Present" ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}>
+                                                {member.FourthAttd=="Present" ? "Present" : "Absent"}
                                             </span>
                                         </td>                 
                                     </tr>
