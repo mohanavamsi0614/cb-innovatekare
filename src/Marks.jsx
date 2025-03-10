@@ -59,7 +59,7 @@ function Marks() {
 
     const handleLogin = (e) => {
         e.preventDefault();
-        if (password === "kluitkare2025") {
+        if (password === "itkare2025") {
             setIsAuthenticated(true);
             sessionStorage.setItem("password", password);
             setError("");

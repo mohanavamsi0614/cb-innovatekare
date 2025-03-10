@@ -5,7 +5,7 @@ import api from "./api";
 function Leaderboard() {
     const [teams, setTeams] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [sortField, setSortField] = useState("FirstReviewScore");
+    const [sortField, setSortField] = useState("FinalScore");
     const [sortDirection, setSortDirection] = useState("desc");
 
     useEffect(() => {
